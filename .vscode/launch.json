@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-Spms30Application<spms30>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "com.teampikachu.spms30.Spms30Application",
+            "projectName": "spms30",
+            "args": ""
+        }
+    ]
+}
