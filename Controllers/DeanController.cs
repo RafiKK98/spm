@@ -14,6 +14,19 @@ namespace SpmsApp.Controllers
             return View();
         }
 
-        
-}
+        [HttpGet("/dean/spcc/")]
+        public IActionResult StudentPLOComparisonByCourse()
+        {
+            return Content("Hi, It is for course");
+        }
+
+        [HttpGet("/dean/spcp/")]
+        public IActionResult StudentPLOComparisonByProgram()
+        {
+            return Content("Hi, It is for Program");
+        }
+
+
+
+    }
 }
