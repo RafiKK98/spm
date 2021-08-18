@@ -16,7 +16,7 @@ namespace SpmsApp.Models
             var ds = DataServices.Get;
             var result = ds.RunQuery(
                 "select * from CO_T" +
-                $"where CourseID={courseID}"
+                $"where CourseID={courseID};"
             );
 
             List<CourseOutcome> coList = new List<CourseOutcome>();

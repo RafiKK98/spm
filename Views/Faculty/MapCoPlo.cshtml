@@ -25,13 +25,42 @@
         @if (Model.SelectedCourse != null)
         {
             var cosOfSelectCourse = Model.SelectedCourse.CourseOutcomes;
+            var ploList = Model.SelectedCourse.Program.ProgramLearningOutcomes;
 
             <div class="row">
                 <div class="col">
-
+                    @foreach (var co in cosOfSelectCourse)
+                    {
+                        <div class="row">
+                            <div class="col-10">
+                                <h3>
+                                    @co.CoName
+                                </h3>
+                                <p>
+                                    @co.Details
+                                </p>
+                            </div>
+                            <div class="col-1">
+                                <a class="btn btn-info" href="#">Modify</a>
+                            </div>
+                            <div class="col-1">
+                                <a class="btn btn-danger" href="#">Delete</a>
+                            </div>
+                        </div>
+                    }
                 </div>
                 <div class="col">
-
+                    @foreach (var plo in ploList)
+                    {
+                        <div class="row">
+                            <div class="col-1">
+                                @plo.PloName
+                            </div>
+                            <div class="col">
+                                @plo.Details
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
         }
