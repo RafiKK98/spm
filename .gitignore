@@ -3,3 +3,8 @@ obj
 bin/*
 obj/*
 SpmsApp.csproj.user
+<<<<<<< HEAD
+=======
+.vs
+.vscode
+>>>>>>> d4a6ae2f948dbafb8dc9731236ca438a768095d3

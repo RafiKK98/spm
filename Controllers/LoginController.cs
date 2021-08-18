@@ -35,6 +35,10 @@ namespace SpmsApp.Controllers
             {
                 return Redirect("/department/");
             }
+            else if (cred.UserType == UserType.UGCIEB)
+            {
+                return Redirect("/ugc/");
+            }
             else
             {
                 throw new NotImplementedException("Please implement");
