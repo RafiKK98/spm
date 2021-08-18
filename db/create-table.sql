@@ -11,6 +11,7 @@ USE spmsdb;
 CREATE TABLE University_T(
 	UniversityID INTEGER NOT NULL AUTO_INCREMENT ,
 	UniversityName VARCHAR(255) NOT NULL,
+    UniversityDomain varchar(255) not null,
 	CONSTRAINT University_PK PRIMARY KEY(UniversityID)
 );
 
