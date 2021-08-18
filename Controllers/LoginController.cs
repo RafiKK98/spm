@@ -21,7 +21,7 @@ namespace SpmsApp.Controllers
             }
             else if (cred.UserType == UserType.Student)
             {
-                throw new NotImplementedException("Please implement");
+                return Redirect("/student/");
             }
             else if (cred.UserType == UserType.Faculty)
             {
