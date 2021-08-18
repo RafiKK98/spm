@@ -45,8 +45,8 @@ CREATE TABLE Program_T(
 
 create table User_T(
 	UserID int not null AUTO_INCREMENT,
-    UserName varchar(255) not null,
-    LoginID varchar(50) not null,
+    FName varchar(255) not null,
+    LName varchar(255) not null,
     LoginPass varchar(50) not null,
     PhoneNumber varchar(14) default 'NOT AVAILABLE',
     Email varchar(50) not null,
@@ -57,6 +57,9 @@ create table User_T(
 
 create table Faculty_T(
 	FID int not null,
+    DepartmentID INTEGER NOT NULL,
+    HiringDate DATE,
+    FacultyID INTEGER NOT NULL,
     constraint Faculty_PK primary key (FID),
     constraint Faculty_FK1 foreign key (FID) references User_T(UserID)
 );
@@ -147,15 +150,15 @@ CREATE TABLE CourseRegistration_T(
 );
 
 
-CREATE TABLE Appointment_T(
-    FID INTEGER NOT NULL,
-    DepartmentID INTEGER NOT NULL,
-    HiringDate DATE,
-    FacultyID INTEGER NOT NULL,  
-    CONSTRAINT Appointment_PK PRIMARY KEY (FID,DepartmentID),
-    CONSTRAINT Appointment_FK1 FOREIGN KEY (FID) REFERENCES Faculty_T(FID),
-    CONSTRAINT Appointment_FK2 FOREIGN KEY (DepartmentID) REFERENCES Department_T(DepartmentID)
-);
+-- CREATE TABLE Appointment_T(
+--     FID INTEGER NOT NULL,
+--     DepartmentID INTEGER NOT NULL,
+--     HiringDate DATE,
+--     FacultyID INTEGER NOT NULL,  
+--     CONSTRAINT Appointment_PK PRIMARY KEY (FID,DepartmentID),
+--     CONSTRAINT Appointment_FK1 FOREIGN KEY (FID) REFERENCES Faculty_T(FID),
+--     CONSTRAINT Appointment_FK2 FOREIGN KEY (DepartmentID) REFERENCES Department_T(DepartmentID)
+-- );
 
 
 CREATE TABLE Assessment_T(
