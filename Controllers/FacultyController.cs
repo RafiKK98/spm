@@ -7,6 +7,8 @@ namespace SpmsApp.Controllers
 {
     public class FacultyController : Controller
     {
+        public static Faculty activeFaculty;
+
         [HttpGet("/faculty/")]
         public IActionResult Index()
         {
