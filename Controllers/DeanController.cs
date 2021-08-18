@@ -17,13 +17,13 @@ namespace SpmsApp.Controllers
         [HttpGet("/dean/spcc/")]
         public IActionResult StudentPLOComparisonByCourse()
         {
-            return Content("Hi, It is for course");
+            return View();
         }
 
         [HttpGet("/dean/spcp/")]
         public IActionResult StudentPLOComparisonByProgram()
         {
-            return Content("Hi, It is for Program");
+            return View();
         }
 
 
