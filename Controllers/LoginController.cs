@@ -41,7 +41,7 @@ namespace SpmsApp.Controllers
             }
             else if (cred.UserType == UserType.VC)
             {
-                return Redirect("/ugc/");
+                return Redirect("/vc/");
             }
             else
             {
