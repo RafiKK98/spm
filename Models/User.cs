@@ -12,6 +12,6 @@ namespace SpmsApp.Models
 
     public class Faculty : User
     {
-        
+        public int DepartmentID { get; set; }
     }
 }
