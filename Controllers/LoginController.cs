@@ -31,6 +31,10 @@ namespace SpmsApp.Controllers
             {
                 return Redirect("/dean/");
             }
+            else if (cred.UserType == UserType.Head)
+            {
+                return Redirect("/department/");
+            }
             else
             {
                 throw new NotImplementedException("Please implement");
