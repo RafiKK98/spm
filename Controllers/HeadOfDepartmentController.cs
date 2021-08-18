@@ -8,7 +8,14 @@ namespace SpmsApp.Controllers
 {
     public class HeadOfDepartmentController : Controller
     {
+        [HttpGet("/department/")]
         public IActionResult Index()
+        {
+            return View();
+        }
+        
+        [HttpGet("/department/SPCC")]
+        public IActionResult StudentPLOComparisonCourseWise()
         {
             return View();
         }
