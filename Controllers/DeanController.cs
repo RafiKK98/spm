@@ -11,6 +11,7 @@ namespace SpmsApp.Controllers
         [HttpGet("/dean/")]
         public IActionResult Index()
         {
+            //
             return View();
         }
 
