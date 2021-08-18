@@ -19,5 +19,65 @@ namespace SpmsApp.Controllers
         {
             return View();
         }
+        [HttpGet("/department/SPCP")]
+        public IActionResult StudentPLOComparisonProgramWise()
+        {
+            return View();
+        }
+        
+
+        [HttpGet("/department/SPAT")]
+        public IActionResult StudentPLOAchievementTable()
+        {
+            return View();
+        }
+
+        [HttpGet("/department/CPPF")]
+        public IActionResult CoursePLOPerformanceFacultyWise()
+        {
+            return View();
+        }
+
+
+        [HttpGet("/department/PWCP")]
+        public IActionResult PLOWiseCoursePerformance()
+        {
+            return View();
+        }
+
+        
+
+        [HttpGet("/department/AAC")]
+        public IActionResult AttemptedVsAchievedComparison()
+        {
+            return View();
+        }       
+
+        [HttpGet("/department/AFPP")]
+        public IActionResult AchievedVsFailedPLOPerformance()
+        {
+            return View();
+        }
+        
+
+        [HttpGet("/department/PAP")]
+        public IActionResult PLOAchievementForAProgram()
+        {
+            return View();
+        }
+
+
+        [HttpGet("/department/SGAP")]
+        public IActionResult StudentsOrGraduatesAchievingAllPLOS()
+        {
+            return View();
+        }
+  
+
+        [HttpGet("/department/IPPC")]
+        public IActionResult InstructorWisePLOPerformanceComparison()
+        {
+            return View();
+        }
     }
 }
