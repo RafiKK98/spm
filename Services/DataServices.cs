@@ -15,7 +15,7 @@ namespace SpmsApp.Services
             connection = new MySqlConnection("server=localhost;database=spmsdb;userid=spms;password=");
         }
 
-        public DataServices Get { get => _ds; }
+        public static DataServices Get { get => _ds; }
 
         public MySqlDataReader RunQuery(string query)
         {

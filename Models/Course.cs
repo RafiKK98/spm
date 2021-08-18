@@ -1,3 +1,8 @@
+using System.Collections.Generic;
+using System.Linq;
+using MySql.Data.MySqlClient;
+using SpmsApp.Services;
+
 namespace SpmsApp.Models
 {
     public class Course
@@ -8,5 +13,15 @@ namespace SpmsApp.Models
         public int CourseCreditCount { get; set; }
         public Program Program { get; set; }
         public int CoofferedCourseID { get; set; }
+
+        public List<CourseOutcome> CourseOutcomes
+        {
+            get
+            {
+                var coList = CourseOutcome.GetCourseOutcomesWithCourseID(this.CourseID);
+                coList.ForEach(co => co.Course = this);
+                return coList;
+            }
+        }
     }
 }
