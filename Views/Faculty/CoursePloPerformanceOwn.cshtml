@@ -1,4 +1,5 @@
 @model SpmsApp.ViewModels.CoursePloPerformanceOwnViewModel
+@using Newtonsoft.Json;
 
 <div class="row">
     <div class="col">@Html.Partial("TopBar")</div>
@@ -9,7 +10,7 @@
         @Html.Partial("FacultySidebar")
     </div>
     <div class="col">
-        <form method="POST">
+        <form id="course-selector" method="POST">
             <label for="selectedCourse">Select a course:</label>
             <select name="selectedCourse">
                 <option value="">Selelct a Course</option>
@@ -20,30 +21,58 @@
             </select>
             <input type="submit" value="Submit">
         </form>
-
-        @if (Model.PloScores != null)
-        {
-            <div style="width: 50%;">
-                <canvas id="ploChart"></canvas>
-            </div>
-        }
+        <div style="width: 50%;">
+            <canvas id="myChart" width="400" height="400"></canvas>
+        </div>
     </div>
 </div>
 
 <script>
-    let ploChart = document.getElementById('ploChart').getContext('2d');
+    let courseSelector = document.getElementById('course-selector');
 
-    let chart = new Chart(ploChart, {
-        type: 'bar',
-        data: {
-            labels: ['a', 'b', 'c'],
-            datasets: [{
-                label: 'Demo',
-                data: [10, 25, 69]
-            }]
-        },
-        option: {
-            maintainAspectRatio: true
-        }
-    })
+    courseSelector.addEventListener("submit", e => {
+        e.preventDefault();
+
+        let result = {};
+
+        fetch('/faculty/cppo/1')
+            .then(res => res.json())
+            .then(res => {
+                var ctx = document.getElementById('myChart').getContext('2d');
+                var myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: res.labels,
+                        datasets: [{
+                            label: '# of Votes',
+                            data: res.data,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                })
+            });
+    });
 </script>

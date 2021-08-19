@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using SpmsApp.Models;
 using SpmsApp.ViewModels;
 
@@ -67,36 +67,20 @@ namespace SpmsApp.Controllers
                     CourseName = "Def"
                 }
             };
-            viewModel.PloScores = null;
 
             return View(viewModel);
         }
 
-        [HttpPost("/faculty/cppo")]
-        public IActionResult CoursePloPerformanceOwn(int selectedCourse)
+        [HttpGet("/faculty/cppo/{courseID}")]
+        public IActionResult CoursePloPerformanceOwn(int courseID)
         {
             // example
             // TODO: to be implemented
-            var ploScores = new Dictionary<ProgramlearningOutcome, float>();
-            ploScores.Add(new ProgramlearningOutcome()
-            {
-                PloID = 0,
-                PloName = "PLO-01"
-            }, 58);
-            ploScores.Add(new ProgramlearningOutcome()
-            {
-                PloID = 1,
-                PloName = "PLO-02"
-            }, 67);
-            ploScores.Add(new ProgramlearningOutcome()
-            {
-                PloID = 2,
-                PloName = "PLO-03"
-            }, 51);
+            // viewModel.Labels = JsonConvert.SerializeObject();
+            // viewModel.Data = JsonConvert.SerializeObject();
 
-            viewModel.PloScores = ploScores;
-
-            return View(viewModel);
+            return Json(new {labels = new List<string>(){"PLO-01", "PLO-02", "PLO-03"}, data = new List<float>(){69, 57, 87}});
+            // return Content(JsonConvert.SerializeObject(viewModel.Data));
         }
     }
 }
