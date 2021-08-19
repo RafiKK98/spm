@@ -21,7 +21,7 @@ namespace SpmsApp.Controllers
             }
             else if (cred.UserType == UserType.Student)
             {
-                throw new NotImplementedException("Please implement");
+                return Redirect("/student/");
             }
             else if (cred.UserType == UserType.Faculty)
             {
@@ -34,6 +34,21 @@ namespace SpmsApp.Controllers
             else if (cred.UserType == UserType.Head)
             {
                 return Redirect("/department/");
+            }
+            else if (cred.UserType == UserType.UGCIEB)
+            {
+                return Redirect("/ugc/");
+            }
+
+            else if (cred.UserType == UserType.Gaurdian)
+            {
+                return Redirect("/guardian/");
+            }
+
+            else if (cred.UserType == UserType.VC)
+            {
+                return Redirect("/vc/");
+
             }
             else
             {
