@@ -22,7 +22,7 @@
             <input type="submit" value="Submit">
         </form>
         <div style="width: 50%;">
-            <canvas id="myChart" width="400" height="400"></canvas>
+            <canvas id="myChart"></canvas>
         </div>
     </div>
 </div>
@@ -32,8 +32,6 @@
 
     courseSelector.addEventListener("submit", e => {
         e.preventDefault();
-
-        let result = {};
 
         fetch('/faculty/cppo/1')
             .then(res => res.json())

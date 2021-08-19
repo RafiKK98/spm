@@ -62,7 +62,8 @@ create table Faculty_T(
     HiringDate DATE,
     FacultyID INTEGER NOT NULL,
     constraint Faculty_PK primary key (FID),
-    constraint Faculty_FK1 foreign key (FID) references User_T(UserID)
+    constraint Faculty_FK1 foreign key (FID) references User_T(UserID),
+    constraint Faculty_FK2 foreign key (DepartmentID) references Department_T(DepartmentID)
 );
 
 
