@@ -24,10 +24,16 @@
         @if (Model.PloScores != null)
         {
             <h1>hello world</h1>
-            <canvas id="ploChart" width="25px"></canvas>
+            <canvas id="ploChart"></canvas>
         }
     </div>
 </div>
+
+@* <style>
+    canvas {
+        width: 25px;
+    }
+</style> *@
 
 <script>
     let ploChart = document.getElementById('ploChart').getContext('2d');
