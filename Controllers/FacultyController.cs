@@ -36,7 +36,8 @@ namespace SpmsApp.Controllers
                 }
             };
 
-            return View(new MapCoPloViewModel(){
+            return View(new MapCoPloViewModel()
+            {
                 Courses = courses
             });
         }
@@ -52,7 +53,7 @@ namespace SpmsApp.Controllers
 
         [HttpGet("/faculty/cppo")]
         public IActionResult CoursePloPerformanceOwn()
-        {            
+        {
             viewModel.Courses = new List<Course>()
             {
                 new Course()
@@ -66,7 +67,7 @@ namespace SpmsApp.Controllers
                     CourseName = "Def"
                 }
             };
-            viewModel.SelectedCourse = null;
+            viewModel.PloScores = null;
 
             return View(viewModel);
         }
@@ -76,7 +77,22 @@ namespace SpmsApp.Controllers
         {
             // example
             // TODO: to be implemented
-            viewModel.SelectedCourse = viewModel.Courses.Where(course => course.CourseID == selectedCourse).First();
+            var ploScores = new Dictionary<ProgramlearningOutcome, float>();
+            ploScores.Add(new ProgramlearningOutcome()
+            {
+                PloID = 0,
+                PloName = "PLO-01"
+            }, 58);
+            ploScores.Add(new ProgramlearningOutcome()
+            {
+                PloID = 1,
+                PloName = "PLO-02"
+            }, 67);
+            ploScores.Add(new ProgramlearningOutcome()
+            {
+                PloID = 2,
+                PloName = "PLO-03"
+            }, 51);
 
             return View(viewModel);
         }
