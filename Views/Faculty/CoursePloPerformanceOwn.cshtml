@@ -1,0 +1,29 @@
+@model SpmsApp.ViewModels.CoursePloPerformanceOwnViewModel
+
+<div class="row">
+    <div class="col">@Html.Partial("TopBar")</div>
+</div>
+
+<div class="row">
+    <div class="col-2">
+        @Html.Partial("FacultySidebar")
+    </div>
+    <div class="col">
+        <form method="POST">
+            <label for="selectedCourse">Select a course:</label>
+            <select name="selectedCourse">
+                <option value="">Selelct a Course</option>
+                @foreach (var course in Model.Courses)
+                {
+                    <option value=@course.CourseID>@course.CourseName</option>
+                }
+            </select>
+            <input type="submit" value="Submit">
+        </form>
+
+        @if (Model.PloScores != null)
+        {
+            <h1>Hello world</h1>
+        }
+    </div>
+</div>

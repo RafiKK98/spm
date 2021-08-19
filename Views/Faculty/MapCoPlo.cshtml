@@ -11,9 +11,10 @@
         @Html.Partial("FacultySidebar")
     </div>
     <div class="col">
-        <form method="GET">
+        <form method="POST">
             <label for="selectedCourse">Select a course:</label>
             <select name="selectedCourse">
+                <option value="">Selelct a Course</option>
                 @foreach (var course in Model.Courses)
                 {
                     <option value=@course.CourseID>@course.CourseName</option>
