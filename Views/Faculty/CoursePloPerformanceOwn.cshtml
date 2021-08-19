@@ -23,17 +23,12 @@
 
         @if (Model.PloScores != null)
         {
-            <h1>hello world</h1>
-            <canvas id="ploChart"></canvas>
+            <div style="width: 50%;">
+                <canvas id="ploChart"></canvas>
+            </div>
         }
     </div>
 </div>
-
-@* <style>
-    canvas {
-        width: 25px;
-    }
-</style> *@
 
 <script>
     let ploChart = document.getElementById('ploChart').getContext('2d');
@@ -41,14 +36,14 @@
     let chart = new Chart(ploChart, {
         type: 'bar',
         data: {
-            labels: ['a','b','c'],
+            labels: ['a', 'b', 'c'],
             datasets: [{
                 label: 'Demo',
                 data: [10, 25, 69]
             }]
         },
-        option:{
-            responsive: true
+        option: {
+            maintainAspectRatio: true
         }
     })
 </script>
