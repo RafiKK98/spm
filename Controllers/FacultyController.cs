@@ -42,5 +42,11 @@ namespace SpmsApp.Controllers
         {
             return Content(selectedCourse.ToString());
         }
+
+        [HttpGet("/faculty/cppo")]
+        public IActionResult CoursePloPerformanceOwn()
+        {
+            return View();
+        }
     }
 }
