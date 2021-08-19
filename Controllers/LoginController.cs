@@ -39,15 +39,16 @@ namespace SpmsApp.Controllers
             {
                 return Redirect("/ugc/");
             }
-<<<<<<< HEAD
+
             else if (cred.UserType == UserType.Gaurdian)
             {
                 return Redirect("/guardian/");
-=======
+            }
+
             else if (cred.UserType == UserType.VC)
             {
                 return Redirect("/vc/");
->>>>>>> 4e1c7a060e424ef2d6454440341603c1e0384176
+
             }
             else
             {
