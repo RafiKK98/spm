@@ -94,6 +94,8 @@ namespace SpmsApp.Controllers
                 PloName = "PLO-03"
             }, 51);
 
+            viewModel.PloScores = ploScores;
+
             return View(viewModel);
         }
     }

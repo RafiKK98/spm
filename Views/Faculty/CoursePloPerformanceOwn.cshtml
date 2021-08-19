@@ -23,7 +23,26 @@
 
         @if (Model.PloScores != null)
         {
-            <h1>Hello world</h1>
+            <h1>hello world</h1>
+            <canvas id="ploChart" width="25px"></canvas>
         }
     </div>
 </div>
+
+<script>
+    let ploChart = document.getElementById('ploChart').getContext('2d');
+
+    let chart = new Chart(ploChart, {
+        type: 'bar',
+        data: {
+            labels: ['a','b','c'],
+            datasets: [{
+                label: 'Demo',
+                data: [10, 25, 69]
+            }]
+        },
+        option:{
+            responsive: true
+        }
+    })
+</script>
