@@ -3,11 +3,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SpmsApp.ViewModels;
+using SpmsApp.Models;
 
 namespace SpmsApp.Controllers
 {
+    
+    
     public class DeanController : Controller
     {
+
+        static CoursePloPerformanceOwnViewModel viewModel = new CoursePloPerformanceOwnViewModel();
+        
         [HttpGet("/dean/")]
         public IActionResult Index()
         {
@@ -33,7 +40,21 @@ namespace SpmsApp.Controllers
         [HttpGet("/dean/cppf/")]
         public IActionResult CoursePLOPerformanceByFaculty()
         {
-            return View();
+            viewModel.Courses = new List<Course>()
+            {
+                new Course()
+                {
+                    CourseID = 0,
+                    CourseName = "Abc"
+                },
+                new Course()
+                {
+                    CourseID = 1,
+                    CourseName = "Def"
+                }
+            };
+
+            return View(viewModel);
         }
 
         [HttpGet("/dean/pcp/")]

@@ -1,6 +1,5 @@
-﻿@{
-    ViewData["Title"] = "Course PLO";
-}
+﻿@model SpmsApp.ViewModels.CoursePloPerformanceOwnViewModel
+@using Newtonsoft.Json;
 
 <div class="row">
     <div class="col">@Html.Partial("TopBar")</div>
@@ -10,6 +9,17 @@
         @Html.Partial("DeanSidebar")
     </div>
     <div class="col">
-        <h1>Course PLO</h1>
+        <form id="course-selector" method="POST">
+            <label for="selectedCourse">Select a course:</label>
+            <select name="selectedCourse">
+                <option value="">Selelct a Course</option>
+                @foreach (var course in Model.Courses)
+                {
+                    <option value=@course.CourseID>@course.CourseName</option>
+                }
+            </select>
+            <input type="submit" value="Submit">
+        </form>
+        
     </div>
 </div>
