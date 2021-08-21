@@ -24,7 +24,21 @@ namespace SpmsApp.Controllers
         [HttpGet("/dean/spcc/")]
         public IActionResult StudentPLOComparisonByCourse()
         {
-            return View();
+            viewModel.Courses = new List<Course>()
+            {
+                new Course()
+                {
+                    CourseID = 0,
+                    CourseName = "Abc"
+                },
+                new Course()
+                {
+                    CourseID = 1,
+                    CourseName = "Def"
+                }
+            };
+
+            return View(viewModel);
         }
 
         [HttpGet("/dean/spcp/")]
