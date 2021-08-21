@@ -57,6 +57,12 @@ namespace SpmsApp.Controllers
             return View(viewModel);
         }
 
+        [HttpGet("/dean/cppf/{courseID}")]
+        public IActionResult CoursePLOPerformanceByFaculty(int courseID)
+        {
+            return Json(new {labels = new List<string>(){"PLO-01", "PLO-02", "PLO-03"}, data = new List<float>(){99, 63, 97}});
+        }
+
         [HttpGet("/dean/pcp/")]
         public IActionResult PLOwiseCoursePerformance()
         {
