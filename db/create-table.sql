@@ -94,6 +94,7 @@ CREATE TABLE Course_T(
      CourseName VARCHAR(255) NOT NULL,
      NumOfCredits INTEGER NOT NULL,
      ProgramID INTEGER NOT NULL,
+     CoOfferedCourseID INTEGER DEFAULT NULL,
      CONSTRAINT Course_PK PRIMARY KEY (CourseID),
      CONSTRAINT Course_FK FOREIGN KEY (ProgramID) REFERENCES Program_T(ProgramID)
 );
@@ -117,6 +118,7 @@ create table Section_T(
     Semester varchar(6) not null,
     `Year` int not null,
     MaximumCapacity int not null,
+    PassMark float(5,2) default 40,
     FID int not null,
     CourseID int not null,
     constraint Section_PK primary key (SectionID),
@@ -134,15 +136,6 @@ CREATE TABLE PrereqCourse_T(
 );
 
 
-CREATE TABLE Cooffered_T(
-    CourseID INTEGER NOT NULL,
-    CoofferedID INTEGER NOT NULL,
-    CONSTRAINT Cooffered_PK PRIMARY KEY (CourseID,CoofferedID),
-    CONSTRAINT Cooffered_FK1 FOREIGN KEY (CourseID)REFERENCES Course_T(CourseID),
-	CONSTRAINT Cooffered_FK2 FOREIGN KEY (CoofferedID)REFERENCES Course_T(CourseID)
-);
-
-
 CREATE TABLE CourseRegistration_T(
      SID INTEGER NOT NULL,
      SectionID INTEGER NOT NULL,
@@ -151,17 +144,6 @@ CREATE TABLE CourseRegistration_T(
      CONSTRAINT CourseRegistration_FK1 FOREIGN KEY (SID) REFERENCES Student_T(SID),
      CONSTRAINT CourseRegistration_FK2 FOREIGN KEY (SectionID) REFERENCES Section_T(SectionID)
 );
-
-
--- CREATE TABLE Appointment_T(
---     FID INTEGER NOT NULL,
---     DepartmentID INTEGER NOT NULL,
---     HiringDate DATE,
---     FacultyID INTEGER NOT NULL,  
---     CONSTRAINT Appointment_PK PRIMARY KEY (FID,DepartmentID),
---     CONSTRAINT Appointment_FK1 FOREIGN KEY (FID) REFERENCES Faculty_T(FID),
---     CONSTRAINT Appointment_FK2 FOREIGN KEY (DepartmentID) REFERENCES Department_T(DepartmentID)
--- );
 
 
 CREATE TABLE Assessment_T(
@@ -187,4 +169,13 @@ CREATE TABLE Evaluation_T(
 );
 
 
+-- CREATE TABLE Appointment_T(
+--     FID INTEGER NOT NULL,
+--     DepartmentID INTEGER NOT NULL,
+--     HiringDate DATE,
+--     FacultyID INTEGER NOT NULL,  
+--     CONSTRAINT Appointment_PK PRIMARY KEY (FID,DepartmentID),
+--     CONSTRAINT Appointment_FK1 FOREIGN KEY (FID) REFERENCES Faculty_T(FID),
+--     CONSTRAINT Appointment_FK2 FOREIGN KEY (DepartmentID) REFERENCES Department_T(DepartmentID)
+-- );
 
