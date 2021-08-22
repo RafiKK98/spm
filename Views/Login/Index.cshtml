@@ -4,19 +4,24 @@
     ViewData["Title"] = "Login - SPMS 3.0";
 }
 
-<form asp-action="login">
-    <input type="text" asp-for="Username" id="username" placeholder="Username"><br>
-    <input type="text" asp-for="Password" id="password" placeholder="Password"><br>
-    <select asp-for="UserType" id="usertype">
-        <option value="">Select User Type</option>
-        <option value="0">Admin</option>
-        <option value="1">Student</option>
-        <option value="2">Faculty</option>
-        <option value="3">Head of Department</option>
-        <option value="4">Dean of School</option>
-        <option value="5">VC</option>
-        <option value="6">UGC/IEB</option>
-        <option value="7">Gaurdian</option>
-    </select><br>
-    <input type="submit" value="Login">
-</form>
+<div class="login-div flex-column-centered">
+  <div class="login-comps">
+    <h1 class="text-center">Login</h1>
+    <form asp-action="login">
+        <input type="text" asp-for="Username" id="username" placeholder="Username"><br>
+        <input type="text" asp-for="Password" id="password" placeholder="Password"><br>
+        <select asp-for="UserType" id="usertype">
+            <option value="">Select User Type</option>
+            <option value="0">Admin</option>
+            <option value="1">Student</option>
+            <option value="2">Faculty</option>
+            <option value="3">Head of Department</option>
+            <option value="4">Dean of School</option>
+            <option value="5">VC</option>
+            <option value="6">UGC/IEB</option>
+            <option value="7">Gaurdian</option>
+        </select><br>
+        <input type="submit" value="Login">
+    </form>
+    </div>
+</div>
