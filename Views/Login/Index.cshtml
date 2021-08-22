@@ -6,11 +6,12 @@
 
 <div class="login-div flex-column-centered">
   <div class="login-comps">
+    <h1 class="text-center">SPMS 3.0</h1>
     <h1 class="text-center">Login</h1>
     <form asp-action="login">
         <input type="text" asp-for="Username" id="username" placeholder="Username"><br>
         <input type="text" asp-for="Password" id="password" placeholder="Password"><br>
-        <select asp-for="UserType" id="usertype">
+        <select asp-for="UserType" id="usertype" class="form-select">
             <option value="">Select User Type</option>
             <option value="0">Admin</option>
             <option value="1">Student</option>
@@ -27,6 +28,12 @@
 </div>
 
 <style>
+
+select option {
+    background-color: azure;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+}
+
 
 * {
   box-sizing: border-box;
@@ -49,66 +56,64 @@
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-
-  .login-comps {
+}
+.login-comps {
     background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
     padding: 2em;
     color: white;
-  }
+}
 
-  form {
+form {
     padding: 20px 0;
     position: relative;
     z-index: 2;
+}
+input[type="text"],
+input[type="password"] {
+    margin: 0.5rem auto;
+    background: rgba(80, 227, 194, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    padding: 0.5em;
+    width: 400px;
+    outline: none;
+}
 
-    input[type="text"],
-    input[type="password"] {
-      margin: 0.5rem auto;
-      background: rgba(80, 227, 194, 0.2);
-      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      padding: 0.5em;
-      width: 400px;
-      outline: none;
-    }
+input[type="text"]:focus,
+input[type="password"]:focus {
+    background-color: rgba(255, 255, 255, 0.329);
+    color: white;
+}
 
-    input[type="text"]:focus,
-    input[type="password"]:focus {
-      background-color: rgba(255, 255, 255, 0.329);
-      color: white;
-    }
+input[type="submit"] {
+    background: black;
+    color: white;
+    border-radius: 5px;
+    margin: 0.5rem auto;
+    padding: 0.5rem;
+    width: 400px;
+    border: none;
+}
 
-    input[type="submit"] {
-      background: black;
-      color: white;
-      border-radius: 5px;
-      margin: 0.5rem auto;
-      padding: 0.5rem;
-      width: 250px;
-      border: none;
-    }
+input[type="submit"]:active {
+    transform: scale(0.95);
+}
 
-    input[type="submit"]:active {
-      transform: scale(0.95);
-    }
+input[type="text"]::placeholder,
+input[type="password"]::placeholder {
+    color: white;
+}
 
-    input[type="text"]::placeholder,
-    input[type="password"]::placeholder {
-      color: white;
-    }
-  }
-
-  .text-center {
+.text-center {
     text-align: center;
-  }
+}
 
-  a {
+a {
     text-decoration: none;
     color: white;
-  }
 }
 
 </style>
