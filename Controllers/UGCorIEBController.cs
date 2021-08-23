@@ -26,11 +26,12 @@ namespace SpmsApp.Controllers
         {
             return View();
         }
-        [HttpGet("/ugc/sogaap")]
+          [HttpGet("/ugc/sogaap")]
         public IActionResult StudentsOrGraduatesAchievingAllPLOs()
         {
             return View();
         }
+       
 
 
 
