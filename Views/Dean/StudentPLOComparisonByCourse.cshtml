@@ -1,4 +1,4 @@
-﻿@model SpmsApp.ViewModels.CoursePloPerformanceOwnViewModel
+﻿@model SpmsApp.ViewModels.StudentPLOComparisonByCourseViewModel
 @using Newtonsoft.Json;
 
 <div class="row">
@@ -9,6 +9,11 @@
         @Html.Partial("DeanSidebar")
     </div>
     <div class="col">
+        <form>
+            <label for="StudnetID">Enter Student ID:</label>
+            <input type="text" id="StudnetID" name="StudnetID" maxlength="10" size="10">
+            
+        </form>
         <form id="course-selector" method="POST">
             <label for="selectedCourse">Select a course:</label>
             <select name="selectedCourse">
@@ -21,11 +26,7 @@
             <input type="submit" value="Submit">
             <br> <br>
         </form>
-        <form>
-            <label for="StudnetID">Enter Student ID:</label>
-            <input type="text" id="StudnetID" name="StudnetID" maxlength="10" size="10">
-            <input type="submit" value="Submit">
-        </form>
+        
         <div style="width: 50%;">
             <canvas id="myChart"></canvas>
         </div>
@@ -39,7 +40,7 @@
     courseSelector.addEventListener("submit", e => {
         e.preventDefault();
 
-        fetch('/dean/cppf/1234')
+        fetch('/dean/spcc/0/1821876')
             .then(res => res.json())
             .then(res => {
                 var ctx = document.getElementById('myChart').getContext('2d');

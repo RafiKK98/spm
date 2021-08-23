@@ -14,6 +14,7 @@ namespace SpmsApp.Controllers
     {
 
         static CoursePloPerformanceOwnViewModel viewModel = new CoursePloPerformanceOwnViewModel();
+        static StudentPLOComparisonByCourseViewModel viewStudentModel = new StudentPLOComparisonByCourseViewModel();
         
         [HttpGet("/dean/")]
         public IActionResult Index()
@@ -24,7 +25,7 @@ namespace SpmsApp.Controllers
         [HttpGet("/dean/spcc/")]
         public IActionResult StudentPLOComparisonByCourse()
         {
-            viewModel.Courses = new List<Course>()
+            viewStudentModel.Courses = new List<Course>()
             {
                 new Course()
                 {
@@ -38,7 +39,22 @@ namespace SpmsApp.Controllers
                 }
             };
 
-            return View(viewModel);
+            viewStudentModel.Students = new List<Student>()
+            {
+                new Student()
+                {
+                    StudentID = 1821876,
+                    StudentName = "Hasibul Haque"
+                }
+            };
+
+            return View(viewStudentModel);
+        }
+
+        [HttpGet("/dean/spcc/{courseID}/{studentID}")]
+        public IActionResult StudentPLOComparisonByCourse(int courseID, int studentID)
+        {
+            return Json(new {labels = new List<string>(){"PLO-01", "PLO-02", "PLO-03"}, data = new List<float>(){99, 93, 97}});
         }
 
         [HttpGet("/dean/spcp/")]
