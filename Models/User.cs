@@ -1,17 +1,19 @@
+using System;
+
 namespace SpmsApp.Models
 {
     public abstract class User
     {
         public int ID { get; set; } // identifier used for the database
-        public string fname { get; set; }
-        public string lname { get; set; }
-        public string contactNumber { get; set; }
-        public string emailAddress { get; set; }
-        public string address { get; set; }
-    }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string ContactNumber { get; set; }
+        public string EmailAddress { get; set; }
+        public string Address { get; set; }
 
-    public class Faculty : User
-    {
-        public Department Department { get; set; }
+        public string FullName
+        {
+            get => $"{FirstName} {LastName}";
+        }
     }
 }

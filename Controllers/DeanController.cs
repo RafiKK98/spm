@@ -44,7 +44,8 @@ namespace SpmsApp.Controllers
                 new Student()
                 {
                     StudentID = 1821876,
-                    StudentName = "Hasibul Haque"
+                    FirstName = "Hasibul",
+                    LastName = "Haque"
                 }
             };
 

@@ -25,6 +25,7 @@ namespace SpmsApp.Controllers
             }
             else if (cred.UserType == UserType.Faculty)
             {
+                
                 return Redirect("/faculty/");
             }
             else if (cred.UserType == UserType.Dean)
@@ -52,8 +53,14 @@ namespace SpmsApp.Controllers
             }
             else
             {
-                throw new NotImplementedException("Please implement");
+                return Redirect("/login/wrong");
             }
+        }
+
+        [HttpGet("/login/wrong")]
+        public IActionResult InvalidLogin()
+        {
+            return View();
         }
     }
 }

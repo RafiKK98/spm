@@ -9,7 +9,8 @@ namespace SpmsApp.Controllers
     public class FacultyController : Controller
     {
         public static Faculty activeFaculty;
-        static CoursePloPerformanceOwnViewModel viewModel = new CoursePloPerformanceOwnViewModel();
+        MapCoPloViewModel mapCoPloViewModel = new MapCoPloViewModel();
+        CoursePloPerformanceOwnViewModel coursePloPerformanceOwnViewModel = new CoursePloPerformanceOwnViewModel();
 
         [HttpGet("/faculty/")]
         public IActionResult Index()
@@ -20,26 +21,19 @@ namespace SpmsApp.Controllers
         [HttpGet("/faculty/mcp")]
         public IActionResult MapCoPlo()
         {
-            // example
-            // TODO: to be implemented
-            List<Course> courses = new List<Course>()
+            // mapCoPloViewModel.Courses = Course.GetCoursesByDepartment(activeFaculty.DepartmentID);
+            // mapCoPloViewModel.TopbarViewModel = new TopbarViewModel()
+            // {
+            //     Name = activeFaculty.FullName,
+            //     ID = activeFaculty.FacultyID
+            // };
+
+            var mcpvm = new MapCoPloViewModel()
             {
-                new Course()
-                {
-                    CourseID = 0,
-                    CourseName = "Abc"
-                },
-                new Course()
-                {
-                    CourseID = 1,
-                    CourseName = "Def"
-                }
+                Courses = Course.GetCoursesByDepartment(1)
             };
 
-            return View(new MapCoPloViewModel()
-            {
-                Courses = courses
-            });
+            return View(mcpvm);
         }
 
         [HttpPost("/faculty/mcp")]
@@ -54,7 +48,7 @@ namespace SpmsApp.Controllers
         [HttpGet("/faculty/cppo")]
         public IActionResult CoursePloPerformanceOwn()
         {
-            viewModel.Courses = new List<Course>()
+            coursePloPerformanceOwnViewModel.Courses = new List<Course>()
             {
                 new Course()
                 {
@@ -68,7 +62,7 @@ namespace SpmsApp.Controllers
                 }
             };
 
-            return View(viewModel);
+            return View(coursePloPerformanceOwnViewModel);
         }
 
         [HttpGet("/faculty/cppo/{courseID}")]
@@ -79,7 +73,7 @@ namespace SpmsApp.Controllers
             // viewModel.Labels = JsonConvert.SerializeObject();
             // viewModel.Data = JsonConvert.SerializeObject();
 
-            return Json(new {labels = new List<string>(){"PLO-01", "PLO-02", "PLO-03"}, data = new List<float>(){69, 57, 87}});
+            return Json(new { labels = new List<string>() { "PLO-01", "PLO-02", "PLO-03" }, data = new List<float>() { 69, 57, 87 } });
             // return Content(JsonConvert.SerializeObject(viewModel.Data));
         }
     }
