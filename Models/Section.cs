@@ -7,8 +7,9 @@ namespace SpmsApp.Models
     {
         public int SectionID { get; set; }
         public int SectionNumber { get; set; }
-        public string Semester { get; set; }
-        public int Year { get; set; }
+        // public string Semester { get; set; }
+        // public int Year { get; set; }
+        public Semester Semester { get; set; }
         public int MaximumCapacity { get; set; }
         public float PassMark { get; set; }
         public Faculty Faculty { get; set; }

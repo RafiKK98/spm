@@ -288,11 +288,15 @@ namespace SpmsApp.Services
                 {
                     SectionID = reader.GetInt32(0),
                     SectionNumber = reader.GetInt32(1),
-                    Semester = reader.GetString(2),
-                    Year = reader.GetInt32(3),
+                    // Semester = reader.GetString(2),
+                    // Year = reader.GetInt32(3),
                     MaximumCapacity = reader.GetInt32(4),
                     PassMark = reader.GetFloat(5)
                 };
+
+                string semesterName = reader.GetString(2);
+                int semesterYear = reader.GetInt32(3);
+                section.Semester = new Semester(semesterName, semesterYear);
 
                 int FID = reader.GetInt32(6);
                 int courseID = reader.GetInt32(7);
