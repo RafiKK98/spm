@@ -2,6 +2,7 @@ using System;
 
 namespace SpmsApp.Models
 {
+    [Serializable]
     public abstract class User
     {
         public int ID { get; set; } // identifier used for the database

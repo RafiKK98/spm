@@ -7,5 +7,6 @@ namespace SpmsApp.ViewModels
     {
         public List<Student> Students { get; set; }
         public List<Course> Courses {get; set;}
+        public TopbarViewModel TopbarViewModel { get; set; }
     }
 }

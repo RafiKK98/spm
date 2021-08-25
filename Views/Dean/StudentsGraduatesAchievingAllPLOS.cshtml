@@ -1,9 +1,10 @@
-﻿@{
-    ViewData["Title"] = "S/G";
+﻿@model SpmsApp.ViewModels.TopbarViewModel
+@{
+    ViewData["Title"] = "Average PLO Achieve";
 }
 
 <div class="row">
-    <div class="col">@Html.Partial("TopBar")</div>
+    <div class="col">@Html.Partial("TopBar", Model)</div>
 </div>
 <div class="row">
     <div class="col-2">

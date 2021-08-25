@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SpmsApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,38 +12,38 @@ namespace SpmsApp.Controllers
         [HttpGet("/department/")]
         public IActionResult Index()
         {
-            return View();
+            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
         }
         
         [HttpGet("/department/SPCC")]
         public IActionResult StudentPLOComparisonCourseWise()
         {
-            return View();
+            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
         }
         [HttpGet("/department/SPCP")]
         public IActionResult StudentPLOComparisonProgramWise()
         {
-            return View();
+            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
         }
         
 
         [HttpGet("/department/SPAT")]
         public IActionResult StudentPLOAchievementTable()
         {
-            return View();
+            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
         }
 
         [HttpGet("/department/CPPF")]
         public IActionResult CoursePLOPerformanceFacultyWise()
         {
-            return View();
+            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
         }
 
 
         [HttpGet("/department/PWCP")]
         public IActionResult PLOWiseCoursePerformance()
         {
-            return View();
+            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
         }
 
         
@@ -50,34 +51,34 @@ namespace SpmsApp.Controllers
         [HttpGet("/department/AAC")]
         public IActionResult AttemptedVsAchievedComparison()
         {
-            return View();
+            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
         }       
 
         [HttpGet("/department/AFPP")]
         public IActionResult AchievedVsFailedPLOPerformance()
         {
-            return View();
+            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
         }
         
 
         [HttpGet("/department/PAP")]
         public IActionResult PLOAchievementForAProgram()
         {
-            return View();
+            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
         }
 
 
         [HttpGet("/department/SGAP")]
         public IActionResult StudentsOrGraduatesAchievingAllPLOS()
         {
-            return View();
+            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
         }
   
 
         [HttpGet("/department/IPPC")]
         public IActionResult InstructorWisePLOPerformanceComparison()
         {
-            return View();
+            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
         }
     }
 }

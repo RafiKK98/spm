@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SpmsApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,12 +12,12 @@ namespace SpmsApp.Controllers
         [HttpGet("/guardian/")]
         public IActionResult Index()
         {
-            return View();
+            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
         }
         [HttpGet("/guardian/spat")]
         public IActionResult StudentPLOAchievementTable()
         {
-            return View();
+            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
         }
 
     }

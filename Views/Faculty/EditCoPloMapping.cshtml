@@ -1,0 +1,46 @@
+@using SpmsApp.Services
+@model SpmsApp.ViewModels.EditCoPloMapping
+
+@{
+    ViewData["Title"] = "CO-PLO Mapping";
+    @* ProgramlearningOutcome plo = ProgramlearningOutcome.GetPLO(Model.PloID);
+    var ploList = ProgramlearningOutcome.GetPlosByProgramID(Model.PLO.ProgramID); *@
+}
+<div class="row">
+    <div class="col">@Html.Partial("TopBar", Model.TopbarViewModel)</div>
+</div>
+<div class="row">
+    <div class="col-2">
+        @Html.Partial("FacultySidebar")
+    </div>
+    <div class="col">
+        <table>
+            <tr>
+                <th colspan="2">
+                    Current CO-PLO Mapping
+                </th>
+            </tr>
+            <tr>
+                <td>@Model.CO.CoName</td>
+            </tr>
+            <tr>
+                <td>@Model.PLO.PloName</td>
+            </tr>
+            <tr>
+                <td>@Model.CO.Details</td>
+            </tr>
+        </table>
+        <form action=@($"/faculty/mcp/edit/{Model.CO.CoID}") method="POST">
+            <label>@Model.CO.CoName</label>
+            <select asp-for="PloID">
+                <option value="">Select a PLO</option>
+                @* @foreach (var p in ploList) *@
+                {
+                    @* <option value=@p.PloID>@p.PloName</option> *@
+                }
+            </select><br>
+            <textarea asp-for="Details" cols="30" rows="10" placeholder="Enter CO-PLO Mapping Details"></textarea><br>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+</div>

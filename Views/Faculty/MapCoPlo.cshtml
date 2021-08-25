@@ -1,10 +1,11 @@
+@using SpmsApp.Services
 @model SpmsApp.ViewModels.MapCoPloViewModel
 @{
     ViewData["Title"] = "Map CO-PLO";
 }
 
 <div class="row">
-    @* <div class="col">@Html.Partial("TopBar", Model.TopbarViewModel)</div> *@
+    <div class="col">@Html.Partial("TopBar", Model.TopbarViewModel)</div>
 </div>
 <div class="row">
     <div class="col-2">
@@ -17,7 +18,7 @@
                 <option value="">Selelct a Course</option>
                 @foreach (var course in Model.Courses)
                 {
-                    <option value=@course.CourseID>@course.CourseCode - @Program.GetProgram(course.ProgramID).ProgramName</option>
+                    @* <option value=@course.CourseID>@course.CourseCode - @Program.GetProgram(course.ProgramID).ProgramName</option> *@
                 }
             </select>
             <input type="submit" value="Submit">
@@ -25,41 +26,45 @@
 
         @if (Model.SelectedCourse != null)
         {
-            var cosOfSelectCourse = Model.SelectedCourse.CourseOutcomes;
+            @* var cosOfSelectCourse = Model.SelectedCourse.CourseOutcomes; *@
+            @* var plosOfSelectCourse = Model.SelectedCourse.MappedPLOs; *@
             @* var ploList = Model.SelectedCourse.Program.ProgramLearningOutcomes; *@
-            var ploList = ProgramlearningOutcome.GetPlosByProgramID(Model.SelectedCourse.ProgramID);
+            @* var ploList = ProgramlearningOutcome.GetPlosByProgramID(Model.SelectedCourse.ProgramID); *@
 
             <div class="row">
                 <div class="col">
-                    @foreach (var co in cosOfSelectCourse)
+                    <h3>Current CO-PLO Mapping</h3>
+                    @* @for (int i = 0; i < cosOfSelectCourse.Count; i++) *@
                     {
+                        @* string mapping = $"{cosOfSelectCourse[i].CoName} - {plosOfSelectCourse[i].PloName}";                         *@
                         <div class="row">
-                            <div class="col-10">
-                                <h3>
-                                    @co.CoName
-                                </h3>
+                            <div class="col-6">
+                                <h4>
+                                    @* @mapping *@
+                                </h4>
                                 <p>
-                                    @co.Details
+                                    @* @cosOfSelectCourse[i].Details *@
                                 </p>
                             </div>
-                            <div class="col-1">
-                                <a class="btn btn-info" href="#">Modify</a>
+                            <div class="col">
+                                @* <a class="btn btn-info" href=@($"/faculty/mcp/edit/{cosOfSelectCourse[i].CoID}")>Modify</a> *@
                             </div>
-                            <div class="col-1">
-                                <a class="btn btn-danger" href="#">Delete</a>
+                            <div class="col">
+                                @* <a class="btn btn-danger" href=@($"/faculty/mcp/delete/{cosOfSelectCourse[i].CoID}")>Delete</a> *@
                             </div>
                         </div>
                     }
                 </div>
-                <div class="col">
-                    @foreach (var plo in ploList)
+                <div class="col border-1">
+                    <h3>PLO Lists</h3>
+                    @* @foreach (var plo in ploList) *@
                     {
                         <div class="row">
                             <div class="col-1">
-                                @plo.PloName
+                                @* @plo.PloName *@
                             </div>
                             <div class="col">
-                                @plo.Details
+                                @* @plo.Details *@
                             </div>
                         </div>
                     }

@@ -1,11 +1,12 @@
+@model SpmsApp.ViewModels.TopbarViewModel;
 @{
     ViewData["Title"] = "Dashboard";
 }
 
 <div class="row">
-    <div class="col">@Html.Partial("TopBar")</div>
+    <div class="col">@Html.Partial("TopBar", Model)</div>
 </div>
-<div class="row">
+<div class="row" style="height: 100%;">
     <div class="col-2">
         @Html.Partial("FacultySidebar")
     </div>

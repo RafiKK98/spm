@@ -1,5 +1,8 @@
+using System;
+
 namespace SpmsApp.Models
 {
+    [Serializable]
     public class University
     {
         public int UniversityID { get; set; }

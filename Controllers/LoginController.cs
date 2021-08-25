@@ -1,6 +1,8 @@
 using System;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using SpmsApp.Models;
+using SpmsApp.Services;
 
 namespace SpmsApp.Controllers
 {
@@ -15,6 +17,8 @@ namespace SpmsApp.Controllers
         [HttpPost("/login")]
         public IActionResult Login(LoginCredentials cred)
         {
+            DataServices service = DataServices.dataServices;
+
             if (cred.UserType == UserType.Admin)
             {
                 throw new NotImplementedException("Please implement");
@@ -25,7 +29,9 @@ namespace SpmsApp.Controllers
             }
             else if (cred.UserType == UserType.Faculty)
             {
-                
+                // var d = DataServices.dataServices;
+                // d.PloAchievementTableData(d.students.First());
+                FacultyController.activeFaculty = service.GetFaculty(cred.Username, cred.Password);
                 return Redirect("/faculty/");
             }
             else if (cred.UserType == UserType.Dean)

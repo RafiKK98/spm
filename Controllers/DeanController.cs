@@ -12,14 +12,14 @@ namespace SpmsApp.Controllers
     
     public class DeanController : Controller
     {
-
+// StudentPLOComparisonByCourseViewModel
         static CoursePloPerformanceOwnViewModel viewModel = new CoursePloPerformanceOwnViewModel();
         static StudentPLOComparisonByCourseViewModel viewStudentModel = new StudentPLOComparisonByCourseViewModel();
         
         [HttpGet("/dean/")]
         public IActionResult Index()
         {
-            return View();
+            return View(new TopbarViewModel(){Name = "Mr Dean", ID = 1234});
         }
 
         [HttpGet("/dean/spcc/")]
@@ -49,6 +49,8 @@ namespace SpmsApp.Controllers
                 }
             };
 
+            viewStudentModel.TopbarViewModel = new TopbarViewModel(){Name = "Mr Dean", ID = 1234};
+
             return View(viewStudentModel);
         }
 
@@ -61,12 +63,12 @@ namespace SpmsApp.Controllers
         [HttpGet("/dean/spcp/")]
         public IActionResult StudentPLOComparisonByProgram()
         {
-            return View();
+            return View(new TopbarViewModel(){Name = "Mr Dean", ID = 1234});
         }
         [HttpGet("/dean/spat/")]
         public IActionResult StudentPLOAchievementTable()
         {
-            return View();
+            return View(new TopbarViewModel(){Name = "Mr Dean", ID = 1234});
         }
         [HttpGet("/dean/cppf/")]
         public IActionResult CoursePLOPerformanceByFaculty()
@@ -85,6 +87,8 @@ namespace SpmsApp.Controllers
                 }
             };
 
+            viewModel.TopbarViewModel = new TopbarViewModel(){Name = "Mr Dean", ID = 1234};
+
             return View(viewModel);
         }
 
@@ -97,48 +101,44 @@ namespace SpmsApp.Controllers
         [HttpGet("/dean/pcp/")]
         public IActionResult PLOwiseCoursePerformance()
         {
-            return View();
+            return View(new TopbarViewModel(){Name = "Mr Dean", ID = 1234});
         }
 
         [HttpGet("/dean/afpp/")]
         public IActionResult AchievedVsFailedPLOPerformance()
         {
-            return View();
+            return View(new TopbarViewModel(){Name = "Mr Dean", ID = 1234});
         }
 
         [HttpGet("/dean/aac/")]
         public IActionResult AttemptedVsAchievedComparison()
         {
-            return View();
+            return View(new TopbarViewModel(){Name = "Mr Dean", ID = 1234});
         }
 
         [HttpGet("/dean/pafap/")]
         public IActionResult PLOAchievementForAProgram()
         {
             //
-            return View();
+            return View(new TopbarViewModel(){Name = "Mr Dean", ID = 1234});
         }
 
         [HttpGet("/dean/sgaap/")]
         public IActionResult StudentsGraduatesAchievingAllPLOS()
         {
-            return View();
+            return View(new TopbarViewModel(){Name = "Mr Dean", ID = 1234});
         }
 
         [HttpGet("/dean/apa/")]
         public IActionResult AveragePLOAchievement()
         {
-            return View();
+            return View(new TopbarViewModel(){Name = "Mr Dean", ID = 1234});
         }
 
         [HttpGet("/dean/ippc/")]
         public IActionResult InstructorwisePLOPerformanceComparison()
         {
-            return View();
+            return View(new TopbarViewModel(){Name = "Mr Dean", ID = 1234});
         }
-
-
-
-
     }
 }
