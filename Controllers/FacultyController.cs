@@ -11,9 +11,7 @@ namespace SpmsApp.Controllers
     public class FacultyController : Controller
     {
         static DataServices ds = DataServices.dataServices;
-        public static Faculty activeFaculty = ds.faculties.First();
-        // MapCoPloViewModel mapCoPloViewModel = new MapCoPloViewModel();
-        // CoursePloPerformanceOwnViewModel coursePloPerformanceOwnViewModel = new CoursePloPerformanceOwnViewModel();
+        public static Faculty activeFaculty;
 
         [HttpGet("/faculty/")]
         public IActionResult Index()
@@ -49,9 +47,66 @@ namespace SpmsApp.Controllers
 
             var plos = ds.plos.Where(o => o.Program == ds.students.First().Program);
 
-            var mydata = new {studentName = student.FullName, ploList = plos, data = _data };
+            var mydata = new { studentName = student.FullName, ploList = plos, data = _data };
 
             return Json(mydata);
+        }
+
+        [HttpGet("/faculty/spcc")]
+        public IActionResult StudentPloComparisonCourse()
+        {
+            StudentPloComparisonCourse viewModel = new StudentPloComparisonCourse();
+            viewModel.Courses = ds.courses.Where(c => c.Program.Department == activeFaculty.Department && c.CoofferedCourse == null).ToList();
+            viewModel.TopbarViewModel = new TopbarViewModel()
+            {
+                Name = activeFaculty.FullName,
+                ID = activeFaculty.FacultyID
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpGet("/faculty/spcc/{selectedCourse}")]
+        public IActionResult StudentPloComparisonCourse(int selectedCourse)
+        {
+            StudentPloComparisonCourse viewModel = new StudentPloComparisonCourse();
+            viewModel.Courses = ds.courses.Where(c => c.Program.Department == activeFaculty.Department && c.CoofferedCourse == null).ToList();
+            viewModel.TopbarViewModel = new TopbarViewModel()
+            {
+                Name = activeFaculty.FullName,
+                ID = activeFaculty.FacultyID
+            };
+
+            var courses = ds.courses.Where(c => (c.CourseID == selectedCourse) || (c.CoofferedCourse != null ? c.CoofferedCourse.CourseID == selectedCourse : false)).ToList();
+            var sections = ds.sections.Where(s => courses.Contains(s.Course)).ToList();
+
+            var sectionEvaluations = ds.evaluations.Where(e => sections.Contains(e.Assessment.Section)).ToList();
+
+            var groupedSectionEvaluation = sectionEvaluations.GroupBy(se => se.Assessment.CourseOutcome.PLO.PloName).ToList();
+
+            List<string> plos = new List<string>();
+            List<int> counts = new List<int>();
+
+            foreach (var group in groupedSectionEvaluation)
+            {
+                int count = 0;
+
+                foreach (var ev in group)
+                {
+                    var convertedMark = (ev.TotalObtainedMark / ev.Assessment.TotalMark) * 100;
+                    if (convertedMark >= ev.Assessment.Section.PassMark)
+                    {
+                        count++;
+                    }
+                }
+
+                plos.Add(group.Key);
+                counts.Add(count);
+
+                System.Console.WriteLine(group);
+            }
+
+            return Json(new { Plos = plos, Counts = counts });
         }
 
         // [HttpGet("/faculty/mcp")]

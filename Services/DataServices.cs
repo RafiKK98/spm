@@ -150,6 +150,26 @@ namespace SpmsApp.Services
             connection.Close();
 
             connection.Open();
+            command = new MySqlCommand("Select CourseID,CoOfferedCourseID from Course_T;", connection);
+
+            reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                Course course;
+                int cid, coOfferedId;
+
+                cid = reader.GetInt32(0);
+                if (!reader.IsDBNull(1))
+                {
+                    coOfferedId = reader.GetInt32(1);
+                    course = courses.Find(c => c.CourseID == cid);
+                    course.CoofferedCourse = courses.Find(c => c.CourseID == coOfferedId);
+                }
+            }
+            reader.Close();
+            connection.Close();
+
+            connection.Open();
             command = new MySqlCommand("Select * from PrereqCourse_T;", connection);
 
             reader = command.ExecuteReader();
