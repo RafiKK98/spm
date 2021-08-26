@@ -21,13 +21,8 @@ namespace SpmsApp.Controllers
             ContactNumber="01853463458",
             EmailAddress = "kazi@iub.edu.bd",
             Address = "Mirpur, Dhaka",
-<<<<<<< HEAD
-            UGCIEBID= 402,
-            University= ds.universities.First()
-=======
             UgciebID= 402,
-            University= ds.universities.First();
->>>>>>> de3fc17f2bfa44d8ad61ba9b8485a2d6677c9f50
+            University= ds.universities.First()
 
         };
 
