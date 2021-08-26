@@ -9,11 +9,8 @@ using SpmsApp.Services;
 
 namespace SpmsApp.Controllers
 {
-    
-    
     public class DeanController : Controller
     {
-
         public static DataServices ds = DataServices.dataServices;
 
         static CoursePloPerformanceOwnViewModel viewModel = new CoursePloPerformanceOwnViewModel();
