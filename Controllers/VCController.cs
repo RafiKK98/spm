@@ -77,7 +77,28 @@ namespace SpmsApp.Controllers
         [HttpGet("/vc/spat/")]
         public IActionResult StudentPLOAchievementTable()
         {
-            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
+            PloAchievementTableViewModel ploAchievementTableViewModel = new PloAchievementTableViewModel();
+            ploAchievementTableViewModel.TopbarViewModel = new TopbarViewModel()
+            {
+                Name = ActiveVC.FullName,
+                ID = ActiveVC.VCID
+            };
+
+            return View(ploAchievementTableViewModel);
+        }
+
+        [HttpGet("/vc/pat/{studentID}")]
+        public IActionResult PloAchievementTable(int studentID)
+        {
+            var student = ds.students.Find(s => s.StudentID == studentID);
+
+            var _data = ds.PloAchievementTableData(student);
+
+            var plos = ds.plos.Where(o => o.Program == ds.students.First().Program);
+
+            var mydata = new { studentName = student.FullName, ploList = plos, data = _data };
+
+            return Json(mydata);
         }
         [HttpGet("/vc/cppf/")]
         public IActionResult CoursePLOPerformanceByFaculty()
