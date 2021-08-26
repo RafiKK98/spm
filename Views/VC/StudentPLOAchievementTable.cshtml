@@ -11,13 +11,14 @@
         @Html.Partial("VCSidebar")
     </div>
     <div class="col">
-        <h1>Student PLO</h1>
+        <h1>Student PLO Achievement Table</h1>
         <form id="student-selector">
             <label for="student-id-field">Enter a Student ID</label>
             <input asp-for="StudentID" type="text" name="student-id-field" id="studentID">
             <input type="submit" value="Submit">
         </form>
         <div id="student-name"></div>
+        <div id="current-student-id"></div>
         <table id="student-report">
 
         </table>
@@ -38,7 +39,9 @@
             .then(res => {
                 console.log(res);
                 let studentName = document.getElementById('student-name');
-                studentName.innerHTML = `<h3>${res.studentName}</h3>`;
+                studentName.innerHTML = `<h3>Name : ${res.studentName}</h3>`;
+                let currentStudentID = document.getElementById('current-student-id');
+                currentStudentID.innerHTML = `<h3>ID : ${studentID}</h3>`;
                 let table = document.getElementById("student-report");
                 let headRow = document.createElement('tr');
                 let firstHeadCol = document.createElement('th');

@@ -17,7 +17,14 @@ namespace SpmsApp.Controllers
         [HttpGet("/guardian/spat")]
         public IActionResult StudentPLOAchievementTable()
         {
-            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
+            PloAchievementTableViewModel ploAchievementTableViewModel = new PloAchievementTableViewModel();
+            ploAchievementTableViewModel.TopbarViewModel = new TopbarViewModel()
+            {
+                Name = "No Name Set", ID = 0000
+            };
+
+            return View(ploAchievementTableViewModel);
+            //return View(ploAchievementTableViewModel.TopbarViewModel = new TopbarViewModel() {Name = "No Name Set", ID = 0000});
         }
 
     }
