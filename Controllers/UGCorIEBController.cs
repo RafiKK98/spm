@@ -31,7 +31,7 @@ namespace SpmsApp.Controllers
         [HttpGet("/ugc/")]
         public IActionResult Index()
         {
-            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
+            return View(new TopbarViewModel() {Name = ActiveUgcieb.FullName, ID =ActiveUgcieb.UgciebID});
         }
 
         [HttpGet("/ugc/pafap")]
