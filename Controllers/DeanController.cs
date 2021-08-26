@@ -5,21 +5,33 @@ using System.Linq;
 using System.Threading.Tasks;
 using SpmsApp.ViewModels;
 using SpmsApp.Models;
+using SpmsApp.Services;
 
 namespace SpmsApp.Controllers
 {
-    
-    
     public class DeanController : Controller
     {
-// StudentPLOComparisonByCourseViewModel
+        public static DataServices ds = DataServices.dataServices;
+
         static CoursePloPerformanceOwnViewModel viewModel = new CoursePloPerformanceOwnViewModel();
         static StudentwisePloComparisonCourseViewModel viewStudentModel = new StudentwisePloComparisonCourseViewModel();
+
+        public static SchoolDean ActiveDean = new SchoolDean()
+        {
+            ID = 10000,
+            FirstName = "Mohammad",
+            LastName = "Anwer",
+            ContactNumber = "01723456789",
+            EmailAddress = "anwar@iub.edu.bd",
+            Address = "Bashundhara R/A",
+            DeanID = 123,
+            School = ds.schools.First()
+        };
         
         [HttpGet("/dean/")]
         public IActionResult Index()
         {
-            return View(new TopbarViewModel(){Name = "Mr Dean", ID = 1234});
+            return View(new TopbarViewModel(){Name = ActiveDean.FullName, ID = ActiveDean.DeanID});
         }
 
         [HttpGet("/dean/spcc/")]
