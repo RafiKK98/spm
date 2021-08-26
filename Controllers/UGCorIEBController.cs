@@ -24,11 +24,7 @@ namespace SpmsApp.Controllers
             UgciebID= 402,
             University= ds.universities.First()
 
-<<<<<<< HEAD
-        };
-=======
         }; 
->>>>>>> cd463c4fb6e82b91599d7dc7bbce3fe913ee564c
 
      
 
