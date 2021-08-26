@@ -15,16 +15,20 @@ namespace SpmsApp.Controllers
 
         public static UGCIEB ActiveUGCIEB = new UGCIEB()
         {
-            ID=15000,
-            FirstName= "Kazi",
+            ID = 15000,
+            FirstName = "Kazi",
             LastName = "Shahidullah",
-            ContactNumber="01853463458",
+            ContactNumber = "01853463458",
             EmailAddress = "kazi@iub.edu.bd",
-            Address = "Mirpur, Dhaka",
+            Address = "Mirpur Dhaka",
             UgciebID= 402,
             University= ds.universities.First()
 
+<<<<<<< HEAD
         };
+=======
+        }; 
+>>>>>>> cd463c4fb6e82b91599d7dc7bbce3fe913ee564c
 
      
 
