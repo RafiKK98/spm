@@ -37,6 +37,13 @@
             .then(res => res.json())
             .then(res => {
                 console.log(res);
+
+                if (res === null)
+                {
+                    alert("Student ID Passed Does not Exist or Assessment Data of the Student Does not Exist");
+                    return;
+                }
+
                 let studentName = document.getElementById('student-name');
                 studentName.innerHTML = `<h3>Name : ${res.studentName}</h3>`;
                 let currentStudentID = document.getElementById('current-student-id');

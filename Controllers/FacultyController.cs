@@ -5,6 +5,7 @@ using System.Linq;
 using SpmsApp.Models;
 using SpmsApp.Services;
 using SpmsApp.ViewModels;
+using System.Collections;
 
 namespace SpmsApp.Controllers
 {
@@ -38,14 +39,29 @@ namespace SpmsApp.Controllers
             return View(ploAchievementTableViewModel);
         }
 
+        struct PatData
+        {
+            public string studentName;
+            public ArrayList data;
+            public IEnumerable<ProgramlearningOutcome> ploList;
+        }
+
         [HttpGet("/faculty/pat/{studentID}")]
         public IActionResult PloAchievementTable(int studentID)
         {
             var student = ds.students.Find(s => s.StudentID == studentID);
 
+            if (student == null) return Json(null);
+
+            // var mydata = new { studentName = student.FullName, ploList = plos, data = _data };
+
             var _data = ds.PloAchievementTableData(student);
 
+            if (_data.Count <= 0) return Json(null);
+
             var plos = ds.plos.Where(o => o.Program == ds.students.First().Program);
+
+            if (plos.Count() <= 0) return Json(null);
 
             var mydata = new { studentName = student.FullName, ploList = plos, data = _data };
 
