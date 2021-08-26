@@ -55,7 +55,7 @@ namespace SpmsApp.Controllers
         [HttpGet("/faculty/spcc")]
         public IActionResult StudentPloComparisonCourse()
         {
-            StudentPloComparisonCourse viewModel = new StudentPloComparisonCourse();
+            StudentPloComparisonCourseViewModel viewModel = new StudentPloComparisonCourseViewModel();
             viewModel.Courses = ds.courses.Where(c => c.Program.Department == activeFaculty.Department && c.CoofferedCourse == null).ToList();
             viewModel.TopbarViewModel = new TopbarViewModel()
             {
@@ -69,7 +69,7 @@ namespace SpmsApp.Controllers
         [HttpGet("/faculty/spcc/{selectedCourse}")]
         public IActionResult StudentPloComparisonCourse(int selectedCourse)
         {
-            StudentPloComparisonCourse viewModel = new StudentPloComparisonCourse();
+            StudentPloComparisonCourseViewModel viewModel = new StudentPloComparisonCourseViewModel();
             viewModel.Courses = ds.courses.Where(c => c.Program.Department == activeFaculty.Department && c.CoofferedCourse == null).ToList();
             viewModel.TopbarViewModel = new TopbarViewModel()
             {

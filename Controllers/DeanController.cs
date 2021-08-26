@@ -14,7 +14,7 @@ namespace SpmsApp.Controllers
     {
 // StudentPLOComparisonByCourseViewModel
         static CoursePloPerformanceOwnViewModel viewModel = new CoursePloPerformanceOwnViewModel();
-        static StudentPLOComparisonByCourseViewModel viewStudentModel = new StudentPLOComparisonByCourseViewModel();
+        static StudentwisePloComparisonCourseViewModel viewStudentModel = new StudentwisePloComparisonCourseViewModel();
         
         [HttpGet("/dean/")]
         public IActionResult Index()
