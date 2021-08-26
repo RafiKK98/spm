@@ -22,9 +22,9 @@ namespace SpmsApp.Controllers
             EmailAddress = "kazi@iub.edu.bd",
             Address = "Mirpur, Dhaka",
             UGCIEBID= 402,
-            University= ds.universities.First();
+            University= ds.universities.First()
 
-        }
+        };
 
      
 
