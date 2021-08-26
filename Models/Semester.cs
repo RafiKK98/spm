@@ -13,6 +13,12 @@ namespace SpmsApp.Models
         public SemesterName SemesterName { get; set; }
         public int Year { get; set; }
 
+        public Semester(int semester, int year)
+        {
+            this.SemesterName = (SemesterName)semester;
+            this.Year = year;
+        }
+
         public Semester(string semesterName, int year)
         {
             switch (semesterName.ToLower())
@@ -34,7 +40,7 @@ namespace SpmsApp.Models
         public int CompareTo([AllowNull] Semester other)
         {
             if (other == null) return 1;
-            
+
             if (this.Year > other.Year)
             {
                 return 1;

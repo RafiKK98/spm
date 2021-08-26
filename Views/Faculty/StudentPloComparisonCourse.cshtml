@@ -12,6 +12,24 @@
     </div>
     <div class="col">
         <form id="course-selector">
+            <label>Starting Semester</label>
+            <select name="startSemester" id="startSemester">
+                <option value="">Select a Semester</option>
+                <option value="0">Spring</option>
+                <option value="1">Summer</option>
+                <option value="2">Autumn</option>
+            </select>
+            <input type="number" name="startYear" id="startYear"> <br>
+
+            <label>Ending Semester</label>
+            <select name="endSemester" id="endSemester">
+                <option value="">Select a Semester</option>
+                <option value="0">Spring</option>
+                <option value="1">Summer</option>
+                <option value="2">Autumn</option>
+            </select>
+            <input type="number" name="endYear" id="endYear"> <br>
+
             <label for="selectedCourse">Select a course:</label>
             <select name="selectedCourse" id="courseID">
                 <option value="">Selelct a Course</option>
@@ -35,8 +53,12 @@
         e.preventDefault();
 
         let selectedCourse = document.getElementById('courseID').value;
-        console.log(selectedCourse);
-        fetch(`/faculty/spcc/${selectedCourse}`)
+        let startSemester = document.getElementById('startSemester').value;
+        let startYear = document.getElementById('startYear').value;
+        let endSemester = document.getElementById('endSemester').value;
+        let endYear = document.getElementById('endYear').value;
+        console.log(endYear);
+        fetch(`/faculty/spcc/${startSemester}/${startYear}/${endSemester}/${endYear}/${selectedCourse}`)
             .then(res => res.json())
             .then(res => {
                 console.log(res);

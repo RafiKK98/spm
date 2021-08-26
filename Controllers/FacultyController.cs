@@ -66,9 +66,12 @@ namespace SpmsApp.Controllers
             return View(viewModel);
         }
 
-        [HttpGet("/faculty/spcc/{selectedCourse}")]
-        public IActionResult StudentPloComparisonCourse(int selectedCourse)
+        [HttpGet("/faculty/spcc/{startSemester}/{startYear}/{endSemester}/{endYear}/{selectedCourse}")]
+        public IActionResult StudentPloComparisonCourse(int startSemester, int startYear, int endSemester, int endYear, int selectedCourse)
         {
+            Semester start = new Semester(startSemester, startYear);
+            Semester end = new Semester(endSemester, endYear);
+
             StudentPloComparisonCourseViewModel viewModel = new StudentPloComparisonCourseViewModel();
             viewModel.Courses = ds.courses.Where(c => c.Program.Department == activeFaculty.Department && c.CoofferedCourse == null).ToList();
             viewModel.TopbarViewModel = new TopbarViewModel()
@@ -78,7 +81,10 @@ namespace SpmsApp.Controllers
             };
 
             var courses = ds.courses.Where(c => (c.CourseID == selectedCourse) || (c.CoofferedCourse != null ? c.CoofferedCourse.CourseID == selectedCourse : false)).ToList();
-            var sections = ds.sections.Where(s => courses.Contains(s.Course)).ToList();
+            var sections = ds.sections.Where(s =>
+            {
+                return courses.Contains(s.Course) && s.Semester.CompareTo(start) >= 0 && s.Semester.CompareTo(end) <= 0;
+            }).ToList();
 
             var sectionEvaluations = ds.evaluations.Where(e => sections.Contains(e.Assessment.Section)).ToList();
 
