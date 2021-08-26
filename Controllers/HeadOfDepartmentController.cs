@@ -15,6 +15,7 @@ namespace SpmsApp.Controllers
 
         public static DataServices ds = DataServices.dataServices;
         
+        static StudentwisePloComparisonCourseViewModel viewStudentModel = new StudentwisePloComparisonCourseViewModel();
         public static DepartmentHead ActiveHead = new DepartmentHead()
         {
             ID = 12000,
@@ -37,7 +38,35 @@ namespace SpmsApp.Controllers
         [HttpGet("/department/SPCC")]
         public IActionResult StudentPLOComparisonCourseWise()
         {
-            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
+
+            viewStudentModel.Courses = new List<Course>()
+            {
+                new Course()
+                {
+                    CourseID = 0,
+                    CourseName = "Abc"
+                },
+                new Course()
+                {
+                    CourseID = 1,
+                    CourseName = "Def"
+                }
+            };
+
+            viewStudentModel.Students = new List<Student>()
+            {
+                new Student()
+                {
+                    StudentID = 1234567,
+                    FirstName = "xzy",
+                    LastName = "use"
+                }
+            };
+
+            viewStudentModel.TopbarViewModel = new TopbarViewModel(){Name = ActiveHead.FullName, ID=ActiveHead.DepartmentHeadID};
+
+            return View(viewStudentModel);
+
         }
         [HttpGet("/department/SPCP")]
         public IActionResult StudentPLOComparisonProgramWise()
