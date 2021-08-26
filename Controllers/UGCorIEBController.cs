@@ -13,7 +13,7 @@ namespace SpmsApp.Controllers
     {
         public static DataServices ds= DataServices.dataServices;
 
-        public static UGCIEB ActiveUGCIEB = new UGCIEB()
+        public static UGCIEB ActiveUGCIEB = new Ugcieb()
         {
             ID=15000,
             FirstName= "Kazi",
@@ -21,8 +21,13 @@ namespace SpmsApp.Controllers
             ContactNumber="01853463458",
             EmailAddress = "kazi@iub.edu.bd",
             Address = "Mirpur, Dhaka",
+<<<<<<< HEAD
             UGCIEBID= 402,
             University= ds.universities.First()
+=======
+            UgciebID= 402,
+            University= ds.universities.First();
+>>>>>>> de3fc17f2bfa44d8ad61ba9b8485a2d6677c9f50
 
         };
 
