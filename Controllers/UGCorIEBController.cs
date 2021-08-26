@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SpmsApp.ViewModels;
+using SpmsApp.Models;
+using SpmsApp.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +11,21 @@ namespace SpmsApp.Controllers
 {
     public class UGCorIEBController : Controller
     {
+        public static DataServices ds= DataServices.dataServices;
+
+        public static UGCIEB ActiveUGCIEB = new UGCIEB()
+        {
+            ID=15000,
+            FirstName= "Kazi",
+            LastName = "Shahidullah",
+            ContactNumber="01853463458",
+            EmailAddress = "kazi@iub.edu.bd",
+            Address = "Mirpur, Dhaka",
+            UGCIEBID= 402,
+            University= ds.universities.First();
+
+        }
+
      
 
         [HttpGet("/ugc/")]
