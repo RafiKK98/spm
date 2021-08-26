@@ -21,9 +21,13 @@ namespace SpmsApp.Services
     {
         public static DataServices dataServices = new DataServices();
 
+        public List<UGCIEB> uGCIEBs = new List<UGCIEB>();
         public List<University> universities = new List<University>();
+        public List<VC> vcs = new List<VC>();
         public List<School> schools = new List<School>();
+        public List<SchoolDean> schoolDeans = new List<SchoolDean>();
         public List<Department> departments = new List<Department>();
+        public List<DepartmentHead> departmentHeads = new List<DepartmentHead>();
         public List<Faculty> faculties = new List<Faculty>();
         public List<Program> programs = new List<Program>();
         public List<Student> students = new List<Student>();
@@ -43,9 +47,31 @@ namespace SpmsApp.Services
         {
             connection = new MySqlConnection("server=localhost;database=spmsdb;userid=spms;password=");
             connection.Open();
-            command = new MySqlCommand("Select * from University_T;", connection);
+            command = new MySqlCommand("Select * from UGCIEB_T ugc, User_T U where UIID=UserID;", connection);
 
             var reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                var ugcIEB = new UGCIEB()
+                {
+                    ID = reader.GetInt32(0),
+                    UgciebID = reader.GetInt32(1),
+                    FirstName = reader.GetString(3),
+                    LastName = reader.GetString(4),
+                    EmailAddress = reader.GetString(7)
+                };
+
+                uGCIEBs.Add(ugcIEB);
+            }
+
+            reader.Close();
+            connection.Close();
+
+            connection.Open();
+            command = new MySqlCommand("Select * from University_T;", connection);
+
+            reader = command.ExecuteReader();
 
             while (reader.Read())
             {
@@ -58,6 +84,30 @@ namespace SpmsApp.Services
                 };
 
                 universities.Add(uni);
+            }
+            reader.Close();
+            connection.Close();
+
+            connection.Open();
+            command = new MySqlCommand("Select * from User_T U, VC_T v where U.UserID=v.VID;");
+
+            reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                var vc = new VC()
+                {
+                    ID = reader.GetInt32(0),
+                    FirstName = reader.GetString(1),
+                    LastName = reader.GetString(2),
+                    EmailAddress = reader.GetString(5),
+                    VCID = reader.GetInt32(10)
+                };
+
+                var uniID = reader.GetInt32(8);
+                vc.University = universities.Find(u => u.UniversityID == uniID);
+
+                vcs.Add(vc);
             }
             reader.Close();
             connection.Close();
@@ -84,6 +134,30 @@ namespace SpmsApp.Services
             connection.Close();
 
             connection.Open();
+            command = new MySqlCommand("select * from User_T u, SchoolDean_T sd where u.UserID=sd.DID;", connection);
+
+            reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                var dean = new SchoolDean()
+                {
+                    ID = reader.GetInt32(0),
+                    FirstName = reader.GetString(1),
+                    LastName = reader.GetString(2),
+                    EmailAddress = reader.GetString(5),
+                    DeanID = reader.GetInt32(10)
+                };
+
+                var sid = reader.GetInt32(8);
+                dean.School = schools.Find(s => s.SchoolID == sid);
+                schoolDeans.Add(dean);
+            }
+
+            reader.Close();
+            connection.Close();
+
+            connection.Open();
             command = new MySqlCommand("Select * from Department_T;", connection);
 
             reader = command.ExecuteReader();
@@ -100,6 +174,29 @@ namespace SpmsApp.Services
                 department.School = schools.Where(s => s.SchoolID == schoolID).First();
 
                 departments.Add(department);
+            }
+            reader.Close();
+            connection.Close();
+
+            connection.Open();
+            command = new MySqlCommand("select * from User_T u, DepartmentHead_T dh where u.UserID=dh.HID;", connection);
+
+            reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                var head = new DepartmentHead()
+                {
+                    ID = reader.GetInt32(0),
+                    FirstName = reader.GetString(1),
+                    LastName = reader.GetString(2),
+                    EmailAddress = reader.GetString(5),
+                    DepartmentHeadID = reader.GetInt32(10) 
+                };
+
+                var did = reader.GetInt32(8);
+                head.Department = departments.Find(d => d.DepartmentID == did);
+                departmentHeads.Add(head);
             }
             reader.Close();
             connection.Close();
