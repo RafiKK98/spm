@@ -5,6 +5,8 @@ namespace SpmsApp.Models
     [Serializable]
     public class UGCIEB : User
     {
-        public int UgcIebID { get; set; }
+        public int UGCIEBID { get; set; }
+        public University University{ get; set;}
+
     }
 }

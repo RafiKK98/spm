@@ -1,10 +1,10 @@
-﻿@model SpmsApp.ViewModels.TopbarViewModel
+﻿@model SpmsApp.ViewModels.PloAchievementTableViewModel
 @{
-    ViewData["Title"] = "Dashboard";
+    ViewData["Title"] = "PLO Table";
 }
 
 <div class="row">
-    <div class="col">@Html.Partial("TopBar", Model)</div>
+    <div class="col">@Html.Partial("TopBar", Model.TopbarViewModel)</div>
 </div>
 <div class="row">
     <div class="col-2">
@@ -12,6 +12,83 @@
     </div>
     <div class="col">
         <h1>Student PLO Achievement Table</h1>
+        <form id="student-selector">
+            <label for="student-id-field">Enter a Student ID</label>
+            <input asp-for="StudentID" type="text" name="student-id-field" id="studentID">
+            <input type="submit" value="Submit">
+        </form>
+        <div id="student-name"></div>
+        <div id="current-student-id"></div>
+        <table id="student-report">
+
+        </table>
     </div>
 </div>
 
+<script>
+    let studentForm = document.querySelector("#student-selector");
+    studentForm.addEventListener("submit", e => {
+        e.preventDefault();
+
+        let studentID = document.getElementById("studentID").value;
+        console.log(studentID);
+
+        fetch(`/faculty/pat/${studentID}`)
+            .then(res => res.json())
+            .then(res => {
+                console.log(res);
+                let studentName = document.getElementById('student-name');
+                studentName.innerHTML = `<h3>Name : ${res.studentName}</h3>`;
+                let currentStudentID = document.getElementById('current-student-id');
+                currentStudentID.innerHTML = `<h3>ID : ${studentID}</h3>`;
+                let table = document.getElementById("student-report");
+                let headRow = document.createElement('tr');
+                let firstHeadCol = document.createElement('th');
+                firstHeadCol.innerText = "Course Code";
+                firstHeadCol.classList.add("p-2", "border");
+                headRow.appendChild(firstHeadCol);
+
+                for (let i = 0; i < res.ploList.length; i++) {
+                    let col = document.createElement('th');
+                    col.innerText = res.ploList[i].ploName;
+                    col.classList.add("p-2", "border");
+                    headRow.appendChild(col);
+                }
+
+                table.innerHTML = "";
+                table.appendChild(headRow);
+
+                for (let i = 0; i < res.data.length; i++) {
+                    let tr = document.createElement('tr');
+                    let first = document.createElement('td');
+                    first.innerText = res.data[i].data[0].courseCode;
+                    first.classList.add("p-2", "border");
+                    tr.appendChild(first);
+
+                    for (let j = 0; j < res.ploList.length; j++) {
+                        let col = document.createElement('td');
+                        col.innerText = 'N/A';
+                        col.classList.add("p-2", "border");
+
+                        for (let k = 0; k < res.data[i].data.length; k++) {
+                            if (res.data[i].data[k].ploName === res.ploList[j].ploName) {
+                                @* idx = k; *@
+                                    let percent = res.data[i].data[k].obtained / res.data[i].data[k].achievable * 100;
+                                col.innerText = percent;
+                                if (percent < res.data[i].data[k].passMark) {
+                                    col.classList.add('bg-danger');
+                                } else {
+                                    col.classList.add('bg-success');
+                                }
+                                break;
+                            }
+                        }
+
+                        tr.appendChild(col);
+                    }
+
+                    table.appendChild(tr);
+                }
+            })
+    });
+</script>

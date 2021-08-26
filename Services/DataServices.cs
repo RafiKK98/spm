@@ -56,7 +56,7 @@ namespace SpmsApp.Services
                 var ugcIEB = new UGCIEB()
                 {
                     ID = reader.GetInt32(0),
-                    UgcIebID = reader.GetInt32(1),
+                    UGCIEBID = reader.GetInt32(1),
                     FirstName = reader.GetString(3),
                     LastName = reader.GetString(4),
                     EmailAddress = reader.GetString(7)
