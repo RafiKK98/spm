@@ -4,15 +4,34 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SpmsApp.ViewModels;
+using SpmsApp.Models;
+using SpmsApp.Services;
 
 namespace SpmsApp.Controllers
 {
     public class HeadOfDepartmentController : Controller
     {
+
+        public static DataServices ds = DataServices.dataServices;
+        
+        public static DepartmentHead ActiveHead = new DepartmentHead()
+        {
+            ID = 12000,
+            FirstName = "Mahady",
+            LastName = "Hasan",
+            ContactNumber = "",
+            EmailAddress = "mahady@iub.edu.bd",
+            Address = "Bashundhara R/A",
+            DepartmentHeadID=101,
+            Department = ds.departments.First()
+        };
+        
+
         [HttpGet("/department/")]
         public IActionResult Index()
         {
-            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
+            return View(new TopbarViewModel() {Name = ActiveHead.FullName, ID=ActiveHead.DepartmentHeadID});
         }
         
         [HttpGet("/department/SPCC")]
