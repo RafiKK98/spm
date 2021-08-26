@@ -13,7 +13,7 @@ namespace SpmsApp.Controllers
     {
         public static DataServices ds= DataServices.dataServices;
 
-        public static UGCIEB ActiveUGCIEB = new Ugcieb()
+        public static UGCIEB ActiveUGCIEB = new UGCIEB()
         {
             ID = 15000,
             FirstName = "Kazi",
