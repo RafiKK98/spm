@@ -22,7 +22,7 @@ namespace SpmsApp.Controllers
             LastName = "Hasan",
             ContactNumber = "",
             EmailAddress = "mahady@iub.edu.bd",
-            Address = "Bashundhara R/A",
+            Address = "Bashundhara ",
             DepartmentHeadID=101,
             Department = ds.departments.First()
         };
