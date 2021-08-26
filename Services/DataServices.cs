@@ -489,8 +489,17 @@ namespace SpmsApp.Services
 
         public Faculty GetFaculty(string username, string password)
         {
-            int userID = loginCredentialsList.Find(lc => lc.Username == username && lc.Password == password).UserID;
-            return faculties.Find(f => f.ID == userID);
+            // int userID = .UserID;
+            // return faculties.Find(f => f.ID == userID);
+            if (loginCredentialsList.Find(lc => lc.Username == username && lc.Password == password) is LoginCredentials lc)
+            {
+                if (faculties.Find(f => f.ID == lc.UserID) is Faculty f)
+                {
+                    return f;
+                }
+            }
+
+            return null;
         }
 
         public ArrayList PloAchievementTableData(Student student)

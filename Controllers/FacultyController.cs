@@ -53,8 +53,6 @@ namespace SpmsApp.Controllers
 
             if (student == null) return Json(null);
 
-            // var mydata = new { studentName = student.FullName, ploList = plos, data = _data };
-
             var _data = ds.PloAchievementTableData(student);
 
             if (_data.Count <= 0) return Json(null);

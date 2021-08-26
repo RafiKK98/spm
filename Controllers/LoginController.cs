@@ -29,10 +29,13 @@ namespace SpmsApp.Controllers
             }
             else if (cred.UserType == UserType.Faculty)
             {
-                // var d = DataServices.dataServices;
-                // d.PloAchievementTableData(d.students.First());
-                FacultyController.activeFaculty = service.GetFaculty(cred.Username, cred.Password);
-                return Redirect("/faculty/");
+                if (service.GetFaculty(cred.Username, cred.Password) is Faculty f)
+                {
+                    FacultyController.activeFaculty = f;
+                    return Redirect("/faculty/"); 
+                }
+
+                return Redirect("/login/wrong");
             }
             else if (cred.UserType == UserType.Dean)
             {
