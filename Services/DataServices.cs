@@ -89,7 +89,7 @@ namespace SpmsApp.Services
             connection.Close();
 
             connection.Open();
-            command = new MySqlCommand("Select * from User_T U, VC_T v where U.UserID=v.VID;");
+            command = new MySqlCommand("Select * from User_T U, VC_T v where U.UserID=v.VID;", connection);
 
             reader = command.ExecuteReader();
 
