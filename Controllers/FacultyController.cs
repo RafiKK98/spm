@@ -155,7 +155,19 @@ namespace SpmsApp.Controllers
 
         public IActionResult AddNewAssessment(int courseID)
         {
-            return Content(courseID.ToString());
+            AddNewAssessmentViewModel viewModel = new AddNewAssessmentViewModel()
+            {
+                TopbarViewModel = new TopbarViewModel()
+                {
+                    Name = activeFaculty.FullName,
+                    ID = activeFaculty.FacultyID
+                },
+                SelectedCourse = ds.courses.Find(c => c.CourseID == courseID),
+                Sections = ds.sections.Where(s => s.Semester == activeFaculty.Department.School.University.CurrentSemester && s.Course.CourseID == courseID).ToList(),
+                CourseOutcomes = ds.cos.Where(co => co.Course.CourseID == courseID).ToList()
+            };
+
+            return View(viewModel);
         }
 
         // [HttpGet("/faculty/mcp")]

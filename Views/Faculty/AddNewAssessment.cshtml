@@ -11,6 +11,27 @@
         @Html.Partial("FacultySidebar")
     </div>
     <div class="col">
-        <h1>DashBoard</h1>
+        <form>
+            <label for="question-no">Question Number:</label><input asp-for="QuestionNumber" type="number" name="question-no" id="question-no" placeholder="Enter Question Number">
+            <label for="question-type">Question Type:</label><input asp-for="AssessmentType" type="text" name="question-type" id="question-type" placeholder="Enter Question Type"> <br>
+            <label for="question-mark">Total Mark:</label><input asp-for="TotalMark" type="number" name="question-mark" id="question-mark" placeholder="Enter Total Mark">
+            <label for="section">Section:</label>
+            <select name="section" id="section" asp-for="SectionID">
+                <option value="">Selelct a Section</option>
+                @foreach (var sec in Model.Sections)
+                {
+                    <option value=@sec.SectionID>@($"{sec.SectionNumber}")</option>
+                }
+            </select>
+            <label for="coid">Course Name:</label>
+            <select name="coid" id="coid" asp-for="CoID">
+                <option value="">Selelct a Section</option>
+                @foreach (var co in Model.CourseOutcomes)
+                {
+                    <option value=@co.CoID>@($"{co.CoName}")</option>
+                }
+            </select><br>
+            <input type="submit" value="Submit" class="btn btn-danger">
+        </form>
     </div>
 </div>

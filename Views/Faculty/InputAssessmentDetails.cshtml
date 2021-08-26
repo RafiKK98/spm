@@ -31,7 +31,7 @@
             {
                 <div class="row">Hello world</div>
             }
-            @* Html.ActionLink("Add New Assessment", "AddNewAssessment", "Faculty", new {courseID=Model.SelectedCourse.CourseID});             *@
+            
             @Html.ActionLink("Add New Assessment", "AddNewAssessment", "Faculty", new {courseID=Model.SelectedCourse.CourseID}, new {@class="btn btn-danger"})
         }
     </div>
