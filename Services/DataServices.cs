@@ -54,6 +54,7 @@ namespace SpmsApp.Services
                     UniversityID = reader.GetInt32(0),
                     UniversityName = reader.GetString(1),
                     UniversityDomain = reader.GetString(2),
+                    CurrentSemester = new Semester(reader.GetString(3), reader.GetInt32(4))
                 };
 
                 universities.Add(uni);

@@ -11,7 +11,7 @@ namespace SpmsApp.Controllers
     public class FacultyController : Controller
     {
         static DataServices ds = DataServices.dataServices;
-        public static Faculty activeFaculty;
+        public static Faculty activeFaculty = ds.faculties.First();
 
         [HttpGet("/faculty/")]
         public IActionResult Index()
@@ -113,6 +113,49 @@ namespace SpmsApp.Controllers
             }
 
             return Json(new { Plos = plos, Counts = counts });
+        }
+
+        [HttpGet("/faculty/iad/")]
+        public IActionResult InputAssessmentDetails()
+        {
+            InputAssessmentDetailsViewModel viewModel = new InputAssessmentDetailsViewModel()
+            {
+                TopbarViewModel = new TopbarViewModel()
+                {
+                    Name = activeFaculty.FullName,
+                    ID = activeFaculty.FacultyID
+                },
+                Courses = ds.courses.Where(c => c.Program.Department == activeFaculty.Department && c.CoofferedCourse == null).ToList()
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost("/faculty/iad/")]
+        public IActionResult InputAssessmentDetails(int selectedCourse)
+        {
+            InputAssessmentDetailsViewModel viewModel = new InputAssessmentDetailsViewModel()
+            {
+                TopbarViewModel = new TopbarViewModel()
+                {
+                    Name = activeFaculty.FullName,
+                    ID = activeFaculty.FacultyID
+                },
+                Courses = ds.courses.Where(c => c.Program.Department == activeFaculty.Department && c.CoofferedCourse == null).ToList()
+            };
+
+            viewModel.SelectedCourse = ds.courses.Find(c => c.CourseID == selectedCourse);
+
+            var sections = ds.sections.Where(s => s.Course == viewModel.SelectedCourse && s.Semester.CompareTo(activeFaculty.Department.School.University.CurrentSemester) == 0);
+
+            viewModel.Assessments = ds.assessments.Where(a => sections.Contains(a.Section)).ToList();
+
+            return View(viewModel);
+        }
+
+        public IActionResult AddNewAssessment(int courseID)
+        {
+            return Content(courseID.ToString());
         }
 
         // [HttpGet("/faculty/mcp")]

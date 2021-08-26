@@ -8,5 +8,6 @@ namespace SpmsApp.Models
         public int UniversityID { get; set; }
         public string UniversityName { get; set; }
         public string UniversityDomain { get; set; }
+        public Semester CurrentSemester { get; set; }
     }
 }

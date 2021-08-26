@@ -1,1 +1,3 @@
 First run the sql commands in 'create-user-database.sql', then run the commands in 'spms_population.sql' file.
+
+Please the codes in 'add-semester-to-university.sql'
