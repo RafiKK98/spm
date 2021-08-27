@@ -12,21 +12,9 @@ namespace SpmsApp.Controllers
     public class UGCorIEBController : Controller
     {
         public static DataServices ds= DataServices.dataServices;
+         public static UGCIEB ActiveUgcieb= ds. uGCIEBs.First();
 
-        public static UGCIEB ActiveUgcieb= new UGCIEB()
-        {
-            ID = 15000,
-            FirstName = "Kazi",
-            LastName = "Shahidullah",
-            ContactNumber = "01853463458",
-            EmailAddress = "kazi@iub.edu.bd",
-            Address = "Mirpur Dhaka",
-            UgciebID= 402,
-            University= ds.universities.First()
-
-        }; 
-
-     
+       
 
         [HttpGet("/ugc/")]
         public IActionResult Index()
