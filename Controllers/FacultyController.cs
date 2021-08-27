@@ -365,6 +365,75 @@ namespace SpmsApp.Controllers
             return Json(data);
         }
 
+        [HttpGet("/faculty/ippsc")]
+        public IActionResult InstructorwisePLOPerformanceSelectCourses()
+        {
+            var viewModel = new InstructorwisePLOPerformanceSelectCoursesViewModel()
+            {
+                TopbarViewModel = new TopbarViewModel() { Name = activeFaculty.FullName, ID = activeFaculty.FacultyID },
+                Courses = ds.courses.Where(c => c.Program.Department == activeFaculty.Department).ToList()
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpGet("/faculty/ippsc/{selectedCourse}/{startSemester}/{startYear}/{endSemester}/{endYear}")]
+        public IActionResult InstructorwisePLOPerformanceSelectCourses(int selectedCourse, int startSemester, int startYear, int endSemester, int endYear)
+        {
+            var course = ds.courses.Find(c => c.CourseID == selectedCourse);
+            var start = new Semester(startSemester, startYear);
+            var end = new Semester(endSemester, endYear);
+
+            var sections = ds.sections.Where(s => (s.Course == course || s.Course == course.CoofferedCourse) && s.Semester.CompareTo(start) >= 0 && s.Semester.CompareTo(end) <= 0)
+                                .GroupBy(s => s.Faculty);
+
+            // Dictionary<Faculty, List<float>> scores = new Dictionary<Faculty, List<float>>();
+            var scores = new ArrayList();
+            var plos = ds.plos.Where(plo => plo.Program == course.Program);
+
+            foreach (var facultySection in sections)
+            {
+                List<float> _scores = new List<float>();
+
+                foreach (var plo in plos)
+                {
+                    float count = 0;
+                    int total = 0;
+
+                    foreach (var section in facultySection)
+                    {
+                        var evaluations = ds.evaluations.Where(ev => ev.Assessment.Section == section && ev.Assessment.CourseOutcome.PLO == plo);
+                        total += evaluations.Count();
+
+                        foreach (var eval in evaluations)
+                        {
+                            var percent = eval.TotalObtainedMark / eval.Assessment.TotalMark * 100;
+                            count = percent > eval.Assessment.Section.PassMark ? count + 1 : count;
+                        }
+                    }
+
+                    if (total > 0) _scores.Add(count / total * 100);
+                    else _scores.Add(0);
+                }
+
+                var d = new {
+                    faculty = facultySection.Key,
+                    data = _scores
+                };
+
+                scores.Add(d);
+            }
+
+            var myData = new
+            {
+                Course = course,
+                Data = scores,
+                ploList = plos.Select(p => p.PloName)
+            };
+
+            return Json(myData);
+        }
+
         // [HttpGet("/faculty/mcp")]
         // public IActionResult MapCoPlo()
         // {

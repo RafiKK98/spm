@@ -211,7 +211,8 @@ namespace SpmsApp.Services
                 {
                     ProgramID = reader.GetInt32(0),
                     ProgramName = reader.GetString(1),
-                    TotalCreditCount = reader.GetInt32(2)
+                    TotalCreditCount = reader.GetInt32(2),
+                    ProgramCode = reader.GetString(4)
                 };
 
                 int deptID = reader.GetInt32(3);
