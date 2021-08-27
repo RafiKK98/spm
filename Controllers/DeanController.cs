@@ -28,8 +28,48 @@ namespace SpmsApp.Controllers
         [HttpGet("/dean/spcc/")]
         public IActionResult StudentPLOComparisonByCourse()
         {
+            int SchoolId = 0;
+
             StudentPloComparisonByCourseViewModel studentPloComparisonByCourseViewModel = new StudentPloComparisonByCourseViewModel();
-            //studentPloComparisonByCourseViewModel
+            List<int> deptID = new List<int>();
+            List<int> progID = new List<int>();
+            List<Course> cou = new List<Course>();
+
+                foreach(SchoolDean s in ds.schoolDeans){
+                    if(s.DeanID == ActiveDean.DeanID)
+                    {
+                        SchoolId = s.School.SchoolID;
+                    }
+                }
+
+                foreach(Department d in ds.departments){
+                    if(SchoolId == d.School.SchoolID)
+                    {
+                       deptID.Add(d.DepartmentID);
+                    }
+                }
+
+                foreach(Program p in ds.programs){
+                    for(int i=0; i< deptID.Count;i++)
+                    {
+                        if(deptID[i] == p.Department.DepartmentID)
+                        {
+                            progID.Add(p.ProgramID);
+                        }
+                    }
+                }
+
+                foreach(Course c in ds.courses){
+                    for(int i=0; i< progID.Count;i++)
+                    {
+                        if(progID[i] == c.Program.ProgramID)
+                        {
+                            cou.Add(c);
+                        }
+                    }
+                }
+            
+            studentPloComparisonByCourseViewModel.Courses = cou;
             studentPloComparisonByCourseViewModel.TopbarViewModel = new TopbarViewModel()
             {
                 Name = ActiveDean.FullName,
