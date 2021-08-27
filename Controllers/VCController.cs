@@ -166,7 +166,7 @@ namespace SpmsApp.Controllers
         [HttpGet("/vc/ippc/")]
         public IActionResult InstructorwisePLOPerformanceComparison()
         {
-            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
+            return View(new TopbarViewModel() {Name = ActiveVC.FullName, ID = ActiveVC.VCID});
         }
     }
 }
