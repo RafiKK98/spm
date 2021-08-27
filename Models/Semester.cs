@@ -8,7 +8,7 @@ namespace SpmsApp.Models
         SPRING, SUMMER, AUTUMN
     }
 
-    public class Semester : IComparable<Semester>
+    public class Semester : IComparable<Semester>, IEquatable<Semester>
     {
         public SemesterName SemesterName { get; set; }
         public int Year { get; set; }
@@ -58,6 +58,16 @@ namespace SpmsApp.Models
         public override string ToString()
         {
             return $"{this.SemesterName} - {this.Year}";
+        }
+
+        public bool Equals([AllowNull] Semester other)
+        {
+            if (CompareTo(other) == 0)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

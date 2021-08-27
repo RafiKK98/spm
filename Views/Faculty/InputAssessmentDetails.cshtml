@@ -24,15 +24,83 @@
             </select>
             <input type="submit" value="Submit">
         </form>
-        
+
         @if (Model.SelectedCourse != null)
         {
-            foreach (var assessment in Model.Assessments)
-            {
-                <div class="row">Hello world</div>
-            }
-            
-            @Html.ActionLink("Add New Assessment", "AddNewAssessment", "Faculty", new {courseID=Model.SelectedCourse.CourseID}, new {@class="btn btn-danger"})
+            <div class="row">
+                <div class="col">Type</div>
+                <div class="col">Number</div>
+                <div class="col">Mark</div>
+                <div class="col">Section</div>
+                <div class="col">Section</div>
+                <div class="col">CoID</div>
+                <div class="col"></div>
+                <div class="col"></div>
+            </div>
+            <table>
+                <tr class="border-bottom">
+                    <th class="p-1">Type</th>
+                    <th class="p-1">Number</th>
+                    <th class="p-1">Mark</th>
+                    <th class="p-1">Section</th>
+                    <th class="p-1">Program</th>
+                    <th class="p-1">CoID</th>
+                    <th class="p-1"></th>
+                    <th class="p-1"></th>
+                </tr>
+                @foreach (var assessment in Model.Assessments)
+                {
+                    <tr class="border-bottom hover-effect">
+                        <td class="p-1">@assessment.AssessmentType</td>
+                        <td class="p-1">@assessment.QuestionNumber</td>
+                        <td class="p-1">@assessment.TotalMark</td>
+                        <td class="p-1">@assessment.Section.SectionNumber</td>
+                        <td class="p-1">@assessment.CourseOutcome.Course.Program.ProgramName</td>
+                        <td class="p-1">@assessment.CourseOutcome.CoName</td>
+                        <td class="p-1 btn btn-danger">Modify</td>
+                        <td class="p-1 btn btn-success">Delete</td>
+                    </tr>
+                }
+            </table>
+
+            <form id="new-assessment-course-selector-form">
+                <select id="new-assessment-course-selector">
+                    <option value="">Selelct a Course</option>
+                    @foreach (var course in Model.CourseList)
+                    {
+                        <option value=@course.CourseID>@($"{course.CourseCode} - {course.Program.ProgramName}")</option>
+                    }
+                </select>
+                <input type="submit" class="btn btn-danger" value="Add New Assessment">
+            </form>
+
+            @* <select id="new-assessment-course-selector">
+
+                </select>
+                @Html.ActionLink("Add New Assessment", "AddNewAssessment", "Faculty", new
+                {
+                courseID=Model.SelectedCourse.CourseID
+                },
+                new
+                {
+                @class="btn btn-danger"
+                }) *@
         }
     </div>
 </div>
+
+<style>
+    .hover-effect:hover {
+        background-color: grey;
+    }
+</style>
+
+<script>
+    document.getElementById("new-assessment-course-selector-form").addEventListener('submit', e =>
+    {
+        e.preventDefault();
+
+        let course = document.getElementById("new-assessment-course-selector").value;
+        if (course !== null) window.location.href = `/faculty/iad/add/${course}`;
+    })
+</script>

@@ -123,7 +123,7 @@ namespace SpmsApp.Controllers
                 plos.Add(group.Key);
                 counts.Add(count);
 
-                System.Console.WriteLine(group);
+                // System.Console.WriteLine(group);
             }
 
             return Json(new { Plos = plos, Counts = counts });
@@ -132,6 +132,8 @@ namespace SpmsApp.Controllers
         [HttpGet("/faculty/iad/")]
         public IActionResult InputAssessmentDetails()
         {
+            activeFaculty.Department.School.University.CurrentSemester = new Semester("Summer", 2003);
+
             InputAssessmentDetailsViewModel viewModel = new InputAssessmentDetailsViewModel()
             {
                 TopbarViewModel = new TopbarViewModel()
@@ -164,9 +166,12 @@ namespace SpmsApp.Controllers
 
             viewModel.Assessments = ds.assessments.Where(a => sections.Contains(a.Section)).ToList();
 
+            viewModel.CourseList = ds.courses.Where(c => c == viewModel.SelectedCourse || c.CoofferedCourse == viewModel.SelectedCourse).ToList();
+
             return View(viewModel);
         }
 
+        [HttpGet("/faculty/iad/add/{courseID}")]
         public IActionResult AddNewAssessment(int courseID)
         {
             AddNewAssessmentViewModel viewModel = new AddNewAssessmentViewModel()
@@ -177,11 +182,36 @@ namespace SpmsApp.Controllers
                     ID = activeFaculty.FacultyID
                 },
                 SelectedCourse = ds.courses.Find(c => c.CourseID == courseID),
-                Sections = ds.sections.Where(s => s.Semester == activeFaculty.Department.School.University.CurrentSemester && s.Course.CourseID == courseID).ToList(),
+                Sections = ds.sections.Where(s => s.Semester.Equals(activeFaculty.Department.School.University.CurrentSemester)
+                                            && (s.Course.CourseID == courseID || s.Course == ds.courses.Find(c => c.CourseID == courseID).CoofferedCourse)).ToList(),
                 CourseOutcomes = ds.cos.Where(co => co.Course.CourseID == courseID).ToList()
             };
 
             return View(viewModel);
+        }
+
+        [HttpPost("/faculty/iad/add/{courseID}")]
+        public IActionResult AddNewAssessment(AddNewAssessmentViewModel viewModel)
+        {
+            // ds.assessments.Find(a => a.Section.Semester.Equals(activeFaculty.Department.School.University.CurrentSemester) &&
+            //                             a.Section.SectionID == viewModel.SectionID &&
+            //                             (a.Section.Course == viewModel.SelectedCourse || a.Section.Course == viewModel.SelectedCourse.CoofferedCourse))
+
+            var section = ds.sections.Find(s => s.SectionID == viewModel.SectionID);
+            var co = ds.cos.Find(co => co.CoID == viewModel.CoID);
+            var assessment = new Assessment()
+            {
+                AssessmentID = ds.assessments.Count + 1,
+                QuestionNumber = viewModel.QuestionNumber,
+                AssessmentType = viewModel.AssessmentType,
+                TotalMark = viewModel.TotalMark,
+                Section = section,
+                CourseOutcome = co
+            };
+
+            ds.AddAssessment(assessment);
+
+            return Redirect("/faculty/iad");
         }
 
         // [HttpGet("/faculty/mcp")]

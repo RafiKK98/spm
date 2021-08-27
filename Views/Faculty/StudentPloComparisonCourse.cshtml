@@ -14,34 +14,37 @@
         <form id="course-selector">
             <label>Starting Semester</label>
             <select name="startSemester" id="startSemester">
-                <option value="">Select a Semester</option>
+                <option value="0">Select a Semester</option>
                 <option value="0">Spring</option>
                 <option value="1">Summer</option>
                 <option value="2">Autumn</option>
             </select>
+            <label for="startYear">Starting Year:</label>
             <input type="number" name="startYear" id="startYear"> <br>
 
             <label>Ending Semester</label>
             <select name="endSemester" id="endSemester">
-                <option value="">Select a Semester</option>
+                <option value="2">Select a Semester</option>
                 <option value="0">Spring</option>
                 <option value="1">Summer</option>
                 <option value="2">Autumn</option>
             </select>
+            <label for="endYear">Ending Year:</label>
             <input type="number" name="endYear" id="endYear"> <br>
 
             <label for="selectedCourse">Select a course:</label>
-            <select name="selectedCourse" id="courseID">
+            <select name="selectedCourse" id="courseID" required>
                 <option value="">Selelct a Course</option>
                 @foreach (var course in Model.Courses)
                 {
                     <option value=@course.CourseID>@($"{course.CourseCode} - {course.CourseName}")</option>
                 }
-            </select>
+            </select> <br>
             <input type="submit" value="Submit">
         </form>
+        <p class="text-info">*Keep the semester fields empty, if you want to view comparisons from the beginning to the end</p>
         <div style="width: 50%;" id="draw-point">
-            
+
         </div>
     </div>
 </div>
@@ -55,9 +58,10 @@
         let selectedCourse = document.getElementById('courseID').value;
         let startSemester = document.getElementById('startSemester').value;
         let startYear = document.getElementById('startYear').value;
+        if (startYear === '') startYear = 0;
         let endSemester = document.getElementById('endSemester').value;
         let endYear = document.getElementById('endYear').value;
-        console.log(endYear);
+        if (endYear==='') endYear = 9999;
         fetch(`/faculty/spcc/${startSemester}/${startYear}/${endSemester}/${endYear}/${selectedCourse}`)
             .then(res => res.json())
             .then(res => {
@@ -65,7 +69,7 @@
                 let drawPoint = document.getElementById('draw-point');
                 drawPoint.innerHTML = "";
 
-                @* var ctx = document.getElementById('myChart').getContext('2d'); *@
+    @* var ctx = document.getElementById('myChart').getContext('2d'); *@
                 var ctx = document.createElement('canvas');
                 ctx.getContext('2d');
                 drawPoint.appendChild(ctx);
@@ -99,7 +103,15 @@
                     options: {
                         scales: {
                             y: {
-                                beginAtZero: true
+                                beginAtZero: true,
+                                grid: {
+                                    offset: true
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    offset: true
+                                }
                             }
                         }
                     }

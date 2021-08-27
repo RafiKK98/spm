@@ -191,7 +191,7 @@ namespace SpmsApp.Services
                     FirstName = reader.GetString(1),
                     LastName = reader.GetString(2),
                     EmailAddress = reader.GetString(5),
-                    DepartmentHeadID = reader.GetInt32(10) 
+                    DepartmentHeadID = reader.GetInt32(10)
                 };
 
                 var did = reader.GetInt32(8);
@@ -484,6 +484,18 @@ namespace SpmsApp.Services
             }
 
             reader.Close();
+            connection.Close();
+        }
+
+        internal void AddAssessment(Assessment assessment)
+        {
+            assessments.Add(assessment);
+            connection = new MySqlConnection("server=localhost;database=spmsdb;userid=spms;password=");
+            connection.Open();
+
+            MySqlCommand cmd = new MySqlCommand("Insert into Assessment_T (AssessmentID, QuestionNumber, AssessmentType, TotalMarks, SectionID, CoID) values" +
+                                                $"({assessment.AssessmentID}, {assessment.QuestionNumber}, '{assessment.AssessmentType}', {assessment.TotalMark}, {assessment.Section.SectionID}, {assessment.CourseOutcome.CoID});", connection);
+            cmd.ExecuteNonQuery();
             connection.Close();
         }
 

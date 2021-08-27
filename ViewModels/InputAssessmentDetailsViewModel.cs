@@ -9,6 +9,7 @@ namespace SpmsApp.ViewModels
         public List<Course> Courses { get; set; }
         public List<Assessment> Assessments { get; set; }
         public Course SelectedCourse { get; set; }
+        public List<Course> CourseList { get; set; }
         // public bool ShowAssessment { get; set; }
     }
 }
