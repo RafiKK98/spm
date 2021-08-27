@@ -38,52 +38,44 @@ namespace SpmsApp.Controllers
         [HttpGet("/vc/spcc/")]
         public IActionResult StudentPLOComparisonByCourse()
         {
-            // viewStudentModel.Courses = new List<Course>()
-            // {
-            //     new Course()
-            //     {
-            //         CourseID = 0,
-            //         CourseName = "Abc"
-            //     },
-            //     new Course()
-            //     {
-            //         CourseID = 1,
-            //         CourseName = "Def"
-            //     }
-            // };
-
-            // viewStudentModel.Students = new List<Student>()
-            // {
-            //     new Student()
-            //     {
-            //         StudentID = 1830411,
-            //         FirstName = "Rafi",
-            //         LastName = "Khan"
-            //     }
-            // };
-            // return View(new TopbarViewModel() {Name = ActiveVC.FullName, ID = ActiveVC.VCID});
-            int SchoolId = 0;
+            int UniversityID = 0;
 
             StudentPloComparisonCourseViewModel studentPloComparisonCourseViewModel = new StudentPloComparisonCourseViewModel();
+            List<int> SchoolIDs = new List<int>();
             List<int> deptID = new List<int>();
             List<int> progID = new List<int>();
             List<Course> cou = new List<Course>();
 
-                foreach(SchoolDean s in ds.schoolDeans){
-                    if(s.DeanID == ActiveVC.VCID)
+                foreach (VC vc in ds.vcs)
+                {
+                    if(vc.VCID == ActiveVC.VCID)
                     {
-                        SchoolId = s.School.SchoolID;
+                        UniversityID = vc.University.UniversityID;
                     }
                 }
 
-                foreach(Department d in ds.departments){
-                    if(SchoolId == d.School.SchoolID)
+                foreach (School school in ds.schools)
+                {
+                    if(UniversityID == school.University.UniversityID)
                     {
-                       deptID.Add(d.DepartmentID);
+                        SchoolIDs.Add(school.SchoolID);
                     }
                 }
 
-                foreach(Program p in ds.programs){
+
+                foreach(Department d in ds.departments)
+                {
+                    for(int i = 0; i<SchoolIDs.Count; i++)
+                    {
+                        if(SchoolIDs[i] == d.School.SchoolID)
+                        {
+                            deptID.Add(d.DepartmentID);
+                        }
+                    }
+                }
+
+                foreach(Program p in ds.programs)
+                {
                     for(int i=0; i< deptID.Count;i++)
                     {
                         if(deptID[i] == p.Department.DepartmentID)
