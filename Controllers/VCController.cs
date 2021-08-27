@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SpmsApp.ViewModels;
+using SpmsApp.ViewModels.VC;
 using SpmsApp.Models;
 using SpmsApp.Services;
 
@@ -40,7 +41,7 @@ namespace SpmsApp.Controllers
         {
             int UniversityID = 0;
 
-            StudentPloComparisonCourseViewModel studentPloComparisonCourseViewModel = new StudentPloComparisonCourseViewModel();
+            StudentPLOComparisonByCourseViewModel studentPLOComparisonByCourseViewModel = new StudentPLOComparisonByCourseViewModel();
             List<int> SchoolIDs = new List<int>();
             List<int> deptID = new List<int>();
             List<int> progID = new List<int>();
@@ -95,14 +96,14 @@ namespace SpmsApp.Controllers
                     }
                 }
             
-            studentPloComparisonCourseViewModel.Courses = cou;
-            studentPloComparisonCourseViewModel.TopbarViewModel = new TopbarViewModel()
+            studentPLOComparisonByCourseViewModel.Courses = cou;
+            studentPLOComparisonByCourseViewModel.TopbarViewModel = new TopbarViewModel()
             {
                 Name = ActiveVC.FullName,
                 ID = ActiveVC.VCID
             };
 
-            return View(studentPloComparisonCourseViewModel);
+            return View(studentPLOComparisonByCourseViewModel);
         }
 
         [HttpGet("/vc/spcc/{courseID}/{studentID}")]
