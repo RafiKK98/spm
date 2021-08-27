@@ -1,4 +1,4 @@
-﻿@model SpmsApp.ViewModels.PloAchievementTableViewModel
+﻿@model SpmsApp.ViewModels.PloAchievementTableViewModel;
 @{
     ViewData["Title"] = "PLO Table";
 }
@@ -38,8 +38,7 @@
             .then(res => {
                 console.log(res);
 
-                if (res === null)
-                {
+                if (res === null) {
                     alert("Student ID Passed Does not Exist or Assessment Data of the Student Does not Exist");
                     return;
                 }
@@ -79,7 +78,7 @@
 
                         for (let k = 0; k < res.data[i].data.length; k++) {
                             if (res.data[i].data[k].ploName === res.ploList[j].ploName) {
-                                @* idx = k; *@
+    @* idx = k; *@
                                     let percent = res.data[i].data[k].obtained / res.data[i].data[k].achievable * 100;
                                 col.innerText = percent;
                                 if (percent < res.data[i].data[k].passMark) {
