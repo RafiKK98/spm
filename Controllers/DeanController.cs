@@ -16,17 +16,7 @@ namespace SpmsApp.Controllers
         static CoursePloPerformanceOwnViewModel viewModel = new CoursePloPerformanceOwnViewModel();
         static StudentwisePloComparisonCourseViewModel viewStudentModel = new StudentwisePloComparisonCourseViewModel();
 
-        public static SchoolDean ActiveDean = new SchoolDean()
-        {
-            ID = 10000,
-            FirstName = "Mohammad",
-            LastName = "Anwer",
-            ContactNumber = "01723456789",
-            EmailAddress = "anwar@iub.edu.bd",
-            Address = "Bashundhara R/A",
-            DeanID = 123,
-            School = ds.schools.First()
-        };
+        public static SchoolDean ActiveDean = ds.schoolDeans.First();
         
         [HttpGet("/dean/")]
         public IActionResult Index()

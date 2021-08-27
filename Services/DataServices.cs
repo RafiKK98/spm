@@ -529,6 +529,20 @@ namespace SpmsApp.Services
             return null;
         }
 
+        public SchoolDean GetDean(string username, string password)
+        {
+            
+            if (loginCredentialsList.Find(lc => lc.Username == username && lc.Password == password) is LoginCredentials lc)
+            {
+                if (schoolDeans.Find(dean => dean.ID == lc.UserID) is SchoolDean d)
+                {
+                    return d;
+                }
+            }
+
+            return null;
+        }
+
         public ArrayList PloAchievementTableData(Student student)
         {
             var studentCourseRegistrations = courseRegistrations.Where(cr => cr.Student == student);

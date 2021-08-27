@@ -39,7 +39,13 @@ namespace SpmsApp.Controllers
             }
             else if (cred.UserType == UserType.Dean)
             {
-                return Redirect("/dean/");
+                if (service.GetDean(cred.Username, cred.Password) is SchoolDean d)
+                {
+                    DeanController.ActiveDean = d;
+                    return Redirect("/dean/"); 
+                }
+
+                return Redirect("/login/wrong");
             }
             else if (cred.UserType == UserType.Head)
             {
