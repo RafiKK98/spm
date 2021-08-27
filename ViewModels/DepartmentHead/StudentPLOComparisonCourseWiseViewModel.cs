@@ -3,7 +3,7 @@ using SpmsApp.Models;
 
 namespace SpmsApp.ViewModels.DepartmentHead
 {
-    public class StudentPloComparisonCourseWiseViewModel
+    public class StudentPLOComparisonCourseWiseViewModel
     {
         public List<Course> Courses { get; set; }
         public TopbarViewModel TopbarViewModel { get; set; }

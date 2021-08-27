@@ -7,7 +7,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using SpmsApp.Models;
 using SpmsApp.Services;
-using System.Collections.Generic;
 using System.Collections;
 
 
@@ -75,7 +74,7 @@ namespace SpmsApp.Controllers
                 }
 
                 foreach(Program p in ds.programs){
-                        if(DeptID == p.Department.DepartmentID)
+                        if(DeptId == p.Department.DepartmentID)
                         {
                             progID.Add(p.ProgramID);
                         }
