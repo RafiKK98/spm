@@ -38,30 +38,79 @@ namespace SpmsApp.Controllers
         [HttpGet("/vc/spcc/")]
         public IActionResult StudentPLOComparisonByCourse()
         {
-            viewStudentModel.Courses = new List<Course>()
-            {
-                new Course()
-                {
-                    CourseID = 0,
-                    CourseName = "Abc"
-                },
-                new Course()
-                {
-                    CourseID = 1,
-                    CourseName = "Def"
+            // viewStudentModel.Courses = new List<Course>()
+            // {
+            //     new Course()
+            //     {
+            //         CourseID = 0,
+            //         CourseName = "Abc"
+            //     },
+            //     new Course()
+            //     {
+            //         CourseID = 1,
+            //         CourseName = "Def"
+            //     }
+            // };
+
+            // viewStudentModel.Students = new List<Student>()
+            // {
+            //     new Student()
+            //     {
+            //         StudentID = 1830411,
+            //         FirstName = "Rafi",
+            //         LastName = "Khan"
+            //     }
+            // };
+            // return View(new TopbarViewModel() {Name = ActiveVC.FullName, ID = ActiveVC.VCID});
+            int SchoolId = 0;
+
+            StudentPloComparisonCourseViewModel studentPloComparisonCourseViewModel = new StudentPloComparisonCourseViewModel();
+            List<int> deptID = new List<int>();
+            List<int> progID = new List<int>();
+            List<Course> cou = new List<Course>();
+
+                foreach(SchoolDean s in ds.schoolDeans){
+                    if(s.DeanID == ActiveVC.VCID)
+                    {
+                        SchoolId = s.School.SchoolID;
+                    }
                 }
+
+                foreach(Department d in ds.departments){
+                    if(SchoolId == d.School.SchoolID)
+                    {
+                       deptID.Add(d.DepartmentID);
+                    }
+                }
+
+                foreach(Program p in ds.programs){
+                    for(int i=0; i< deptID.Count;i++)
+                    {
+                        if(deptID[i] == p.Department.DepartmentID)
+                        {
+                            progID.Add(p.ProgramID);
+                        }
+                    }
+                }
+
+                foreach(Course c in ds.courses){
+                    for(int i=0; i< progID.Count;i++)
+                    {
+                        if(progID[i] == c.Program.ProgramID)
+                        {
+                            cou.Add(c);
+                        }
+                    }
+                }
+            
+            studentPloComparisonCourseViewModel.Courses = cou;
+            studentPloComparisonCourseViewModel.TopbarViewModel = new TopbarViewModel()
+            {
+                Name = ActiveVC.FullName,
+                ID = ActiveVC.VCID
             };
 
-            viewStudentModel.Students = new List<Student>()
-            {
-                new Student()
-                {
-                    StudentID = 1830411,
-                    FirstName = "Rafi",
-                    LastName = "Khan"
-                }
-            };
-            return View(new TopbarViewModel() {Name = ActiveVC.FullName, ID = ActiveVC.VCID});
+            return View(studentPloComparisonCourseViewModel);
         }
 
         [HttpGet("/vc/spcc/{courseID}/{studentID}")]
