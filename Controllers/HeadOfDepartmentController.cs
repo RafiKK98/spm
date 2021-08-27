@@ -32,34 +32,6 @@ namespace SpmsApp.Controllers
         public IActionResult StudentPLOComparisonCourseWise()
         {
 
-            // viewStudentModel.Courses = new List<Course>()
-            // {
-            //     new Course()
-            //     {
-            //         CourseID = 0,
-            //         CourseName = "Abc"
-            //     },
-            //     new Course()
-            //     {
-            //         CourseID = 1,
-            //         CourseName = "Def"
-            //     }
-            // };
-
-            // viewStudentModel.Students = new List<Student>()
-            // {
-            //     new Student()
-            //     {
-            //         StudentID = 1234567,
-            //         FirstName = "xzy",
-            //         LastName = "use"
-            //     }
-            // };
-
-            // viewStudentModel.TopbarViewModel = new TopbarViewModel(){Name = ActiveHead.FullName, ID=ActiveHead.DepartmentHeadID};
-
-            // return View(viewStudentModel);
-
             int DeptId = 0;
 
             StudentPLOComparisonCourseWiseViewModel studentPLOComparisonCourseWiseViewModel = new StudentPLOComparisonCourseWiseViewModel();
@@ -111,14 +83,7 @@ namespace SpmsApp.Controllers
         [HttpGet("/department/SPAT")]
         public IActionResult PloAchievementTable()
         {
-            PloAchievementTableViewModel ploAchievementTableViewModel = new PloAchievementTableViewModel();
-            ploAchievementTableViewModel.TopbarViewModel = new TopbarViewModel()
-            {             
-                Name = ActiveHead.FullName, 
-                ID=ActiveHead.DepartmentHeadID
-            };
-
-            return View(ploAchievementTableViewModel);
+           return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
         }
 
 
