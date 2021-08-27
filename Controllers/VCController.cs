@@ -160,7 +160,7 @@ namespace SpmsApp.Controllers
         [HttpGet("/vc/apa/")]
         public IActionResult AveragePLOAchievement()
         {
-            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
+            return View(new TopbarViewModel() {Name = ActiveVC.FullName, ID = ActiveVC.VCID});
         }
 
         [HttpGet("/vc/ippc/")]
