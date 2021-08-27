@@ -16,17 +16,18 @@ namespace SpmsApp.Controllers
         static CoursePloPerformanceOwnViewModel viewModel = new CoursePloPerformanceOwnViewModel();
         static StudentwisePloComparisonCourseViewModel viewStudentModel = new StudentwisePloComparisonCourseViewModel();
 
-        public static VC ActiveVC = new VC()
-        {
-            ID = 11000,
-            FirstName = "Tanweer",
-            LastName = "Hasan",
-            ContactNumber = "01923456789",
-            EmailAddress = "tanweer@iub.edu.bd",
-            Address = "Bashundhara R/A",
-            VCID = 234,
-            University = ds.universities.First()
-        };
+        public static VC ActiveVC = ds.vcs.First();
+        // public static VC ActiveVC = new VC()
+        // {
+        //     ID = 11000,
+        //     FirstName = "Tanweer",
+        //     LastName = "Hasan",
+        //     ContactNumber = "01923456789",
+        //     EmailAddress = "tanweer@iub.edu.bd",
+        //     Address = "Bashundhara R/A",
+        //     VCID = 234,
+        //     University = ds.universities.First()
+        // };
 
         [HttpGet("/vc/")]
         public IActionResult Index()
@@ -87,14 +88,20 @@ namespace SpmsApp.Controllers
             return View(ploAchievementTableViewModel);
         }
 
-        [HttpGet("/vc/pat/{studentID}")]
-        public IActionResult PloAchievementTable(int studentID)
+        [HttpGet("/vc/spat/{studentID}")]
+        public IActionResult StudentPloAchievementTable(int studentID)
         {
             var student = ds.students.Find(s => s.StudentID == studentID);
 
+            if (student == null) return Json(null);
+
             var _data = ds.PloAchievementTableData(student);
 
+            if (_data.Count <= 0) return Json(null);
+
             var plos = ds.plos.Where(o => o.Program == ds.students.First().Program);
+
+            if (plos.Count() <= 0) return Json(null);
 
             var mydata = new { studentName = student.FullName, ploList = plos, data = _data };
 
@@ -123,7 +130,14 @@ namespace SpmsApp.Controllers
         [HttpGet("/vc/pcp/")]
         public IActionResult PLOwiseCoursePerformance()
         {
-            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
+            //return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
+            TopbarViewModel viewModel = new TopbarViewModel()
+            {
+                Name = ActiveVC.FullName,
+                ID = ActiveVC.VCID
+            };
+
+            return View(viewModel);
         }
 
         [HttpGet("/vc/afpp/")]
