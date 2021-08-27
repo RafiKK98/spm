@@ -1,4 +1,4 @@
-﻿@model SpmsApp.ViewModels.TopbarViewModel
+﻿@* @model SpmsApp.ViewModels.TopbarViewModel
 @{
     ViewData["Title"] = "Dashboard";
 }
@@ -13,4 +13,125 @@
     <div class="col">
         <h1>Student PLO Comparison By Course</h1>
     </div>
+</div> *@
+
+@model SpmsApp.ViewModels.VC.StudentPLOComparisonByCourseViewModel
+@{
+    ViewData["Title"] = "Student PLO Comparison (Course)";
+}
+
+<div class="row">
+    <div class="col">@Html.Partial("TopBar", Model.TopbarViewModel)</div>
 </div>
+<div class="row" style="height: 100%;">
+    <div class="col-2">
+        @Html.Partial("VCSidebar")
+    </div>
+    <div class="col">
+        <form id="course-selector">
+            <label>Starting Semester</label>
+            <select name="startSemester" id="startSemester">
+                <option value="0">Select a Semester</option>
+                <option value="0">Spring</option>
+                <option value="1">Summer</option>
+                <option value="2">Autumn</option>
+            </select>
+            <label for="startYear">Starting Year:</label>
+            <input type="number" name="startYear" id="startYear"> <br>
+
+            <label>Ending Semester</label>
+            <select name="endSemester" id="endSemester">
+                <option value="2">Select a Semester</option>
+                <option value="0">Spring</option>
+                <option value="1">Summer</option>
+                <option value="2">Autumn</option>
+            </select>
+            <label for="endYear">Ending Year:</label>
+            <input type="number" name="endYear" id="endYear"> <br>
+
+            <label for="selectedCourse">Select a course:</label>
+            <select name="selectedCourse" id="courseID" required>
+                <option value="">Selelct a Course</option>
+                @foreach (var course in Model.Courses)
+                {
+                    <option value=@course.CourseID>@($"{course.CourseCode} - {course.CourseName}")</option>
+                }
+            </select> <br>
+            <input type="submit" value="Submit">
+        </form>
+        <p class="text-info">*Keep the semester fields empty, if you want to view comparisons from the beginning to the end</p>
+        <div style="width: 50%;" id="draw-point">
+
+        </div>
+    </div>
+</div>
+
+<script>
+    let courseSelector = document.getElementById('course-selector');
+
+    courseSelector.addEventListener("submit", e => {
+        e.preventDefault();
+
+        let selectedCourse = document.getElementById('courseID').value;
+        let startSemester = document.getElementById('startSemester').value;
+        let startYear = document.getElementById('startYear').value;
+        if (startYear === '') startYear = 0;
+        let endSemester = document.getElementById('endSemester').value;
+        let endYear = document.getElementById('endYear').value;
+        if (endYear==='') endYear = 9999;
+        fetch(`/faculty/spcc/${startSemester}/${startYear}/${endSemester}/${endYear}/${selectedCourse}`)
+            .then(res => res.json())
+            .then(res => {
+                console.log(res);
+                let drawPoint = document.getElementById('draw-point');
+                drawPoint.innerHTML = "";
+
+                var ctx = document.createElement('canvas');
+                ctx.getContext('2d');
+                drawPoint.appendChild(ctx);
+
+                var myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: res.plos,
+                        datasets: [{
+                            label: 'No. of Students',
+                            data: res.counts,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    offset: true
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    offset: true
+                                }
+                            }
+                        }
+                    }
+                })
+            });
+    });
+</script>

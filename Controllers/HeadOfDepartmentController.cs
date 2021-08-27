@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SpmsApp.ViewModels;
+using SpmsApp.ViewModels.DepartmentHead;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SpmsApp.Models;
 using SpmsApp.Services;
+using System.Collections;
+
 
 namespace SpmsApp.Controllers
 {
@@ -15,17 +18,8 @@ namespace SpmsApp.Controllers
         public static DataServices ds = DataServices.dataServices;
         
         static StudentwisePloComparisonCourseViewModel viewStudentModel = new StudentwisePloComparisonCourseViewModel();
-        public static DepartmentHead ActiveHead = new DepartmentHead()
-        {
-            ID = 12000,
-            FirstName = "Mahady",
-            LastName = "Hasan",
-            ContactNumber = "",
-            EmailAddress = "mahady@iub.edu.bd",
-            Address = "Bashundhara ",
-            DepartmentHeadID=101,
-            Department = ds.departments.First()
-        };
+        public static DepartmentHead ActiveHead = ds.departmentHeads.First();
+       
         
 
         [HttpGet("/department/")]
@@ -38,33 +32,72 @@ namespace SpmsApp.Controllers
         public IActionResult StudentPLOComparisonCourseWise()
         {
 
-            viewStudentModel.Courses = new List<Course>()
-            {
-                new Course()
-                {
-                    CourseID = 0,
-                    CourseName = "Abc"
-                },
-                new Course()
-                {
-                    CourseID = 1,
-                    CourseName = "Def"
+            // viewStudentModel.Courses = new List<Course>()
+            // {
+            //     new Course()
+            //     {
+            //         CourseID = 0,
+            //         CourseName = "Abc"
+            //     },
+            //     new Course()
+            //     {
+            //         CourseID = 1,
+            //         CourseName = "Def"
+            //     }
+            // };
+
+            // viewStudentModel.Students = new List<Student>()
+            // {
+            //     new Student()
+            //     {
+            //         StudentID = 1234567,
+            //         FirstName = "xzy",
+            //         LastName = "use"
+            //     }
+            // };
+
+            // viewStudentModel.TopbarViewModel = new TopbarViewModel(){Name = ActiveHead.FullName, ID=ActiveHead.DepartmentHeadID};
+
+            // return View(viewStudentModel);
+
+            int DeptId = 0;
+
+            StudentPLOComparisonCourseWiseViewModel studentPLOComparisonCourseWiseViewModel = new StudentPLOComparisonCourseWiseViewModel();
+            List<int> progID = new List<int>();
+            List<Course> cou = new List<Course>();
+
+                foreach(DepartmentHead d in ds.departmentHeads){
+                    if(d.DepartmentHeadID == ActiveHead.DepartmentHeadID)
+                    {
+                        DeptId= d.Department.DepartmentID;
+                    }
                 }
+
+                foreach(Program p in ds.programs){
+                        if(DeptId == p.Department.DepartmentID)
+                        {
+                            progID.Add(p.ProgramID);
+                        }
+                }
+
+                foreach(Course c in ds.courses){
+                    for(int i=0; i< progID.Count;i++)
+                    {
+                        if(progID[i] == c.Program.ProgramID)
+                        {
+                            cou.Add(c);
+                        }
+                    }
+                }
+            
+            studentPLOComparisonCourseWiseViewModel.Courses = cou;
+            studentPLOComparisonCourseWiseViewModel.TopbarViewModel = new TopbarViewModel()
+            {
+                Name = ActiveHead.FullName,
+                ID = ActiveHead.DepartmentHeadID
             };
 
-            viewStudentModel.Students = new List<Student>()
-            {
-                new Student()
-                {
-                    StudentID = 1234567,
-                    FirstName = "xzy",
-                    LastName = "use"
-                }
-            };
-
-            viewStudentModel.TopbarViewModel = new TopbarViewModel(){Name = ActiveHead.FullName, ID=ActiveHead.DepartmentHeadID};
-
-            return View(viewStudentModel);
+            return View(studentPLOComparisonCourseWiseViewModel);
 
         }
         [HttpGet("/department/SPCP")]
@@ -74,12 +107,22 @@ namespace SpmsApp.Controllers
         }
         
 
+
         [HttpGet("/department/SPAT")]
-        public IActionResult StudentPLOAchievementTable()
+        public IActionResult PloAchievementTable()
         {
-            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
+            PloAchievementTableViewModel ploAchievementTableViewModel = new PloAchievementTableViewModel();
+            ploAchievementTableViewModel.TopbarViewModel = new TopbarViewModel()
+            {             
+                Name = ActiveHead.FullName, 
+                ID=ActiveHead.DepartmentHeadID
+            };
+
+            return View(ploAchievementTableViewModel);
         }
 
+
+       
         [HttpGet("/department/CPPF")]
         public IActionResult CoursePLOPerformanceFacultyWise()
         {

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SpmsApp.ViewModels;
+using SpmsApp.ViewModels.VC;
 using SpmsApp.Models;
 using SpmsApp.Services;
 
@@ -38,30 +39,71 @@ namespace SpmsApp.Controllers
         [HttpGet("/vc/spcc/")]
         public IActionResult StudentPLOComparisonByCourse()
         {
-            viewStudentModel.Courses = new List<Course>()
-            {
-                new Course()
+            int UniversityID = 0;
+
+            StudentPLOComparisonByCourseViewModel studentPLOComparisonByCourseViewModel = new StudentPLOComparisonByCourseViewModel();
+            List<int> SchoolIDs = new List<int>();
+            List<int> deptID = new List<int>();
+            List<int> progID = new List<int>();
+            List<Course> cou = new List<Course>();
+
+                foreach (VC vc in ds.vcs)
                 {
-                    CourseID = 0,
-                    CourseName = "Abc"
-                },
-                new Course()
-                {
-                    CourseID = 1,
-                    CourseName = "Def"
+                    if(vc.VCID == ActiveVC.VCID)
+                    {
+                        UniversityID = vc.University.UniversityID;
+                    }
                 }
+
+                foreach (School school in ds.schools)
+                {
+                    if(UniversityID == school.University.UniversityID)
+                    {
+                        SchoolIDs.Add(school.SchoolID);
+                    }
+                }
+
+
+                foreach(Department d in ds.departments)
+                {
+                    for(int i = 0; i<SchoolIDs.Count; i++)
+                    {
+                        if(SchoolIDs[i] == d.School.SchoolID)
+                        {
+                            deptID.Add(d.DepartmentID);
+                        }
+                    }
+                }
+
+                foreach(Program p in ds.programs)
+                {
+                    for(int i=0; i< deptID.Count;i++)
+                    {
+                        if(deptID[i] == p.Department.DepartmentID)
+                        {
+                            progID.Add(p.ProgramID);
+                        }
+                    }
+                }
+
+                foreach(Course c in ds.courses){
+                    for(int i=0; i< progID.Count;i++)
+                    {
+                        if(progID[i] == c.Program.ProgramID)
+                        {
+                            cou.Add(c);
+                        }
+                    }
+                }
+            
+            studentPLOComparisonByCourseViewModel.Courses = cou;
+            studentPLOComparisonByCourseViewModel.TopbarViewModel = new TopbarViewModel()
+            {
+                Name = ActiveVC.FullName,
+                ID = ActiveVC.VCID
             };
 
-            viewStudentModel.Students = new List<Student>()
-            {
-                new Student()
-                {
-                    StudentID = 1830411,
-                    FirstName = "Rafi",
-                    LastName = "Khan"
-                }
-            };
-            return View(new TopbarViewModel() {Name = ActiveVC.FullName, ID = ActiveVC.VCID});
+            return View(studentPLOComparisonByCourseViewModel);
         }
 
         [HttpGet("/vc/spcc/{courseID}/{studentID}")]
