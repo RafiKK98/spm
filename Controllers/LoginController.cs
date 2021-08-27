@@ -57,8 +57,14 @@ namespace SpmsApp.Controllers
 
             else if (cred.UserType == UserType.VC)
             {
-                return Redirect("/vc/");
+                //return Redirect("/vc/");
+                if (service.GetVC(cred.Username, cred.Password) is VC v)
+                {
+                    VCController.ActiveVC = v;
+                    return Redirect("/vc/"); 
+                }
 
+                return Redirect("/login/wrong");
             }
             else
             {
