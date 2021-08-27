@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SpmsApp.ViewModels;
+using SpmsApp.ViewModels.DepartmentHead;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,12 +70,12 @@ namespace SpmsApp.Controllers
                 foreach(DepartmentHead d in ds.departmentHeads){
                     if(d.DepartmentHeadID == ActiveHead.DepartmentHeadID)
                     {
-                        DeptId= d.Department.DeptId;
+                        DeptId= d.Department.DepartmentID;
                     }
                 }
 
                 foreach(Program p in ds.programs){
-                        if(deptID == p.Department.DepartmentID)
+                        if(DeptID == p.Department.DepartmentID)
                         {
                             progID.Add(p.ProgramID);
                         }
@@ -98,8 +99,6 @@ namespace SpmsApp.Controllers
             };
 
             return View(studentPLOComparisonCourseWiseViewModel);
-
-
 
         }
         [HttpGet("/department/SPCP")]
