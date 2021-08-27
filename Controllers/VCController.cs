@@ -130,14 +130,7 @@ namespace SpmsApp.Controllers
         [HttpGet("/vc/pcp/")]
         public IActionResult PLOwiseCoursePerformance()
         {
-            //return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
-            TopbarViewModel viewModel = new TopbarViewModel()
-            {
-                Name = ActiveVC.FullName,
-                ID = ActiveVC.VCID
-            };
-
-            return View(viewModel);
+            return View(new TopbarViewModel() {Name = ActiveVC.FullName, ID = ActiveVC.VCID});
         }
 
         [HttpGet("/vc/afpp/")]
