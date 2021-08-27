@@ -514,6 +514,21 @@ namespace SpmsApp.Services
             return null;
         }
 
+        public VC GetVC(string username, string password)
+        {
+            // int userID = .UserID;
+            // return faculties.Find(f => f.ID == userID);
+            if (loginCredentialsList.Find(lc => lc.Username == username && lc.Password == password) is LoginCredentials lc)
+            {
+                if (vcs.Find(vc => vc.ID == lc.UserID) is VC v)
+                {
+                    return v;
+                }
+            }
+
+            return null;
+        }
+
         public ArrayList PloAchievementTableData(Student student)
         {
             var studentCourseRegistrations = courseRegistrations.Where(cr => cr.Student == student);
