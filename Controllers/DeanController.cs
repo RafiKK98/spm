@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using SpmsApp.ViewModels;
 using SpmsApp.Models;
 using SpmsApp.Services;
+using SpmsApp.ViewModels.Dean;
 
 namespace SpmsApp.Controllers
 {
@@ -17,7 +18,7 @@ namespace SpmsApp.Controllers
         static StudentwisePloComparisonCourseViewModel viewStudentModel = new StudentwisePloComparisonCourseViewModel();
 
         public static SchoolDean ActiveDean = ds.schoolDeans.First();
-        
+
         [HttpGet("/dean/")]
         public IActionResult Index()
         {
@@ -27,33 +28,15 @@ namespace SpmsApp.Controllers
         [HttpGet("/dean/spcc/")]
         public IActionResult StudentPLOComparisonByCourse()
         {
-            viewStudentModel.Courses = new List<Course>()
+            StudentPloComparisonByCourseViewModel studentPloComparisonByCourseViewModel = new StudentPloComparisonByCourseViewModel();
+            //studentPloComparisonByCourseViewModel
+            studentPloComparisonByCourseViewModel.TopbarViewModel = new TopbarViewModel()
             {
-                new Course()
-                {
-                    CourseID = 0,
-                    CourseName = "Abc"
-                },
-                new Course()
-                {
-                    CourseID = 1,
-                    CourseName = "Def"
-                }
+                Name = ActiveDean.FullName,
+                ID = ActiveDean.DeanID
             };
 
-            viewStudentModel.Students = new List<Student>()
-            {
-                new Student()
-                {
-                    StudentID = 1821876,
-                    FirstName = "Hasibul",
-                    LastName = "Haque"
-                }
-            };
-
-            viewStudentModel.TopbarViewModel = new TopbarViewModel(){Name = "Mr Dean", ID = 1234};
-
-            return View(viewStudentModel);
+            return View(studentPloComparisonByCourseViewModel);
         }
 
         [HttpGet("/dean/spcc/{courseID}/{studentID}")]
