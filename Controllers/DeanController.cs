@@ -194,5 +194,156 @@ namespace SpmsApp.Controllers
         {
             return View(new TopbarViewModel(){Name = "Mr Dean", ID = 1234});
         }
+
+        [HttpGet("/dean/ispscc/")]
+        public IActionResult IndividualStudentPloScoreComparisonCourse()
+        {
+            var viewModel = new IndividualStudentPLOScoreComparisonCourseViewModel()
+            {
+                TopbarViewModel = new TopbarViewModel()
+                {
+                    Name = ActiveDean.FullName,
+                    ID = ActiveDean.DeanID
+                },
+                Courses = ds.courses.Where(c => c.Program.Department.School == ActiveDean.School && c.CoofferedCourse == null).ToList()
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpGet("/dean/ispscc/{studentID}/{courseID}")]
+        public IActionResult IndividualStudentPLOScoreComparisonCourse(int studentID, int courseID)
+        {
+            var student = ds.students.Find(s => s.StudentID == studentID && s.Program.Department.School == ActiveDean.School);
+            var course = ds.courses.Find(c => c.CourseID == courseID);
+
+            if (student == null) return NotFound();
+
+            var courseRegistrations = ds.courseRegistrations.Where(cr => cr.Student == student && cr.Section.Course == course).ToList();
+
+            if (courseRegistrations.Count <= 0) return NotFound();
+
+            var sections = courseRegistrations.Select((cr, idx) => cr.Section).ToList();
+
+            var section = sections.First();
+
+            for (int i = 1; i < sections.Count; i++)
+            {
+                if (section.Semester.CompareTo(sections[i].Semester) > 0)
+                {
+                    section = sections[i];
+                }
+            }
+
+            var semester = section.Semester;
+
+            var studentEvaluation = ds.evaluations.Where(e => e.Assessment.Section == section && e.Student == student);
+
+            var studentEvalGroup = studentEvaluation.GroupBy(se => se.Assessment.CourseOutcome.PLO.PloName);
+
+            List<string> studentPloList = new List<string>();
+            List<float> studentScoreList = new List<float>();
+
+            foreach (var evalGroup in studentEvalGroup)
+            {
+                studentPloList.Add(evalGroup.Key);
+
+                float score = 0;
+
+                foreach (var eval in evalGroup)
+                {
+                    score += eval.TotalObtainedMark;
+                }
+
+                studentScoreList.Add(score);
+            }
+
+            var courseEval = ds.evaluations.Where(ev => ev.Assessment.Section.Semester.Equals(semester) && ev.Assessment.Section.Course == course && ev.Assessment.CourseOutcome.PLO.Program == student.Program);
+
+            var courseEvalGroupbyPlo = courseEval.GroupBy(ce => ce.Assessment.CourseOutcome.PLO.PloName);
+
+            var coursePloList = new List<string>();
+            var courseAvgScoreList = new List<float>();
+
+            foreach (var evalGroup in courseEvalGroupbyPlo)
+            {
+                coursePloList.Add(evalGroup.Key);
+
+                var evalGroupbySt = evalGroup.GroupBy(eg => eg.Student);
+                var stCount = evalGroupbySt.Count();
+
+                float score = 0;
+
+                foreach (var eval in evalGroup)
+                {
+                    score += eval.TotalObtainedMark;
+                }
+
+                courseAvgScoreList.Add(score / stCount);
+            }
+
+            return Json(new { StData = studentScoreList, StLabel = studentPloList, CourseData = courseAvgScoreList });
+        }
+
+        [HttpGet("/dean/ispscp")]
+        public IActionResult IndividualStudentPLOScoreComparisonProgram() // 2
+        {
+            var viewModel = new IndividualStudentPLOScoreComparisonProgramViewModel()
+            {
+                TopbarViewModel = new TopbarViewModel()
+                {
+                    Name = ActiveDean.FullName,
+                    ID = ActiveDean.DeanID
+                },
+                Programs = ds.programs.Where(p => p.Department.School == ActiveDean.School).ToList()
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpGet("/dean/ispscp/{studentID}/{programID}")]
+        public IActionResult IndividualStudentPLOScoreComparisonProgram(int studentID, int programID) // 2 continued
+        {
+            var student = ds.students.Find(s => s.StudentID == studentID);
+
+            if (student == null) return NotFound();
+
+            var program = ds.programs.Find(p => p.ProgramID == programID);
+            var programPlos = ds.plos.Where(plo => plo.Program == program);
+
+            var evaluations = ds.evaluations.Where(ev => ev.Assessment.CourseOutcome.PLO.Program == program);
+
+            List<float> programScores = new List<float>();
+            List<float> studentScores = new List<float>();
+
+            foreach (var plo in programPlos)
+            {
+                var ploScoreProgram = evaluations.Where(ev => ev.Assessment.CourseOutcome.PLO == plo);
+                var stCount = ploScoreProgram.GroupBy(psp => psp.Student).Count();
+                // var ploScoreStudent = ploScoreProgram.Where(ev => ev.Student == student);
+
+                float programScore = 0;
+                float studentScore = 0;
+
+                foreach (var p in ploScoreProgram)
+                {
+                    programScore += p.TotalObtainedMark;
+
+                    if (p.Student == student)
+                    {
+                        studentScore += p.TotalObtainedMark;
+                    }
+                }
+
+                programScores.Add(programScore / stCount);
+                studentScores.Add(studentScore);
+            }
+
+            var data = new { PloList = programPlos.Select(p => p.PloName), StudentScores = studentScores, ProgramScores = programScores };
+
+            return Json(data);
+        }
+
+
     }
 }
