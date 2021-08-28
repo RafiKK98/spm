@@ -28,7 +28,7 @@
             <option>Select a Course</option>
             @foreach (var course in Model.Courses)
             {
-                <option value="@course.CourseID">@($"{course.CourseCode} - {course.CourseName} - {course.Program.ProgramCode}")</option>
+                <option value=@course.CourseID>@($"{course.CourseCode} - {course.CourseName} - {course.Program.ProgramCode}")</option>
             }
         </select>
         <button class="btn btn-primary" id="add-course-btn"><i class="fas fa-plus"></i></button>
@@ -53,6 +53,9 @@
         <button class="btn btn-primary" id="add-plo-btn"><i class="fas fa-plus"></i></button>
         <p id="selected-plos"></p>
         <button id="submit-btn" class="btn btn-primary">Submit</button>
+        <div style="width: 50%;" id="draw-point">
+
+        </div>
     </div>
 </div>
 
@@ -69,8 +72,9 @@
 
     document.querySelector("#add-course-btn").addEventListener('click', e => {
         e.preventDefault();
-        if (course.value != null && !selectedCourses.includes(course.value)) {
-            selectedCourses.push(course.value);
+        let value = parseInt(course.value);
+        if (course.value != null && !selectedCourses.includes(value)) {
+            selectedCourses.push(value);
             let c = courses.find(el => el.courseID == selectedCourses[0]);
             selectedCourseBanner.innerText = `Selected Course(s): ${c.courseName} (${c.program.programCode})`;
             for (let i = 1; i < selectedCourses.length; i++) {
@@ -82,7 +86,7 @@
 
     document.querySelector("#add-plo-btn").addEventListener('click', e => {
         e.preventDefault();
-        if (plo.value != null && !selectedPlos.includes(plo.value)) {
+        if (plo.value != null && !selectedPlos.includes()) {
             selectedPlos.push(plo.value);
             let pIdx = plos.findIndex(el => el === selectedPlos[0]);
             selectedPlosBanner.innerText = `Selected PLO(s): ${plos[pIdx]}`;
@@ -94,7 +98,88 @@
         }
     });
 
-    document.getElementById("submit-btn").addEventListener('click', e => {
-        
+    document.getElementById("submit-btn").addEventListener('click', e =>
+    {
+        e.preventDefault();
+
+        let startSemester = document.getElementById("start-semester").value;
+        let startYear = document.getElementById("start-year").value;
+        let endSemester = document.getElementById("end-semester").value;
+        let endYear = document.getElementById("end-year").value;
+
+        if (startYear === null) startYear = 0;
+        if (endYear === null) endYear = 9999;
+
+        let data =
+        {
+            SelectedCoursesID: selectedCourses,
+            SelectedPlosName: selectedPlos
+        };
+
+        console.log(data);
+
+        fetch(`/faculty/pccsp/${startSemester}/${startYear}/${endSemester}/${endYear}`, 
+        {
+            method: 'post',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+        .then(res => res.json())
+        .then(res => 
+        {
+            console.log(res);
+            let drawPoint = document.getElementById('draw-point');
+            drawPoint.innerHTML = "";
+
+            var ctx = document.createElement('canvas');
+            ctx.getContext('2d');
+            drawPoint.appendChild(ctx);
+
+            var myChart = new Chart(ctx, 
+            {
+                type: 'bar',
+                data: {
+                    labels: res.labels,
+                    datasets: [{
+                        label: 'No. of Students',
+                        data: res.data,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                offset: true
+                            }
+                        },
+                        x: {
+                            grid: {
+                                offset: true
+                            }
+                        }
+                    }
+                }
+            })
+        });
     })
 </script>

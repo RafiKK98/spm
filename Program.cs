@@ -13,6 +13,7 @@ namespace SpmsApp
     {
         public static void Main(string[] args)
         {
+            var x = SpmsApp.Services.DataServices.dataServices;
             CreateHostBuilder(args).Build().Run();
         }
 

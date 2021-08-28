@@ -13,6 +13,8 @@ namespace SpmsApp.Models
         public SemesterName SemesterName { get; set; }
         public int Year { get; set; }
 
+        public Semester() { }
+
         public Semester(int semester, int year)
         {
             this.SemesterName = (SemesterName)semester;
