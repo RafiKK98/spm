@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
-// using Newtonsoft.Json;
+using Newtonsoft.Json;
 using SpmsApp.Models;
 using SpmsApp.Services;
 using SpmsApp.ViewModels;
@@ -416,7 +416,8 @@ namespace SpmsApp.Controllers
                     else _scores.Add(0);
                 }
 
-                var d = new {
+                var d = new
+                {
                     faculty = facultySection.Key,
                     data = _scores
                 };
@@ -432,6 +433,22 @@ namespace SpmsApp.Controllers
             };
 
             return Json(myData);
+        }
+
+        [HttpGet("/faculty/pccsp")]
+        public IActionResult PloComparisonCourseWithSelectPlos()
+        {
+            var viewModel = new PloComparisonCourseWithSelectPlosViewModel()
+            {
+                TopbarViewModel = new TopbarViewModel()
+                {
+                    Name = activeFaculty.FullName,
+                    ID = activeFaculty.FacultyID
+                },
+                Courses = ds.courses.Where(c => c.Program.Department == activeFaculty.Department).ToList()
+            };
+
+            return View(viewModel);
         }
 
         // [HttpGet("/faculty/mcp")]
