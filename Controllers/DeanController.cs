@@ -106,7 +106,7 @@ namespace SpmsApp.Controllers
         [HttpGet("/dean/spat/{studentID}")]
         public IActionResult StudentPLOAchievementTable(int studentID)
         {
-            var student = ds.students.Find(s => s.StudentID == studentID);
+            var student = ds.students.Find(s => s.StudentID == studentID && s.Program.Department.School == ActiveDean.School);
 
             if (student == null) return Json(null);
 
