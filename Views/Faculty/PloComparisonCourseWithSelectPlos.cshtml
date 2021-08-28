@@ -34,8 +34,6 @@
         <button class="btn btn-primary" id="add-course-btn"><i class="fas fa-plus"></i></button>
         <p id="selected-courses"></p>
 
-        <br>
-
         <label>Select PLO(s):</label>
         <select id="plo" required>
             <option>Select a PLO</option>
@@ -54,8 +52,7 @@
         </select>
         <button class="btn btn-primary" id="add-plo-btn"><i class="fas fa-plus"></i></button>
         <p id="selected-plos"></p>
-        <button id="submit-btn">Submit</button>
-        <button id="reset-btn">Reset</button>
+        <button id="submit-btn" class="btn btn-primary">Submit</button>
     </div>
 </div>
 
@@ -71,6 +68,7 @@
     let selectedPlosBanner = document.getElementById("selected-plos");
 
     document.querySelector("#add-course-btn").addEventListener('click', e => {
+        e.preventDefault();
         if (course.value != null && !selectedCourses.includes(course.value)) {
             selectedCourses.push(course.value);
             let c = courses.find(el => el.courseID == selectedCourses[0]);
@@ -80,9 +78,10 @@
                 selectedCourseBanner.innerText += `, ${c.courseName} (${c.program.programCode})`;
             }
         }
-    })
+    });
 
     document.querySelector("#add-plo-btn").addEventListener('click', e => {
+        e.preventDefault();
         if (plo.value != null && !selectedPlos.includes(plo.value)) {
             selectedPlos.push(plo.value);
             let pIdx = plos.findIndex(el => el === selectedPlos[0]);
@@ -93,5 +92,9 @@
                 selectedPlosBanner.innerText += `, ${plos[pIdx]}`;
             }
         }
+    });
+
+    document.getElementById("submit-btn").addEventListener('click', e => {
+        
     })
 </script>

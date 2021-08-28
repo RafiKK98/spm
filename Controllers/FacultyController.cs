@@ -27,7 +27,7 @@ namespace SpmsApp.Controllers
         }
 
         [HttpGet("/faculty/pat")]
-        public IActionResult PloAchievementTable()
+        public IActionResult PloAchievementTable() // 3
         {
             PloAchievementTableViewModel ploAchievementTableViewModel = new PloAchievementTableViewModel();
             ploAchievementTableViewModel.TopbarViewModel = new TopbarViewModel()
@@ -47,7 +47,7 @@ namespace SpmsApp.Controllers
         }
 
         [HttpGet("/faculty/pat/{studentID}")]
-        public IActionResult PloAchievementTable(int studentID)
+        public IActionResult PloAchievementTable(int studentID) // 3 continued...
         {
             var student = ds.students.Find(s => s.StudentID == studentID);
 
@@ -67,7 +67,7 @@ namespace SpmsApp.Controllers
         }
 
         [HttpGet("/faculty/spcc")]
-        public IActionResult StudentPloComparisonCourse()
+        public IActionResult StudentPloComparisonCourse() 
         {
             StudentPloComparisonCourseViewModel viewModel = new StudentPloComparisonCourseViewModel();
             viewModel.Courses = ds.courses.Where(c => c.Program.Department == activeFaculty.Department && c.CoofferedCourse == null).ToList();
@@ -215,7 +215,7 @@ namespace SpmsApp.Controllers
         }
 
         [HttpGet("/faculty/ispscc")]
-        public IActionResult IndividualStudentPloScoreComparisonCourse()
+        public IActionResult IndividualStudentPloScoreComparisonCourse() // 1
         {
             // return Content("HELLO WORLD");
 
@@ -233,7 +233,7 @@ namespace SpmsApp.Controllers
         }
 
         [HttpGet("/faculty/ispscc/{studentID}/{courseID}")]
-        public IActionResult IndividualStudentPloScoreComparisonCourse(int studentID, int courseID)
+        public IActionResult IndividualStudentPloScoreComparisonCourse(int studentID, int courseID) // 1 continued
         {
             var student = ds.students.Find(s => s.StudentID == studentID && s.Program.Department == activeFaculty.Department);
             var course = ds.courses.Find(c => c.CourseID == courseID);
@@ -307,7 +307,7 @@ namespace SpmsApp.Controllers
         }
 
         [HttpGet("/faculty/ispscp")]
-        public IActionResult IndividualStudentPloScoreComparisonProgram()
+        public IActionResult IndividualStudentPloScoreComparisonProgram() // 2
         {
             var viewModel = new IndividualStudentPloScoreComparisonProgramViewModel()
             {
@@ -323,7 +323,7 @@ namespace SpmsApp.Controllers
         }
 
         [HttpGet("/faculty/ispscp/{studentID}/{programID}")]
-        public IActionResult IndividualStudentPloScoreComparisonProgram(int studentID, int programID)
+        public IActionResult IndividualStudentPloScoreComparisonProgram(int studentID, int programID) // 2 continued
         {
             var student = ds.students.Find(s => s.StudentID == studentID);
 
@@ -366,7 +366,7 @@ namespace SpmsApp.Controllers
         }
 
         [HttpGet("/faculty/ippsc")]
-        public IActionResult InstructorwisePLOPerformanceSelectCourses()
+        public IActionResult InstructorwisePLOPerformanceSelectCourses() // 4
         {
             var viewModel = new InstructorwisePLOPerformanceSelectCoursesViewModel()
             {
@@ -378,7 +378,7 @@ namespace SpmsApp.Controllers
         }
 
         [HttpGet("/faculty/ippsc/{selectedCourse}/{startSemester}/{startYear}/{endSemester}/{endYear}")]
-        public IActionResult InstructorwisePLOPerformanceSelectCourses(int selectedCourse, int startSemester, int startYear, int endSemester, int endYear)
+        public IActionResult InstructorwisePLOPerformanceSelectCourses(int selectedCourse, int startSemester, int startYear, int endSemester, int endYear) // 4 continued
         {
             var course = ds.courses.Find(c => c.CourseID == selectedCourse);
             var start = new Semester(startSemester, startYear);
@@ -436,7 +436,7 @@ namespace SpmsApp.Controllers
         }
 
         [HttpGet("/faculty/pccsp")]
-        public IActionResult PloComparisonCourseWithSelectPlos()
+        public IActionResult PloComparisonCourseWithSelectPlos() // 5
         {
             var viewModel = new PloComparisonCourseWithSelectPlosViewModel()
             {
