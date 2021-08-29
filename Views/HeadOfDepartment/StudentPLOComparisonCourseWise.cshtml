@@ -63,7 +63,7 @@
         let endSemester = document.getElementById('endSemester').value;
         let endYear = document.getElementById('endYear').value;
         if (endYear === '') endYear = 9999;
-        fetch(`/faculty/spcc/${startSemester}/${startYear}/${endSemester}/${endYear}/${selectedCourse}`)
+        fetch(`/department/SPCC/${startSemester}/${startYear}/${endSemester}/${endYear}/${selectedCourse}`)
             .then(res => res.json())
             .then(res => {
                 console.log(res);
