@@ -543,6 +543,23 @@ namespace SpmsApp.Services
 
             return null;
         }
+         public DepartmentHead GetHead(string username, string password)
+        {
+            
+            if (loginCredentialsList.Find(lc => lc.Username == username && lc.Password == password) is LoginCredentials lc)
+            {
+                if (departmentHeads.Find(head => head.ID == lc.UserID) is DepartmentHead h)
+                {
+                    return h;
+                }
+            }
+
+            return null;
+        }
+
+
+
+
 
         public ArrayList PloAchievementTableData(Student student)
         {
