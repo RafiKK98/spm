@@ -525,6 +525,67 @@ namespace SpmsApp.Controllers
             return Json(myData);
         }
 
+        [HttpGet("/faculty/cpafc")]
+        public IActionResult ComparisonPloAchievedFailedSelectCourses()
+        {
+            var viewModel = new ComparisonPloAchievedFailedSelectCoursesViewModel()
+            {
+                TopbarViewModel = new TopbarViewModel()
+                {
+                    Name = activeFaculty.FullName,
+                    ID = activeFaculty.FacultyID
+                },
+                Courses = ds.courses.Where(c => c.Program.Department == activeFaculty.Department && c.CoofferedCourse == null).ToList(),
+                Semester = new Semester(1, 2001)
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost("/faculty/cpafc")]
+        public IActionResult ComparisonPloAchievedFailedSelectCourses([FromBody] ComparisonPloAchievedFailedSelectCoursesViewModel viewModel)
+        {
+            var evaluations = ds.evaluations.Where(ev => viewModel.Courses.Contains(ev.Assessment.Section.Course));
+            var evaluationsPloGroups = evaluations.GroupBy(ev => ev.Assessment.CourseOutcome.PLO.PloName);
+
+            var ploNameList = new List<string>();
+            var achievedList = new List<float>();
+            var failedList = new List<float>();
+
+            foreach (var evGroup in evaluationsPloGroups)
+            {
+                ploNameList.Add(evGroup.Key);
+
+                var passedCount = 0;
+
+                foreach (var ev in evGroup)
+                {
+                    var percent = ev.TotalObtainedMark / ev.Assessment.TotalMark * 100;
+
+                    if (percent > ev.Assessment.Section.PassMark)
+                    {
+                        passedCount++;
+                    }
+                }
+            }
+
+            var myData = new {};
+
+            return Json(myData);
+        }
+
+        [HttpGet]
+        public IActionResult Dummy2()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public void Dummy2([FromBody] Semester semester)
+        {
+            System.Console.WriteLine(semester);
+        }
+
         // [HttpGet("/faculty/mcp")]
         // public IActionResult MapCoPlo()
         // {

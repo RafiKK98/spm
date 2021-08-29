@@ -1,0 +1,24 @@
+<input type="number" name="" id="semester">
+<input type="number" name="" id="year">
+<button id="submit">Submit</button>
+
+<script>
+    document.getElementById("submit").addEventListener("click", e =>
+    {
+        let semester = parseInt(document.getElementById("semester").value);
+        console.log(typeof(semester));
+        let year = parseInt(document.getElementById("year").value);
+        console.log(typeof(year));
+
+        fetch("/faculty/dummy2", {
+            method:"POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                SemesterName: semester,
+                Year: year
+            })
+        })
+    })
+</script>
