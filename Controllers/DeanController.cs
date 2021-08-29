@@ -7,6 +7,7 @@ using SpmsApp.ViewModels;
 using SpmsApp.Models;
 using SpmsApp.Services;
 using SpmsApp.ViewModels.Dean;
+using System.Collections;
 
 namespace SpmsApp.Controllers
 {
@@ -192,7 +193,71 @@ namespace SpmsApp.Controllers
         [HttpGet("/dean/ippc/")]
         public IActionResult InstructorwisePLOPerformanceComparison()
         {
-            return View(new TopbarViewModel(){Name = "Mr Dean", ID = 1234});
+            var viewModel = new InstructorwisePLOPerformanceViewModel()
+            {
+                TopbarViewModel = new TopbarViewModel() { Name = ActiveDean.FullName, ID = ActiveDean.DeanID },
+                Courses = ds.courses.Where(c => c.Program.Department.School == ActiveDean.School).ToList()
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpGet("/dean/ippc/{selectedCourse}/{startSemester}/{startYear}/{endSemester}/{endYear}")]
+        public IActionResult InstructorwisePLOPerformanceSelectCourses(int selectedCourse, int startSemester, int startYear, int endSemester, int endYear) // 4 continued
+        {
+            var course = ds.courses.Find(c => c.CourseID == selectedCourse);
+            var start = new Semester(startSemester, startYear);
+            var end = new Semester(endSemester, endYear);
+
+            var sections = ds.sections.Where(s => (s.Course == course || s.Course == course.CoofferedCourse) && s.Semester.CompareTo(start) >= 0 && s.Semester.CompareTo(end) <= 0)
+                                .GroupBy(s => s.Faculty);
+
+            // Dictionary<Faculty, List<float>> scores = new Dictionary<Faculty, List<float>>();
+            var scores = new ArrayList();
+            var plos = ds.plos.Where(plo => plo.Program == course.Program);
+
+            foreach (var facultySection in sections)
+            {
+                List<float> _scores = new List<float>();
+
+                foreach (var plo in plos)
+                {
+                    float count = 0;
+                    int total = 0;
+
+                    foreach (var section in facultySection)
+                    {
+                        var evaluations = ds.evaluations.Where(ev => ev.Assessment.Section == section && ev.Assessment.CourseOutcome.PLO == plo);
+                        total += evaluations.Count();
+
+                        foreach (var eval in evaluations)
+                        {
+                            var percent = eval.TotalObtainedMark / eval.Assessment.TotalMark * 100;
+                            count = percent > eval.Assessment.Section.PassMark ? count + 1 : count;
+                        }
+                    }
+
+                    if (total > 0) _scores.Add(count / total * 100);
+                    else _scores.Add(0);
+                }
+
+                var d = new
+                {
+                    faculty = facultySection.Key,
+                    data = _scores
+                };
+
+                scores.Add(d);
+            }
+
+            var myData = new
+            {
+                Course = course,
+                Data = scores,
+                ploList = plos.Select(p => p.PloName)
+            };
+
+            return Json(myData);
         }
 
         [HttpGet("/dean/ispscc/")]
