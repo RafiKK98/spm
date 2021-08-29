@@ -80,10 +80,37 @@ namespace SpmsApp.Controllers
         
 
 
-        [HttpGet("/department/SPAT")]
-        public IActionResult PloAchievementTable()
+        [HttpGet("/department/SPAT/")]
+        public IActionResult StudentPloAchievementTable()
         {
-           return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
+
+           StudentPloAchievementTableViewModel studentPloAchievementTableViewModel = new StudentPloAchievementTableViewModel();
+           studentPloAchievementTableViewModel.TopbarViewModel= new TopbarViewModel(){
+               Name = ActiveHead.FullName, 
+               ID=ActiveHead.DepartmentHeadID
+           };
+           return View(studentPloAchievementTableViewModel);
+        }
+        
+        [HttpGet("/department/SPAT/{studentID}")]
+
+         public IActionResult StudentPloAchievementTable(int studentID)
+        {
+            var student = ds.students.Find(s => s.StudentID == studentID && s.Program.Department== ActiveHead.Department);
+            if (student == null) return Json(null);
+
+            var _data = ds.PloAchievementTableData(student);
+
+            if (_data.Count <= 0) return Json(null);
+
+            var plos = ds.plos.Where(o => o.Program == ds.students.First().Program);
+
+            if (plos.Count() <= 0) return Json(null);
+
+            var mydata = new { studentName = student.FullName, ploList = plos, data = _data };
+
+            return Json(mydata);
+
         }
 
 
@@ -135,6 +162,7 @@ namespace SpmsApp.Controllers
         {
             return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
         }
+
         [HttpGet("/department/ISPSCC")]
         public IActionResult IndividualStudentPLOScoreComparisonCourseWise()
         {
