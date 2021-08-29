@@ -33,7 +33,7 @@
         let studentID = document.getElementById("studentID").value;
         console.log(studentID);
 
-        fetch(`/faculty/pat/${studentID}`)
+        fetch(`/dean/spat/${studentID}`)
             .then(res => res.json())
             .then(res => {
                 console.log(res);
