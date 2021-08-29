@@ -72,6 +72,61 @@ namespace SpmsApp.Controllers
             return View(studentPLOComparisonCourseWiseViewModel);
 
         }
+
+        [HttpGet("/department/SPCC/{startSemester}/{startYear}/{endSemester}/{endYear}/{selectedCourse}")]
+
+         public IActionResult StudentPLOComparisonCourseWise(int startSemester, int startYear, int endSemester, int endYear, int selectedCourse)
+        {
+            Semester start = new Semester(startSemester, startYear);
+            Semester end = new Semester(endSemester, endYear);
+
+            StudentPLOComparisonCourseWiseViewModel viewModel = new StudentPLOComparisonCourseWiseViewModel();
+
+             viewModel.TopbarViewModel = new TopbarViewModel()
+            {
+                Name = ActiveHead.FullName,
+                ID = ActiveHead.DepartmentHeadID
+            };
+
+            var courses = ds.courses.Where(c => (c.CourseID == selectedCourse) || (c.CoofferedCourse != null ? c.CoofferedCourse.CourseID == selectedCourse : false)).ToList();
+            var sections = ds.sections.Where(s =>
+            {
+                return courses.Contains(s.Course) && s.Semester.CompareTo(start) >= 0 && s.Semester.CompareTo(end) <= 0;
+            }).ToList();
+
+            var sectionEvaluations = ds.evaluations.Where(e => sections.Contains(e.Assessment.Section)).ToList();
+
+            var groupedSectionEvaluation = sectionEvaluations.GroupBy(se => se.Assessment.CourseOutcome.PLO.PloName).ToList();
+
+            List<string> plos = new List<string>();
+            List<int> counts = new List<int>();
+
+            foreach (var group in groupedSectionEvaluation)
+            {
+                int count = 0;
+
+                foreach (var ev in group)
+                {
+                    var convertedMark = (ev.TotalObtainedMark / ev.Assessment.TotalMark) * 100;
+                    if (convertedMark >= ev.Assessment.Section.PassMark)
+                    {
+                        count++;
+                    }
+                }
+
+                plos.Add(group.Key);
+                counts.Add(count);
+
+                // System.Console.WriteLine(group);
+            }
+
+            return Json(new { Plos = plos, Counts = counts });
+
+
+
+        }
+
+
         [HttpGet("/department/SPCP")]
         public IActionResult StudentPLOComparisonProgramWise()
         {
