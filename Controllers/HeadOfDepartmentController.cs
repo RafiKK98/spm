@@ -20,7 +20,6 @@ namespace SpmsApp.Controllers
         static StudentwisePloComparisonCourseViewModel viewStudentModel = new StudentwisePloComparisonCourseViewModel();
         public static DepartmentHead ActiveHead = ds.departmentHeads.First();
        
-        
 
         [HttpGet("/department/")]
         public IActionResult Index()
@@ -33,7 +32,6 @@ namespace SpmsApp.Controllers
         {
 
             int DeptId = 0;
-
             StudentPLOComparisonCourseWiseViewModel studentPLOComparisonCourseWiseViewModel = new StudentPLOComparisonCourseWiseViewModel();
             List<int> progID = new List<int>();
             List<Course> cou = new List<Course>();
@@ -116,14 +114,9 @@ namespace SpmsApp.Controllers
 
                 plos.Add(group.Key);
                 counts.Add(count);
-
-                // System.Console.WriteLine(group);
             }
 
             return Json(new { Plos = plos, Counts = counts });
-
-
-
         }
 
 
@@ -131,14 +124,11 @@ namespace SpmsApp.Controllers
         public IActionResult StudentPLOComparisonProgramWise()
         {
             return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
-        }
-        
-
+        }       
 
         [HttpGet("/department/SPAT/")]
         public IActionResult StudentPloAchievementTable()
         {
-
            StudentPloAchievementTableViewModel studentPloAchievementTableViewModel = new StudentPloAchievementTableViewModel();
            studentPloAchievementTableViewModel.TopbarViewModel= new TopbarViewModel(){
                Name = ActiveHead.FullName, 
@@ -153,22 +143,14 @@ namespace SpmsApp.Controllers
         {
             var student = ds.students.Find(s => s.StudentID == studentID && s.Program.Department== ActiveHead.Department);
             if (student == null) return Json(null);
-
             var _data = ds.PloAchievementTableData(student);
-
             if (_data.Count <= 0) return Json(null);
-
             var plos = ds.plos.Where(o => o.Program == ds.students.First().Program);
-
             if (plos.Count() <= 0) return Json(null);
-
             var mydata = new { studentName = student.FullName, ploList = plos, data = _data };
-
             return Json(mydata);
 
         }
-
-
        
         [HttpGet("/department/CPPF")]
         public IActionResult CoursePLOPerformanceFacultyWise()
@@ -176,14 +158,11 @@ namespace SpmsApp.Controllers
             return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
         }
 
-
         [HttpGet("/department/PWCP")]
         public IActionResult PLOWiseCoursePerformance()
         {
             return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
         }
-
-        
 
         [HttpGet("/department/AAC")]
         public IActionResult AttemptedVsAchievedComparison()
@@ -197,20 +176,17 @@ namespace SpmsApp.Controllers
             return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
         }
         
-
         [HttpGet("/department/PAP")]
         public IActionResult PLOAchievementForAProgram()
         {
             return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
         }
 
-
         [HttpGet("/department/SGAP")]
         public IActionResult StudentsOrGraduatesAchievingAllPLOS()
         {
             return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
         }
-  
 
         [HttpGet("/department/IPPC")]
         public IActionResult InstructorWisePLOPerformanceComparison()
@@ -280,9 +256,6 @@ namespace SpmsApp.Controllers
             };
 
             return Json(myData);
-
-
-
         }
 
         [HttpGet("/department/ISPSCC")]
@@ -300,7 +273,6 @@ namespace SpmsApp.Controllers
             };
             return View(viewModel);
         }
-
 
         [HttpGet("/department/ISPSCC/{studentID}/{courseID}")]
         public IActionResult IndividualStudentPLOScoreComparisonCourseWise(int studentID, int courseID)
@@ -374,13 +346,7 @@ namespace SpmsApp.Controllers
             }
 
             return Json(new { StData = studentScoreList, StLabel = studentPloList, CourseData = courseAvgScoreList });
-
-
-
         }
-
-
-
 
         [HttpGet("/department/ISPSCP")]
         public IActionResult IndividualStudentPLOScoreComparisonProgramWise()
@@ -434,19 +400,9 @@ namespace SpmsApp.Controllers
                 programScores.Add(programScore / stCount);
                 studentScores.Add(studentScore);
             }
-
             var data = new { PloList = programPlos.Select(p => p.PloName), StudentScores = studentScores, ProgramScores = programScores };
 
             return Json(data);
-
-
-
         }
-
-
-
-
-
-
     }
 }
