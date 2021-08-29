@@ -1,17 +1,118 @@
-﻿@model SpmsApp.ViewModels.TopbarViewModel
+﻿@model SpmsApp.ViewModels.DepartmentHead.InstructorWisePLOPerformanceComparisonViewModel;
 @{
-    ViewData["Title"] = "Dashboard";
+    ViewData["Title"] = "Instructor-wise PLO Performance";
 }
 
 <div class="row">
-    <div class="col">@Html.Partial("TopBar", Model)</div>
+    <div class="col">@Html.Partial("TopBar", Model.TopbarViewModel)</div>
 </div>
-<div class="row">
+<div class="row" style="height: 100%;">
     <div class="col-2">
         @Html.Partial("HeadOfDepartmentSidebar")
     </div>
     <div class="col">
-        <h1>Instructor-wise PLO Performance Comparison</h1>
+        <label>Select Starting Semester: </label>
+        <select asp-items=@Html.GetEnumSelectList(typeof(SpmsApp.Models.SemesterName)) id="start-semester"></select>
+        <input type="number" placeholder="Starting Year" id="start-year" required>
+
+        <br>
+
+        <label>Select Ending Semester: </label>
+        <select asp-items=@Html.GetEnumSelectList(typeof(SpmsApp.Models.SemesterName)) id="end-semester"></select>
+        <input type="number" placeholder="Starting Year" id="end-year" required>
+
+        <br>
+
+        <label>Select a Course:</label>
+        <select id="course" required>
+            <option>Select a Course</option>
+            @foreach (var course in Model.Courses)
+            {
+                <option value="@course.CourseID">@($"{course.CourseCode} - {course.CourseName} - {course.Program.ProgramCode}")</option>
+            }
+        </select>
+        <button class="btn btn-primary" id="add-btn"><i class="fas fa-plus"></i></button>
+        <p id="selected-courses"></p>
+        <div style="width: 85%;" id="draw-point">
+
+        </div>
     </div>
 </div>
+
+<script>
+    let data = [];
+    let addBtn = document.querySelector("#add-btn");
+    let selectedCourses = Array();
+    let banner = document.querySelector("#selected-courses");
+    let _data = [];
+
+   
+    addBtn.addEventListener('click', e => {
+        let startSemester = document.querySelector("#start-semester").value;
+        let startYear = document.querySelector("#start-year").value;
+        let endSemester = document.querySelector("#end-semester").value;
+        let endYear = document.querySelector("#end-year").value;
+        let selectedCourse = document.querySelector("#course").value;
+
+        fetch(`/department/IPPC/${selectedCourse}/${startSemester}/${startYear}/${endSemester}/${endYear}`)
+            .then(res => res.json())
+            .then(res => {
+                if (!selectedCourses.includes(`${res.course.courseCode} (${res.course.program.programCode})`)) {
+                        selectedCourses.push(`${res.course.courseCode} (${res.course.program.programCode})`);
+
+                        banner.innerHTML = `Selected Course(s): ${selectedCourses[0]}`;
+                        for (let i = 1; i < selectedCourses.length; i++) {
+                            banner.innerHTML += `, ${selectedCourses[i]}`;
+                        }
+
+                        res.data.forEach(e => {
+                            let color = `rgba(${(Math.random() * 6174) % 256}, ${(Math.random() * 495) % 256}, ${(Math.random() * 1729) % 256}, 1)`;
+                            let _dataset = {
+                                label: `${e.faculty.fullName} - ${res.course.courseCode} (${res.course.program.programCode})`,
+                                data: e.data,
+                                backgroundColor: [
+                                    color
+                                ],
+                                borderColor: [
+                                    color
+                                ],
+                                borderWidth: 1
+                            }
+
+                            _data.push(_dataset);
+                        });
+
+                        let drawPoint = document.getElementById('draw-point');
+                        drawPoint.innerHTML = "";
+
+                        var ctx = document.createElement('canvas');
+                        ctx.getContext('2d');
+                        drawPoint.appendChild(ctx);
+
+                        var myChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: res.ploList,
+                                datasets: _data
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        grid: {
+                                            offset: true
+                                        }
+                                    },
+                                    x: {
+                                        grid: {
+                                            offset: true
+                                        }
+                                    }
+                                }
+                            }
+                        })
+                    }                  
+                });
+        });
+</script>
 
