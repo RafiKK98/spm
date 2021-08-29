@@ -135,5 +135,15 @@ namespace SpmsApp.Controllers
         {
             return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
         }
+        [HttpGet("/department/ISPSCC")]
+        public IActionResult IndividualStudentPLOScoreComparisonCourseWise()
+        {
+            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
+        }
+        [HttpGet("/department/ISPSCP")]
+        public IActionResult IndividualStudentPLOScoreComparisonProgramWise()
+        {
+            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
+        }
     }
 }
