@@ -1,0 +1,99 @@
+@model SpmsApp.ViewModels.IndividualStudentPloScoreComparisonCourseViewModel;
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="row">
+    <div class="col">@Html.Partial("TopBar", Model.TopbarViewModel)</div>
+</div>
+<div class="row" style="height: 100%;">
+    <div class="col-2">
+        @Html.Partial("StudentSidebar")
+    </div>
+    <div class="col">
+        <form id="student-course-selector">
+            
+            <label>
+                Select a Course:
+            </label>
+            <select id="cID" required>
+                <option value="">Select a Course</option>
+                @foreach (var course in Model.Courses)
+                {
+                    <option value=@course.CourseID>@($"{course.CourseCode} - {course.CourseName}")</option>
+                }
+            </select>
+            <input type="submit" value="Submit">
+        </form>
+        <div style="width: 50%;" id="draw-point">
+
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("student-course-selector").addEventListener('submit', e => {
+        e.preventDefault();
+
+        let cID = document.getElementById("cID").value;
+
+
+        console.log(cID);
+
+        fetch(`/student/ispscc/${cID}`)
+            .then(res => res.json())
+            .then(res => {
+                console.log(res);
+                let drawPoint = document.getElementById('draw-point');
+                drawPoint.innerHTML = "";
+
+                var ctx = document.createElement('canvas');
+                ctx.getContext('2d');
+                drawPoint.appendChild(ctx);
+
+                var myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: res.stLabel,
+                        datasets: [{
+                            label: 'Student Score',
+                            data: res.stData,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 1)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)'
+                            ],
+                            borderWidth: 1
+                        }, {
+                            label: 'Course Average',
+                            data: res.courseData,
+                            backgroundColor: [
+                                'rgba(54, 162, 235, 1)'
+                            ],
+                            borderColor: [
+                                'rgba(54, 162, 235, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    offset: true
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    offset: true
+                                }
+                            }
+                        }
+                    }
+                })
+            })
+            .catch(error => alert('Please Select Correct Student ID and/or Course'));
+    })
+</script>

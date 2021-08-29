@@ -49,7 +49,12 @@ namespace SpmsApp.Controllers
             }
             else if (cred.UserType == UserType.Head)
             {
+                if (service.GetHead(cred.Username, cred.Password) is DepartmentHead h)
+                {
+                HeadOfDepartmentController.ActiveHead=h;
                 return Redirect("/department/");
+                }
+                return Redirect("/login/wrong");
             }
             else if (cred.UserType == UserType.UGCIEB)
             {
