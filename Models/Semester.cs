@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace SpmsApp.Models
@@ -8,7 +9,7 @@ namespace SpmsApp.Models
         SPRING, SUMMER, AUTUMN
     }
 
-    public class Semester : IComparable<Semester>, IEquatable<Semester>
+    public class Semester : IComparable<Semester>, IEquatable<Semester>, IEqualityComparer<Semester>
     {
         public SemesterName SemesterName { get; set; }
         public int Year { get; set; }
@@ -70,6 +71,16 @@ namespace SpmsApp.Models
             }
 
             return false;
+        }
+
+        public bool Equals([AllowNull] Semester x, [AllowNull] Semester y)
+        {
+            return x.Equals(y);
+        }
+
+        public int GetHashCode([DisallowNull] Semester obj)
+        {
+            return SemesterName.GetHashCode() | Year.GetHashCode();
         }
     }
 }

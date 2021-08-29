@@ -545,7 +545,8 @@ namespace SpmsApp.Controllers
         [HttpPost("/faculty/cpafc")]
         public IActionResult ComparisonPloAchievedFailedSelectCourses([FromBody] ComparisonPloAchievedFailedSelectCoursesViewModel viewModel)
         {
-            var evaluations = ds.evaluations.Where(ev => viewModel.Courses.Contains(ev.Assessment.Section.Course));
+            var evaluations = ds.evaluations.Where(ev => viewModel.SelectedCourses.Contains(ev.Assessment.Section.Course.CourseID))
+                                            .Where(ev => viewModel.SelectedSemesters.Contains(ev.Assessment.Section.Semester));
             var evaluationsPloGroups = evaluations.GroupBy(ev => ev.Assessment.CourseOutcome.PLO.PloName);
 
             var ploNameList = new List<string>();
@@ -567,9 +568,14 @@ namespace SpmsApp.Controllers
                         passedCount++;
                     }
                 }
+
+                var passPercent = (float)passedCount / evGroup.Count() * 100;
+
+                achievedList.Add(passPercent);
+                failedList.Add(100 - passPercent);
             }
 
-            var myData = new {};
+            var myData = new {label = ploNameList, passData = achievedList, failData = failedList};
 
             return Json(myData);
         }
