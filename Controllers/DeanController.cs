@@ -80,10 +80,53 @@ namespace SpmsApp.Controllers
             return View(studentPloComparisonByCourseViewModel);
         }
 
-        [HttpGet("/dean/spcc/{courseID}/{studentID}")]
-        public IActionResult StudentPLOComparisonByCourse(int courseID, int studentID)
+        [HttpGet("/dean/spcc/{startSemester}/{startYear}/{endSemester}/{endYear}/{selectedCourse}")]
+        public IActionResult StudentPLOComparisonByCourse(int startSemester, int startYear, int endSemester, int endYear, int selectedCourse)
         {
-            return Json(new {labels = new List<string>(){"PLO-01", "PLO-02", "PLO-03"}, data = new List<float>(){99, 93, 97}});
+            Semester start = new Semester(startSemester, startYear);
+            Semester end = new Semester(endSemester, endYear);
+
+            StudentPloComparisonCourseViewModel viewModel = new StudentPloComparisonCourseViewModel();
+            viewModel.Courses = ds.courses.Where(c => c.Program.Department.School == ActiveDean.School && c.CoofferedCourse == null).ToList();
+            viewModel.TopbarViewModel = new TopbarViewModel()
+            {
+                Name = ActiveDean.FullName,
+                ID = ActiveDean.DeanID
+            };
+
+            var courses = ds.courses.Where(c => (c.CourseID == selectedCourse) || (c.CoofferedCourse != null ? c.CoofferedCourse.CourseID == selectedCourse : false)).ToList();
+            var sections = ds.sections.Where(s =>
+            {
+                return courses.Contains(s.Course) && s.Semester.CompareTo(start) >= 0 && s.Semester.CompareTo(end) <= 0;
+            }).ToList();
+
+            var sectionEvaluations = ds.evaluations.Where(e => sections.Contains(e.Assessment.Section)).ToList();
+
+            var groupedSectionEvaluation = sectionEvaluations.GroupBy(se => se.Assessment.CourseOutcome.PLO.PloName).ToList();
+
+            List<string> plos = new List<string>();
+            List<int> counts = new List<int>();
+
+            foreach (var group in groupedSectionEvaluation)
+            {
+                int count = 0;
+
+                foreach (var ev in group)
+                {
+                    var convertedMark = (ev.TotalObtainedMark / ev.Assessment.TotalMark) * 100;
+                    if (convertedMark >= ev.Assessment.Section.PassMark)
+                    {
+                        count++;
+                    }
+                }
+
+                plos.Add(group.Key);
+                counts.Add(count);
+
+                // System.Console.WriteLine(group);
+            }
+
+            return Json(new { Plos = plos, Counts = counts });
         }
 
         [HttpGet("/dean/spcp/")]
