@@ -235,7 +235,68 @@ namespace SpmsApp.Controllers
         [HttpGet("/department/ISPSCP")]
         public IActionResult IndividualStudentPLOScoreComparisonProgramWise()
         {
-            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
+            var viewModel = new IndividualStudentPLOScoreComparisonProgramWiseViewModel()
+            {
+                TopbarViewModel = new TopbarViewModel()
+                {
+                    Name = ActiveHead.FullName,
+                    ID = ActiveHead.DepartmentHeadID
+                },
+                Programs = ds.programs.Where(p => p.Department == ActiveHead.Department).ToList()
+            };
+
+            return View(viewModel);
         }
+        [HttpGet("/department/ISPSCP/{studentID}/{programID}")]
+         public IActionResult IndividualStudentPLOScoreComparisonProgramWise(int studentID, int programID)
+        {
+            var student = ds.students.Find(s => s.StudentID == studentID);
+
+            if (student == null) return NotFound();
+
+            var program = ds.programs.Find(p => p.ProgramID == programID);
+            var programPlos = ds.plos.Where(plo => plo.Program == program);
+
+            var evaluations = ds.evaluations.Where(ev => ev.Assessment.CourseOutcome.PLO.Program == program);
+
+            List<float> programScores = new List<float>();
+            List<float> studentScores = new List<float>();
+
+            foreach (var plo in programPlos)
+            {
+                var ploScoreProgram = evaluations.Where(ev => ev.Assessment.CourseOutcome.PLO == plo);
+                var stCount = ploScoreProgram.GroupBy(psp => psp.Student).Count();
+                // var ploScoreStudent = ploScoreProgram.Where(ev => ev.Student == student);
+
+                float programScore = 0;
+                float studentScore = 0;
+
+                foreach (var p in ploScoreProgram)
+                {
+                    programScore += p.TotalObtainedMark;
+
+                    if (p.Student == student)
+                    {
+                        studentScore += p.TotalObtainedMark;
+                    }
+                }
+
+                programScores.Add(programScore / stCount);
+                studentScores.Add(studentScore);
+            }
+
+            var data = new { PloList = programPlos.Select(p => p.PloName), StudentScores = studentScores, ProgramScores = programScores };
+
+            return Json(data);
+
+
+
+        }
+
+
+
+
+
+
     }
 }
