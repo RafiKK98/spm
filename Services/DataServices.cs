@@ -597,6 +597,35 @@ namespace SpmsApp.Services
             return null;
         }
 
+        public UGCIEB GetUGCIEB(string username, string password)
+        {
+            
+            if (loginCredentialsList.Find(lc => lc.Username == username && lc.Password == password) is LoginCredentials lc)
+            {
+                if (uGCIEBs.Find(uGCIEBs => uGCIEBs.ID == lc.UserID) is UGCIEB u)
+                {
+                    return u;
+                }
+            }
+
+            return null;
+        }
+
+         public Guardian GetGuardian(string username, string password)
+        {
+            
+            if (loginCredentialsList.Find(lc => lc.Username == username && lc.Password == password) is LoginCredentials lc)
+            {
+                if (guardians.Find(guardians => guardians.ID == lc.UserID) is Guardian g)
+                {
+                    return g;
+                }
+            }
+
+            return null;
+        }
+
+
 
 
 
