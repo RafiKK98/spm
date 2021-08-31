@@ -17,7 +17,7 @@ namespace SpmsApp.Controllers
         [HttpGet("/guardian/")]
         public IActionResult Index()
         {
-            // return View(new TopbarViewModel() {Name = Activeguardian.FullName, ID = Activeguardian.guardianID});
+            return View(new TopbarViewModel() {Name = Activeguardian.FullName, ID = Activeguardian.guardianID});
         }
         [HttpGet("/guardian/spat")]
         public IActionResult StudentPLOAchievementTable()
