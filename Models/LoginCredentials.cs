@@ -11,7 +11,7 @@ namespace SpmsApp.Models
         Dean,
         VC,
         UGCIEB,
-        Gaurdian
+        Guardian
     }
 
     [Serializable]

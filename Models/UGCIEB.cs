@@ -6,7 +6,6 @@ namespace SpmsApp.Models
     public class UGCIEB : User
     {
         public int UgciebID { get; set; }
-        public University University{get; set;}
 
     }
 }

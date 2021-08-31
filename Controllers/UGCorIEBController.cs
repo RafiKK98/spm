@@ -12,7 +12,7 @@ namespace SpmsApp.Controllers
     public class UGCorIEBController : Controller
     {
         public static DataServices ds= DataServices.dataServices;
-         public static UGCIEB ActiveUgcieb= ds. uGCIEBs.First();
+         public static UGCIEB ActiveUgcieb= ds.uGCIEBs.First();
 
        
 

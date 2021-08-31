@@ -58,13 +58,26 @@ namespace SpmsApp.Controllers
             }
             else if (cred.UserType == UserType.UGCIEB)
             {
-                return Redirect("/ugc/");
+                 if (service.GetUGCIEB(cred.Username, cred.Password) is UGCIEB u)
+                {
+                     UGCorIEBController.ActiveUgcieb=u;
+                    return Redirect("/ugc/");
+                }
+                  return Redirect("/login/wrong");
+             
             }
 
-            else if (cred.UserType == UserType.Gaurdian)
+            else if (cred.UserType == UserType.Guardian)
             {
-                return Redirect("/guardian/");
+                 if (service.GetGuardian(cred.Username, cred.Password) is Guardian g)
+                {
+                    GuardianController.Activeguardian = g;
+                    return Redirect("/guardian/"); 
+                }
+
+                return Redirect("/login/wrong");
             }
+            
 
             else if (cred.UserType == UserType.VC)
             {
