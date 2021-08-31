@@ -36,6 +36,98 @@ namespace SpmsApp.Controllers
             return View(new TopbarViewModel() {Name = ActiveVC.FullName, ID = ActiveVC.VCID});
         }
 
+        [HttpGet("/vc/ispscc")]
+        public IActionResult IndividualStudentPloScoreComparisonCourse() // 1
+        {
+            // return Content("HELLO WORLD");
+
+            var viewModel = new IndividualStudentPLOScoreComparisonCourseViewModel()
+            {
+                TopbarViewModel = new TopbarViewModel()
+                {
+                    Name = ActiveVC.FullName,
+                    ID = ActiveVC.VCID
+                },
+                Courses = ds.courses.Where(c => c.Program.Department.School.University == ActiveVC.University && c.CoofferedCourse == null).ToList()
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpGet("/vc/ispscc/{studentID}/{courseID}")]
+        public IActionResult IndividualStudentPloScoreComparisonCourse(int studentID, int courseID) // 1 continued
+        {
+            var student = ds.students.Find(s => s.StudentID == studentID && s.Program.Department.School.University == ActiveVC.University);
+            var course = ds.courses.Find(c => c.CourseID == courseID);
+
+            if (student == null) return NotFound();
+
+            var courseRegistrations = ds.courseRegistrations.Where(cr => cr.Student == student && cr.Section.Course == course).ToList();
+
+            if (courseRegistrations.Count <= 0) return NotFound();
+
+            var sections = courseRegistrations.Select((cr, idx) => cr.Section).ToList();
+
+            var section = sections.First();
+
+            for (int i = 1; i < sections.Count; i++)
+            {
+                if (section.Semester.CompareTo(sections[i].Semester) > 0)
+                {
+                    section = sections[i];
+                }
+            }
+
+            var semester = section.Semester;
+
+            var studentEvaluation = ds.evaluations.Where(e => e.Assessment.Section == section && e.Student == student);
+
+            var studentEvalGroup = studentEvaluation.GroupBy(se => se.Assessment.CourseOutcome.PLO.PloName);
+
+            List<string> studentPloList = new List<string>();
+            List<float> studentScoreList = new List<float>();
+
+            foreach (var evalGroup in studentEvalGroup)
+            {
+                studentPloList.Add(evalGroup.Key);
+
+                float score = 0;
+
+                foreach (var eval in evalGroup)
+                {
+                    score += eval.TotalObtainedMark;
+                }
+
+                studentScoreList.Add(score);
+            }
+
+            var courseEval = ds.evaluations.Where(ev => ev.Assessment.Section.Semester.Equals(semester) && ev.Assessment.Section.Course == course && ev.Assessment.CourseOutcome.PLO.Program == student.Program);
+
+            var courseEvalGroupbyPlo = courseEval.GroupBy(ce => ce.Assessment.CourseOutcome.PLO.PloName);
+
+            var coursePloList = new List<string>();
+            var courseAvgScoreList = new List<float>();
+
+            foreach (var evalGroup in courseEvalGroupbyPlo)
+            {
+                coursePloList.Add(evalGroup.Key);
+
+                var evalGroupbySt = evalGroup.GroupBy(eg => eg.Student);
+                var stCount = evalGroupbySt.Count();
+
+                float score = 0;
+
+                foreach (var eval in evalGroup)
+                {
+                    score += eval.TotalObtainedMark;
+                }
+
+                courseAvgScoreList.Add(score / stCount);
+            }
+
+            return Json(new { StData = studentScoreList, StLabel = studentPloList, CourseData = courseAvgScoreList });
+        }
+
         [HttpGet("/vc/spcc/")]
         public IActionResult StudentPLOComparisonByCourse()
         {
