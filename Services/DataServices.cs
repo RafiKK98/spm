@@ -39,6 +39,8 @@ namespace SpmsApp.Services
         public List<Assessment> assessments = new List<Assessment>();
         public List<Evaluation> evaluations = new List<Evaluation>();
         public List<LoginCredentials> loginCredentialsList = new List<LoginCredentials>();
+        public List<Guardian> guardians = new List<Guardian>();
+        public List<GuardianChildRelation> relations = new List<GuardianChildRelation>();
 
         private MySqlConnection connection;
         private MySqlCommand command;
@@ -482,6 +484,44 @@ namespace SpmsApp.Services
                 };
 
                 loginCredentialsList.Add(loginCredentials);
+            }
+
+            reader.Close();
+            connection.Close();
+
+            connection.Open();
+            command = new MySqlCommand("Select * from Guardian_T G inner join User_T U on G.GID=U.UserID;", connection);
+            reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Guardian guardian = new Guardian()
+                {
+                    ID = reader.GetInt32(0),
+                    FirstName = reader.GetString(2),
+                    LastName = reader.GetString(3),
+                    EmailAddress = reader.GetString(6)
+                };
+
+                guardians.Add(guardian);
+            }
+
+            reader.Close();
+            connection.Close();
+
+            connection.Open();
+            command = new MySqlCommand("Select * from GuardianChild_T;", connection);
+            reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                GuardianChildRelation relation = new GuardianChildRelation()
+                {
+                    Guardian = guardians.Find(g => g.ID == reader.GetInt32(0)),
+                    Child = students.Find(s => s.ID == reader.GetInt32(1))
+                };
+
+                relations.Add(relation);
             }
 
             reader.Close();
