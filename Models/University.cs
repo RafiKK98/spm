@@ -9,5 +9,10 @@ namespace SpmsApp.Models
         public string UniversityName { get; set; }
         public string UniversityDomain { get; set; }
         public Semester CurrentSemester { get; set; }
+
+        public override int GetHashCode()
+        {
+            return UniversityID.GetHashCode() | UniversityName.GetHashCode() | UniversityDomain.GetHashCode() | CurrentSemester.GetHashCode();
+        }
     }
 }

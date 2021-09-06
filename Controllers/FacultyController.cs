@@ -599,7 +599,8 @@ namespace SpmsApp.Controllers
         [HttpPost("/faculty/cpaap")]
         public IActionResult ComparisonPloAchievedAttemptedSelectPrograms([FromBody] ComparisonPloAchievedAttemptedSelectProgramsViewModel viewModel) // 7 continued...
         {
-            
+            var evaluations = ds.evaluations.Where(e => viewModel.SelectedPrograms.Contains(e.Assessment.Section.Course.Program.ProgramID))
+                                            .Where(e => viewModel.SelectedSemesters.Contains(e.Assessment.Section.Semester));
 
             return View(viewModel);
         }
