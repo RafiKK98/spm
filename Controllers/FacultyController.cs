@@ -526,7 +526,7 @@ namespace SpmsApp.Controllers
         }
 
         [HttpGet("/faculty/cpafc")]
-        public IActionResult ComparisonPloAchievedFailedSelectCourses()
+        public IActionResult ComparisonPloAchievedFailedSelectCourses() // 6
         {
             var viewModel = new ComparisonPloAchievedFailedSelectCoursesViewModel()
             {
@@ -543,7 +543,7 @@ namespace SpmsApp.Controllers
         }
 
         [HttpPost("/faculty/cpafc")]
-        public IActionResult ComparisonPloAchievedFailedSelectCourses([FromBody] ComparisonPloAchievedFailedSelectCoursesViewModel viewModel)
+        public IActionResult ComparisonPloAchievedFailedSelectCourses([FromBody] ComparisonPloAchievedFailedSelectCoursesViewModel viewModel) // 6 continued...
         {
             var evaluations = ds.evaluations.Where(ev => viewModel.SelectedCourses.Contains(ev.Assessment.Section.Course.CourseID))
                                             .Where(ev => viewModel.SelectedSemesters.Contains(ev.Assessment.Section.Semester));
@@ -578,6 +578,22 @@ namespace SpmsApp.Controllers
             var myData = new {label = ploNameList, passData = achievedList, failData = failedList};
 
             return Json(myData);
+        }
+
+        [HttpGet("/faculty/cpaap")]
+        public IActionResult ComparisonPloAchievedAttemptedSelectPrograms() // 7
+        {
+            var viewModel = new ComparisonPloAchievedAttemptedSelectProgramsViewModel()
+            {
+                TopbarViewModel = new TopbarViewModel()
+                {
+                    Name = activeFaculty.FullName,
+                    ID = activeFaculty.FacultyID
+                },
+                Programs = ds.programs.Where(p => p.Department == activeFaculty.Department).ToList()
+            };
+
+            return View(viewModel);
         }
 
         [HttpGet]

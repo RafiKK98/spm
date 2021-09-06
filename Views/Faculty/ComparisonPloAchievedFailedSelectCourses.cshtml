@@ -29,11 +29,11 @@
         <button class="btn btn-primary" id="add-semester-btn"><i class="fas fa-plus"></i></button>
         <p id="select-semesters-banner">Selected Semesters:</p>
 
-        <button id="submit-btn">Submit</button>
-        <button id="reset-btn">Reset</button>
+        <button id="submit-btn" class="btn btn-primary">Submit</button>
+        <button id="reset-btn" class="btn btn-secondary">Reset</button>
 
-        <div style="width: 50%;">
-            <canvas id="myChart"></canvas>
+        <div style="width: 50%;" id="draw-point">
+
         </div>
     </div>
 </div>
@@ -48,20 +48,16 @@
     document.getElementById("add-course-btn").addEventListener('click', e => {
         let courseID = parseInt(document.getElementById("selectedCourse").value);
 
-        if (!selectedCourses.some(c => c.courseID === courseID))
-        {
+        if (!selectedCourses.some(c => c.courseID === courseID)) {
             let course = courses.find(c => c.courseID === courseID);
             selectedCourses.push(courseID);
             selectCourseBanner.innerText = "Selected Courses:"
 
-            selectedCourses.forEach((e, i) =>
-            {
-                if (i !== 0)
-                {
+            selectedCourses.forEach((e, i) => {
+                if (i !== 0) {
                     selectCourseBanner.innerText += `, ${courses[i].courseCode}`;
                 }
-                else
-                {
+                else {
                     selectCourseBanner.innerText += ` ${courses[i].courseCode}`;
                 }
             })
@@ -77,21 +73,17 @@
             Year: parseInt(document.getElementById("year").value)
         }
 
-        if (!selectedSemesters.some(s => s.SemesterName === semester.SemesterName && s.Year === semester.Year))
-        {
+        if (!selectedSemesters.some(s => s.SemesterName === semester.SemesterName && s.Year === semester.Year)) {
             selectedSemesters.push(semester);
             selectSemesterBanner.innerText = "Selected Semesters:"
 
-            selectedSemesters.forEach((e, i) =>
-            {
-                if (i !== 0)
-                {
-                    switch (semester.SemesterName)
-                    {
+            selectedSemesters.forEach((e, i) => {
+                if (i !== 0) {
+                    switch (semester.SemesterName) {
                         case 0:
                             selectSemesterBanner.innerText += `, Spring ${e.Year}`;
                             break;
-                        case 1: 
+                        case 1:
                             selectSemesterBanner.innerText += `, Summer ${e.Year}`;;
                             break;
                         case 2:
@@ -99,16 +91,14 @@
                             break;
                     }
 
-                    @* selectSemesterBanner.innerText += `, ${e.SemesterName} ${e.Year}`; *@
+    @* selectSemesterBanner.innerText += `, ${e.SemesterName} ${e.Year}`; *@
                 }
-                else
-                {
-                    switch (semester.SemesterName)
-                    {
+                else {
+                    switch (semester.SemesterName) {
                         case 0:
                             selectSemesterBanner.innerText += ` Spring ${e.Year}`;
                             break;
-                        case 1: 
+                        case 1:
                             selectSemesterBanner.innerText += ` Summer ${e.Year}`;;
                             break;
                         case 2:
@@ -125,67 +115,75 @@
     document.getElementById("submit-btn").addEventListener('click', e => {
         fetch("/faculty/cpafc", {
             method: 'POST',
-            headers: 
+            headers:
             {
                 "Content-Type": "application/json"
             },
-            body:JSON.stringify({
+            body: JSON.stringify({
                 SelectedCourses: selectedCourses,
                 SelectedSemesters: selectedSemesters
-            })            
+            })
         })
-        .then(res => res.json())
-        .then(res => {
-            var ctx = document.getElementById('myChart').getContext('2d');
-            var myChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: res.label,
-                    datasets: [{
-                        label: 'Percent of Student Achieved',
-                        data: res.passData,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 1)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)'
-                        ],
-                        borderWidth: 1
-                    }, {
-                        label: 'Percent of Student Failed',
-                        data: res.failData,
-                        backgroundColor: [
-                            'rgba(54, 162, 235, 1)'
-                        ],
-                        borderColor: [
-                            'rgba(54, 162, 235, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                offset: true
-                            }
-                        },
-                        x: {
-                            grid: {
-                                offset: true
+            .then(res => res.json())
+            .then(res => {
+                let drawPoint = document.getElementById('draw-point');
+                drawPoint.innerHTML = "";
+
+                var ctx = document.createElement('canvas');
+                ctx.getContext('2d');
+                drawPoint.appendChild(ctx);
+
+                var myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: res.label,
+                        datasets: [{
+                            label: 'Percent of Student Achieved',
+                            data: res.passData,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 1)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)'
+                            ],
+                            borderWidth: 1
+                        }, {
+                            label: 'Percent of Student Failed',
+                            data: res.failData,
+                            backgroundColor: [
+                                'rgba(54, 162, 235, 1)'
+                            ],
+                            borderColor: [
+                                'rgba(54, 162, 235, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    offset: true
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    offset: true
+                                }
                             }
                         }
                     }
-                }
-            });
-        })
+                });
+            })
     })
 
     document.getElementById("reset-btn").addEventListener('click', e => {
         selectedCourses = [];
         selectCourseBanner.innerText = "Selected Courses:"
         selectedSemesters = [];
-        selectSemesterBanner.innerText = "Selected Semesters:"
+        selectSemesterBanner.innerText = "Selected Semesters:";
+        let drawPoint = document.getElementById('draw-point');
+        drawPoint.innerHTML = "";
     })
 </script>
