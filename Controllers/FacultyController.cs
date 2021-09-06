@@ -596,6 +596,14 @@ namespace SpmsApp.Controllers
             return View(viewModel);
         }
 
+        [HttpPost("/faculty/cpaap")]
+        public IActionResult ComparisonPloAchievedAttemptedSelectPrograms([FromBody] ComparisonPloAchievedAttemptedSelectProgramsViewModel viewModel) // 7 continued...
+        {
+            
+
+            return View(viewModel);
+        }
+
         [HttpGet]
         public IActionResult Dummy2()
         {
