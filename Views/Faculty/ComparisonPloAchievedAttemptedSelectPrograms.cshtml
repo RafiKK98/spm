@@ -44,20 +44,23 @@
     let selectCourseBanner = document.getElementById("select-courses-banner");
     let selectSemesterBanner = document.getElementById("select-semesters-banner");
 
+    console.log(courses);
+
     document.getElementById("add-course-btn").addEventListener('click', e => {
         let courseID = parseInt(document.getElementById("selectedCourse").value);
 
+        console.log(courseID);
+
         if (!selectedCourses.some(c => c.programID === courseID)) {
-            let course = courses.find(c => c.programID === courseID);
             selectedCourses.push(courseID);
             selectCourseBanner.innerText = "Selected Programs:"
 
             selectedCourses.forEach((e, i) => {
                 if (i !== 0) {
-                    selectCourseBanner.innerText += `, ${courses[i].programCode}`;
+                    selectCourseBanner.innerText += `, ${courses.find(c => c.programID === e).programCode}`;
                 }
                 else {
-                    selectCourseBanner.innerText += ` ${courses[i].programCode}`;
+                    selectCourseBanner.innerText += ` ${courses.find(c => c.programID === e).programCode}`;
                 }
             })
         }
@@ -123,12 +126,63 @@
                 SelectedSemesters: selectedSemesters
             })
         })
+            .then(res => res.json())
+            .then(res => {
+                let drawPoint = document.getElementById('draw-point');
+                drawPoint.innerHTML = "";
 
+                var ctx = document.createElement('canvas');
+                ctx.getContext('2d');
+                drawPoint.appendChild(ctx);
+
+                var myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: res.label,
+                        datasets: [{
+                            label: 'Percent of Student Achieved',
+                            data: res.passData,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 1)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)'
+                            ],
+                            borderWidth: 1
+                        }, {
+                            label: 'Percent of Student Attempted',
+                            data: res.attemptData,
+                            backgroundColor: [
+                                'rgba(54, 162, 235, 1)'
+                            ],
+                            borderColor: [
+                                'rgba(54, 162, 235, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    offset: true
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    offset: true
+                                }
+                            }
+                        }
+                    }
+                });
+            })
     })
 
     document.getElementById("reset-btn").addEventListener('click', e => {
         selectedCourses = [];
-        selectCourseBanner.innerText = "Selected Courses:"
+        selectCourseBanner.innerText = "Selected Programs:"
         selectedSemesters = [];
         selectSemesterBanner.innerText = "Selected Semesters:";
         let drawPoint = document.getElementById('draw-point');
