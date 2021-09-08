@@ -258,6 +258,86 @@ namespace SpmsApp.Controllers
             return Json(myData);
         }
 
+        [HttpGet("/vc/pccsp")]
+        public IActionResult PloComparisonCourseWithSelectPlos() // 5
+        {
+            var viewModel = new PLOComparisonCourseWithSelectPlosViewModel()
+            {
+                TopbarViewModel = new TopbarViewModel()
+                {
+                    Name = ActiveVC.FullName,
+                    ID = ActiveVC.VCID
+                },
+                Courses = ds.courses.Where(c => c.Program.Department.School.University == ActiveVC.University).ToList()
+            
+
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost("/vc/pccsp/{startSemester}/{startYear}/{endSemester}/{endYear}")]
+        public IActionResult PloComparisonCourseWithSelectPlos([FromBody] PLOComparisonCourseWithSelectPlosViewModel viewModel, int startSemester, int startYear, int endSemester, int endYear) // 5 continued
+        {
+            var start = new Semester(startSemester, startYear);
+            var end = new Semester(endSemester, endYear);
+
+            // var courses = ds.courses.Where(c => viewModel.SelectedCoursesID.Contains(c.CourseID)).ToList();
+
+            // var plos = ds.plos.Where(plo => plo.Program.Department == activeFaculty.Department && viewModel.SelectedPlosName.Contains(plo.PloName)).ToList();
+
+
+
+            List<float> scores = new List<float>();
+            List<string> ploNames = new List<string>();
+
+            List<Course> courses = new List<Course>();
+
+            foreach (var course in ds.courses)
+            {
+                if (viewModel.SelectedCoursesID.Contains(course.CourseID))
+                {
+                    bool available = true;
+                    var plos = ds.cos.Where(co => co.Course == course).Select(co => co.PLO.PloName);
+
+                    foreach (var ploName in viewModel.SelectedPlosName)
+                    {
+                        if (!plos.Contains(ploName))
+                            available = false;
+                    }
+
+                    if (available) courses.Add(course);
+                }
+            }
+
+            var evaluations = ds.evaluations.Where(ev => courses.Contains(ev.Assessment.Section.Course)
+                                                    && viewModel.SelectedPlosName.Contains(ev.Assessment.CourseOutcome.PLO.PloName)
+                                                    && ev.Assessment.Section.Semester.CompareTo(start) >= 0
+                                                    && ev.Assessment.Section.Semester.CompareTo(end) <= 0)
+                                            .GroupBy(ev => ev.Assessment.CourseOutcome.PLO.PloName);
+
+            foreach (var evg in evaluations)
+            {
+                ploNames.Add(evg.Key);
+                int count = 0;
+
+                foreach (var ev in evg)
+                {
+                    var percent = ev.TotalObtainedMark / ev.Assessment.TotalMark * 100;
+                    if (percent >= ev.Assessment.Section.PassMark)
+                    {
+                        count++;
+                    }
+                }
+
+                scores.Add((float)count / evg.Count() * 100);
+            }
+
+            var myData = new { labels = ploNames, data = scores };
+
+            return Json(myData);
+        }
+
         [HttpGet("/vc/spcc/")]
         public IActionResult StudentPLOComparisonByCourse()
         {
