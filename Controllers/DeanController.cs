@@ -120,6 +120,63 @@ namespace SpmsApp.Controllers
         }
 
 
+        [HttpGet("/dean/cpafc")]
+        public IActionResult ComparisonPloAchievedFailedSelectCourses() // 6
+        {
+            var viewModel = new ComparisonPLOAchievedFailedSelectCoursesViewModel()
+            {
+                TopbarViewModel = new TopbarViewModel()
+                {
+                    Name = ActiveDean.FullName,
+                    ID = ActiveDean.DeanID
+                },
+                Courses = ds.courses.Where(c => c.Program.Department.School == ActiveDean.School && c.CoofferedCourse == null).ToList(),
+                Semester = new Semester(1, 2001)
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost("/dean/cpafc")]
+        public IActionResult ComparisonPloAchievedFailedSelectCourses([FromBody] ComparisonPLOAchievedFailedSelectCoursesViewModel viewModel) // 6 continued...
+        {
+            var evaluations = ds.evaluations.Where(ev => viewModel.SelectedCourses.Contains(ev.Assessment.Section.Course.CourseID))
+                                            .Where(ev => viewModel.SelectedSemesters.Contains(ev.Assessment.Section.Semester));
+            var evaluationsPloGroups = evaluations.GroupBy(ev => ev.Assessment.CourseOutcome.PLO.PloName);
+
+            var ploNameList = new List<string>();
+            var achievedList = new List<float>();
+            var failedList = new List<float>();
+
+            foreach (var evGroup in evaluationsPloGroups)
+            {
+                ploNameList.Add(evGroup.Key);
+
+                var passedCount = 0;
+
+                foreach (var ev in evGroup)
+                {
+                    var percent = ev.TotalObtainedMark / ev.Assessment.TotalMark * 100;
+
+                    if (percent > ev.Assessment.Section.PassMark)
+                    {
+                        passedCount++;
+                    }
+                }
+
+                var passPercent = (float)passedCount / evGroup.Count() * 100;
+
+                achievedList.Add(passPercent);
+                failedList.Add(100 - passPercent);
+            }
+
+            var myData = new {label = ploNameList, passData = achievedList, failData = failedList};
+
+            return Json(myData);
+        }
+
+
+
 
         [HttpGet("/dean/spcc/")]
         public IActionResult StudentPLOComparisonByCourse()
