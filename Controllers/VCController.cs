@@ -34,7 +34,7 @@ namespace SpmsApp.Controllers
         [HttpGet("/vc/")]
         public IActionResult Index()
         {
-            return View(new TopbarViewModel() {Name = ActiveVC.FullName, ID = ActiveVC.VCID});
+            return View(new TopbarViewModel() { Name = ActiveVC.FullName, ID = ActiveVC.VCID });
         }
 
         [HttpGet("/vc/ispscc")]
@@ -189,9 +189,9 @@ namespace SpmsApp.Controllers
         }
 
         [HttpGet("/vc/ippsc")]
-        public IActionResult InstructorwisePLOPerformanceComparison() // 4
+        public IActionResult InstructorwisePLOPerformanceComparisonSelectCourse() // 4
         {
-            var viewModel = new InstructorwisePLOPerformanceViewModel()
+            var viewModel = new InstructorwisePLOPerformanceViewModelSelectCourse()
             {
                 TopbarViewModel = new TopbarViewModel() { Name = ActiveVC.FullName, ID = ActiveVC.VCID },
                 Courses = ds.courses.Where(c => c.Program.Department.School.University == ActiveVC.University).ToList()
@@ -201,7 +201,7 @@ namespace SpmsApp.Controllers
         }
 
         [HttpGet("/vc/ippsc/{selectedCourse}/{startSemester}/{startYear}/{endSemester}/{endYear}")]
-        public IActionResult InstructorwisePLOPerformanceComparison(int selectedCourse, int startSemester, int startYear, int endSemester, int endYear) // 4 continued
+        public IActionResult InstructorwisePLOPerformanceComparisonSelectCourse(int selectedCourse, int startSemester, int startYear, int endSemester, int endYear) // 4 continued
         {
             var course = ds.courses.Find(c => c.CourseID == selectedCourse);
             var start = new Semester(startSemester, startYear);
@@ -269,7 +269,7 @@ namespace SpmsApp.Controllers
                     ID = ActiveVC.VCID
                 },
                 Courses = ds.courses.Where(c => c.Program.Department.School.University == ActiveVC.University).ToList()
-            
+
 
             };
 
@@ -388,7 +388,7 @@ namespace SpmsApp.Controllers
                 failedList.Add(100 - passPercent);
             }
 
-            var myData = new {label = ploNameList, passData = achievedList, failData = failedList};
+            var myData = new { label = ploNameList, passData = achievedList, failData = failedList };
 
             return Json(myData);
         }
@@ -404,55 +404,56 @@ namespace SpmsApp.Controllers
             List<int> progID = new List<int>();
             List<Course> cou = new List<Course>();
 
-                foreach (VC vc in ds.vcs)
+            foreach (VC vc in ds.vcs)
+            {
+                if (vc.VCID == ActiveVC.VCID)
                 {
-                    if(vc.VCID == ActiveVC.VCID)
-                    {
-                        UniversityID = vc.University.UniversityID;
-                    }
+                    UniversityID = vc.University.UniversityID;
                 }
+            }
 
-                foreach (School school in ds.schools)
+            foreach (School school in ds.schools)
+            {
+                if (UniversityID == school.University.UniversityID)
                 {
-                    if(UniversityID == school.University.UniversityID)
-                    {
-                        SchoolIDs.Add(school.SchoolID);
-                    }
+                    SchoolIDs.Add(school.SchoolID);
                 }
+            }
 
 
-                foreach(Department d in ds.departments)
+            foreach (Department d in ds.departments)
+            {
+                for (int i = 0; i < SchoolIDs.Count; i++)
                 {
-                    for(int i = 0; i<SchoolIDs.Count; i++)
+                    if (SchoolIDs[i] == d.School.SchoolID)
                     {
-                        if(SchoolIDs[i] == d.School.SchoolID)
-                        {
-                            deptID.Add(d.DepartmentID);
-                        }
+                        deptID.Add(d.DepartmentID);
                     }
                 }
+            }
 
-                foreach(Program p in ds.programs)
+            foreach (Program p in ds.programs)
+            {
+                for (int i = 0; i < deptID.Count; i++)
                 {
-                    for(int i=0; i< deptID.Count;i++)
+                    if (deptID[i] == p.Department.DepartmentID)
                     {
-                        if(deptID[i] == p.Department.DepartmentID)
-                        {
-                            progID.Add(p.ProgramID);
-                        }
+                        progID.Add(p.ProgramID);
                     }
                 }
+            }
 
-                foreach(Course c in ds.courses){
-                    for(int i=0; i< progID.Count;i++)
+            foreach (Course c in ds.courses)
+            {
+                for (int i = 0; i < progID.Count; i++)
+                {
+                    if (progID[i] == c.Program.ProgramID)
                     {
-                        if(progID[i] == c.Program.ProgramID)
-                        {
-                            cou.Add(c);
-                        }
+                        cou.Add(c);
                     }
                 }
-            
+            }
+
             studentPLOComparisonByCourseViewModel.Courses = cou;
             studentPLOComparisonByCourseViewModel.TopbarViewModel = new TopbarViewModel()
             {
@@ -466,13 +467,13 @@ namespace SpmsApp.Controllers
         [HttpGet("/vc/spcc/{courseID}/{studentID}")]
         public IActionResult StudentPLOComparisonByCourse(int courseID, int studentID)
         {
-            return Json(new {labels = new List<string>(){"PLO-01", "PLO-02", "PLO-03"}, data = new List<float>(){99, 93, 97}});
+            return Json(new { labels = new List<string>() { "PLO-01", "PLO-02", "PLO-03" }, data = new List<float>() { 99, 93, 97 } });
         }
 
         [HttpGet("/vc/spcp/")]
         public IActionResult StudentPLOComparisonByProgram()
         {
-            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
+            return View(new TopbarViewModel() { Name = "No Name Set", ID = 0000 });
         }
         [HttpGet("/vc/spat/")]
         public IActionResult StudentPLOAchievementTable()
@@ -523,43 +524,65 @@ namespace SpmsApp.Controllers
                 }
             };
 
-            return View(new TopbarViewModel() {Name = ActiveVC.FullName, ID = ActiveVC.VCID});
+            return View(new TopbarViewModel() { Name = ActiveVC.FullName, ID = ActiveVC.VCID });
         }
 
         [HttpGet("/vc/pcp/")]
         public IActionResult PLOwiseCoursePerformance()
         {
-            return View(new TopbarViewModel() {Name = ActiveVC.FullName, ID = ActiveVC.VCID});
+            return View(new TopbarViewModel() { Name = ActiveVC.FullName, ID = ActiveVC.VCID });
         }
 
         [HttpGet("/vc/afpp/")]
         public IActionResult AchievedVsFailedPLOPerformance()
         {
-            return View(new TopbarViewModel() {Name = ActiveVC.FullName, ID = ActiveVC.VCID});
+            return View(new TopbarViewModel() { Name = ActiveVC.FullName, ID = ActiveVC.VCID });
         }
 
         [HttpGet("/vc/aac/")]
         public IActionResult AttemptedVsAchievedComparison()
         {
-            return View(new TopbarViewModel() {Name = ActiveVC.FullName, ID = ActiveVC.VCID});
+            return View(new TopbarViewModel() { Name = ActiveVC.FullName, ID = ActiveVC.VCID });
         }
 
         [HttpGet("/vc/pafap/")]
         public IActionResult PLOAchievementForAProgram()
         {
-            return View(new TopbarViewModel() {Name = ActiveVC.FullName, ID = ActiveVC.VCID});
+            return View(new TopbarViewModel() { Name = ActiveVC.FullName, ID = ActiveVC.VCID });
         }
 
         [HttpGet("/vc/sgaap/")]
         public IActionResult StudentsGraduatesAchievingAllPLOS()
         {
-            return View(new TopbarViewModel() {Name = ActiveVC.FullName, ID = ActiveVC.VCID});
+            return View(new TopbarViewModel() { Name = ActiveVC.FullName, ID = ActiveVC.VCID });
         }
 
         [HttpGet("/vc/apa/")]
         public IActionResult AveragePLOAchievement()
         {
-            return View(new TopbarViewModel() {Name = ActiveVC.FullName, ID = ActiveVC.VCID});
+            return View(new TopbarViewModel() { Name = ActiveVC.FullName, ID = ActiveVC.VCID });
+        }
+
+        [HttpGet("/vc/ippc")]
+        public IActionResult InstructorwisePloPerformanceComparison()
+        {
+            var viewModel = new InstructorwisePloPerformanceComparisonViewModel()
+            {
+                TopbarViewModel = new TopbarViewModel()
+                {
+                    Name = ActiveVC.FullName,
+                    ID = ActiveVC.VCID
+                },
+                Faculties = ds.faculties.Where(f => f.Department.School.University == ActiveVC.University).ToList()
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost("/vc/ippc")]
+        public IActionResult InstructorwisePloPerformanceComparison(InstructorwisePloPerformanceComparisonViewModel viewModel)
+        {
+            return View(viewModel);
         }
     }
 }

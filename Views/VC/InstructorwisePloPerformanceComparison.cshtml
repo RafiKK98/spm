@@ -1,0 +1,37 @@
+@model SpmsApp.ViewModels.VC.InstructorwisePloPerformanceComparisonViewModel;
+
+@{
+    ViewData["Title"] = "Instructor-wise PLO Performance";
+}
+
+<div class="row">
+    <div class="col">@Html.Partial("TopBar", Model.TopbarViewModel)</div>
+</div>
+<div class="row" style="height: 100%;">
+    <div class="col-2">
+        @Html.Partial("VCSidebar")
+    </div>
+    <div class="col">
+        @* HELL *@
+        <form asp-action="InstructorwisePloPerformanceComparison" asp-controller="VC">
+            <label>Select a Faculty:</label>
+            <select asp-for="FacultyID" required>
+                <option>Select a Faculty</option>
+                @foreach (var faculty in Model.Faculties)
+                {
+                    <option value="@faculty.ID">@($"{faculty.FacultyID} - {faculty.FullName}")</option>
+                }
+            </select>
+            <br>
+            <label>Select Start Semester:</label>
+            <select asp-for="StartSemester" asp-items=@Html.GetEnumSelectList(typeof(SemesterName))></select>
+            <input type="number" asp-for="StartYear" placeholder="Enter Start Year">
+            <br>
+            <label>Select End Semester:</label>
+            <select asp-for="EndSemester" asp-items=@Html.GetEnumSelectList(typeof(SemesterName))></select>
+            <input type="number" asp-for="EndYear" placeholder="Enter End Year">
+            <br>
+            <input type="submit" value="Submit" class="btn btn-primary">
+        </form>
+    </div>
+</div>

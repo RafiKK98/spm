@@ -10,8 +10,8 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
-  <ItemGroup>
+  <!-- <ItemGroup>
     <Folder Include="ViewModels\Guardian\" />
-  </ItemGroup>
+  </ItemGroup> -->
 
 </Project>
