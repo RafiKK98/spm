@@ -394,6 +394,59 @@ namespace SpmsApp.Controllers
             return Json(myData);
         }
 
+        [HttpGet("/vc/cpaap")]
+        public IActionResult ComparisonPloAchievedAttemptedSelectPrograms() // 7
+        {
+            var viewModel = new ComparisonPloAchievedAttemptedSelectProgramsViewModel()
+            {
+                TopbarViewModel = new TopbarViewModel()
+                {
+                    Name = ActiveVC.FullName,
+                    ID = ActiveVC.VCID
+                },
+                Programs = ds.programs.Where(p => p.Department.School.University == ActiveVC.University).ToList()
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost("/vc/cpaap")]
+        public IActionResult ComparisonPloAchievedAttemptedSelectPrograms([FromBody] ComparisonPloAchievedAttemptedSelectProgramsViewModel viewModel) // 7 continued...
+        {
+            var evaluations = ds.evaluations.Where(e => viewModel.SelectedPrograms.Contains(e.Assessment.CourseOutcome.PLO.Program.ProgramID))
+                                            .Where(e => viewModel.SelectedSemesters.Contains(e.Assessment.Section.Semester));
+
+            var evaluationsPloGroups = evaluations.GroupBy(ev => ev.Assessment.CourseOutcome.PLO.PloName);
+
+            var ploNameList = new List<string>();
+            var achievedList = new List<float>();
+            var attemptedList = new List<float>();
+
+            foreach (var evGroup in evaluationsPloGroups)
+            {
+                ploNameList.Add(evGroup.Key);
+
+                var passedCount = 0;
+
+                foreach (var ev in evGroup)
+                {
+                    var percent = ev.TotalObtainedMark / ev.Assessment.TotalMark * 100;
+
+                    if (percent > ev.Assessment.Section.PassMark)
+                    {
+                        passedCount++;
+                    }
+                }
+
+                achievedList.Add(passedCount);
+                attemptedList.Add(evGroup.Count());
+            }
+
+            var myData = new {label = ploNameList, passData = achievedList, attemptData = attemptedList};
+
+            return Json(myData);
+        }
+
         [HttpGet("/vc/spcc/")]
         public IActionResult StudentPLOComparisonByCourse()
         {
