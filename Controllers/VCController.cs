@@ -277,7 +277,8 @@ namespace SpmsApp.Controllers
         }
 
         [HttpPost("/vc/pccsp/{startSemester}/{startYear}/{endSemester}/{endYear}")]
-        public IActionResult PloComparisonCourseWithSelectPlos([FromBody] PLOComparisonCourseWithSelectPlosViewModel viewModel, int startSemester, int startYear, int endSemester, int endYear) // 5 continued
+        public IActionResult PloComparisonCourseWithSelectPlos([FromBody] PLOComparisonCourseWithSelectPlosViewModel viewModel, 
+        int startSemester, int startYear, int endSemester, int endYear) // 5 continued
         {
             var start = new Semester(startSemester, startYear);
             var end = new Semester(endSemester, endYear);
