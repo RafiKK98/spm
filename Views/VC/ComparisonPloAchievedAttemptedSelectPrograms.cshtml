@@ -1,0 +1,191 @@
+@model SpmsApp.ViewModels.VC.ComparisonPLOAchievedAttemptedSelectProgramsViewModel;
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="row">
+    <div class="col">@Html.Partial("TopBar", Model.TopbarViewModel)</div>
+</div>
+<div class="row" style="height: 100%;">
+    <div class="col-2">
+        @Html.Partial("VCSidebar")
+    </div>
+    <div class="col">
+        <label>Select Program(s)</label>
+        <select id="selectedCourse">
+            <option>Select a Program</option>
+            @foreach (var course in Model.Programs)
+            {
+                <option value=@course.ProgramID>@($"{course.ProgramCode} - {course.ProgramName}")</option>
+            }
+        </select>
+        <button class="btn btn-primary" id="add-course-btn"><i class="fas fa-plus"></i></button>
+        <p id="select-courses-banner">Selected Programs:</p>
+
+        <label>Select Semeser(s)</label>
+        <select id="semester-name" asp-items=@Html.GetEnumSelectList(typeof(SpmsApp.Models.SemesterName))></select>
+        <input type="number" id="year" placeholder="Enter Year">
+        <button class="btn btn-primary" id="add-semester-btn"><i class="fas fa-plus"></i></button>
+        <p id="select-semesters-banner">Selected Semesters:</p>
+
+        <button id="submit-btn" class="btn btn-primary">Submit</button>
+        <button id="reset-btn" class="btn btn-secondary">Reset</button>
+
+        <div style="width: 50%;" id="draw-point">
+
+        </div>
+    </div>
+</div>
+
+<script>
+    let courses = @Html.Raw(Json.Serialize(Model.Programs));
+    let selectedCourses = [];
+    let selectedSemesters = [];
+    let selectCourseBanner = document.getElementById("select-courses-banner");
+    let selectSemesterBanner = document.getElementById("select-semesters-banner");
+
+    console.log(courses);
+
+    document.getElementById("add-course-btn").addEventListener('click', e => {
+        let courseID = parseInt(document.getElementById("selectedCourse").value);
+
+        console.log(courseID);
+
+        if (!selectedCourses.some(c => c.programID === courseID)) {
+            selectedCourses.push(courseID);
+            selectCourseBanner.innerText = "Selected Programs:"
+
+            selectedCourses.forEach((e, i) => {
+                if (i !== 0) {
+                    selectCourseBanner.innerText += `, ${courses.find(c => c.programID === e).programCode}`;
+                }
+                else {
+                    selectCourseBanner.innerText += ` ${courses.find(c => c.programID === e).programCode}`;
+                }
+            })
+        }
+
+        console.log(selectedCourses);
+    })
+
+    document.getElementById("add-semester-btn").addEventListener('click', e => {
+        let semester =
+        {
+            SemesterName: parseInt(document.getElementById("semester-name").value),
+            Year: parseInt(document.getElementById("year").value)
+        }
+
+        if (!selectedSemesters.some(s => s.SemesterName === semester.SemesterName && s.Year === semester.Year)) {
+            selectedSemesters.push(semester);
+            selectSemesterBanner.innerText = "Selected Semesters:"
+
+            selectedSemesters.forEach((e, i) => {
+                if (i !== 0) {
+                    switch (semester.SemesterName) {
+                        case 0:
+                            selectSemesterBanner.innerText += `, Spring ${e.Year}`;
+                            break;
+                        case 1:
+                            selectSemesterBanner.innerText += `, Summer ${e.Year}`;;
+                            break;
+                        case 2:
+                            selectSemesterBanner.innerText += `, Autumn ${e.Year}`;
+                            break;
+                    }
+
+    @* selectSemesterBanner.innerText += `, ${e.SemesterName} ${e.Year}`; *@
+                }
+                else {
+                    switch (semester.SemesterName) {
+                        case 0:
+                            selectSemesterBanner.innerText += ` Spring ${e.Year}`;
+                            break;
+                        case 1:
+                            selectSemesterBanner.innerText += ` Summer ${e.Year}`;;
+                            break;
+                        case 2:
+                            selectSemesterBanner.innerText += ` Autumn ${e.Year}`;
+                            break;
+                    }
+                }
+            })
+        }
+
+        console.log(JSON.stringify(selectedSemesters));
+    })
+
+    document.getElementById("submit-btn").addEventListener('click', e => {
+        fetch("/dean/cpaap", {
+            method: 'POST',
+            headers:
+            {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                SelectedPrograms: selectedCourses,
+                SelectedSemesters: selectedSemesters
+            })
+        })
+            .then(res => res.json())
+            .then(res => {
+                let drawPoint = document.getElementById('draw-point');
+                drawPoint.innerHTML = "";
+
+                var ctx = document.createElement('canvas');
+                ctx.getContext('2d');
+                drawPoint.appendChild(ctx);
+
+                var myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: res.label,
+                        datasets: [{
+                            label: 'Percent of Student Achieved',
+                            data: res.passData,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 1)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)'
+                            ],
+                            borderWidth: 1
+                        }, {
+                            label: 'Percent of Student Attempted',
+                            data: res.attemptData,
+                            backgroundColor: [
+                                'rgba(54, 162, 235, 1)'
+                            ],
+                            borderColor: [
+                                'rgba(54, 162, 235, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    offset: true
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    offset: true
+                                }
+                            }
+                        }
+                    }
+                });
+            })
+    })
+
+    document.getElementById("reset-btn").addEventListener('click', e => {
+        selectedCourses = [];
+        selectCourseBanner.innerText = "Selected Programs:"
+        selectedSemesters = [];
+        selectSemesterBanner.innerText = "Selected Semesters:";
+        let drawPoint = document.getElementById('draw-point');
+        drawPoint.innerHTML = "";
+    })
+</script>

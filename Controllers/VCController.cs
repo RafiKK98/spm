@@ -397,7 +397,7 @@ namespace SpmsApp.Controllers
         [HttpGet("/vc/cpaap")]
         public IActionResult ComparisonPloAchievedAttemptedSelectPrograms() // 7
         {
-            var viewModel = new ComparisonPloAchievedAttemptedSelectProgramsViewModel()
+            var viewModel = new ComparisonPLOAchievedAttemptedSelectProgramsViewModel()
             {
                 TopbarViewModel = new TopbarViewModel()
                 {
