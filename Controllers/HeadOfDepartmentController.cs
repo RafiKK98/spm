@@ -230,11 +230,104 @@ namespace SpmsApp.Controllers
             return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
         }
 
+
         [HttpGet("/department/PCACSP")]
-        public IActionResult PLOComparisonAmongCourseWithSameSelectedPlos()
+        public IActionResult PLOComparisonAmongCourseWithSameSelectedPLOs()
         {
-            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
+            
+            var viewModel = new PLOComparisonAmongCourseWithSameSelectedPLOsViewModel()
+            {
+                TopbarViewModel = new TopbarViewModel()
+                {
+                    Name = ActiveHead.FullName,
+                    ID = ActiveHead.DepartmentHeadID
+                },
+                Courses = ds.courses.Where(c => c.Program.Department == ActiveHead.Department).ToList()
+            
+
+            };
+
+            return View(viewModel);
         }
+
+        public class Dummy
+        {
+            public string Name { get; set; }
+        }
+
+
+        [HttpPost]
+        public IActionResult DummyAction([FromBody] PLOComparisonAmongCourseWithSameSelectedPLOsViewModel dummy)
+        {
+            var courses = ds.courses.Where(c => dummy.SelectedCoursesID.Contains(c.CourseID)).ToList();
+            return Json(dummy);
+        }
+
+
+
+        [HttpPost("/department/PCACSP/{startSemester}/{startYear}/{endSemester}/{endYear}")]
+
+        public IActionResult PLOComparisonAmongCourseWithSameSelectedPLOs([FromBody] PLOComparisonAmongCourseWithSameSelectedPLOsViewModel viewModel, int startSemester, int startYear, int endSemester, int endYear )
+        {
+             var start = new Semester(startSemester, startYear);
+            var end = new Semester(endSemester, endYear);
+
+            
+            List<float> scores = new List<float>();
+            List<string> ploNames = new List<string>();
+
+            List<Course> courses = new List<Course>();
+
+            foreach (var course in ds.courses)
+            {
+                if (viewModel.SelectedCoursesID.Contains(course.CourseID))
+                {
+                    bool available = true;
+                    var plos = ds.cos.Where(co => co.Course == course).Select(co => co.PLO.PloName);
+
+                    foreach (var ploName in viewModel.SelectedPlosName)
+                    {
+                        if (!plos.Contains(ploName))
+                            available = false;
+                    }
+
+                    if (available) courses.Add(course);
+                }
+            }
+
+            var evaluations = ds.evaluations.Where(ev => courses.Contains(ev.Assessment.Section.Course)
+                                                    && viewModel.SelectedPlosName.Contains(ev.Assessment.CourseOutcome.PLO.PloName)
+                                                    && ev.Assessment.Section.Semester.CompareTo(start) >= 0
+                                                    && ev.Assessment.Section.Semester.CompareTo(end) <= 0)
+                                            .GroupBy(ev => ev.Assessment.CourseOutcome.PLO.PloName);
+
+            foreach (var evg in evaluations)
+            {
+                ploNames.Add(evg.Key);
+                int count = 0;
+
+                foreach (var ev in evg)
+                {
+                    var percent = ev.TotalObtainedMark / ev.Assessment.TotalMark * 100;
+                    if (percent >= ev.Assessment.Section.PassMark)
+                    {
+                        count++;
+                    }
+                }
+
+                scores.Add((float)count / evg.Count() * 100);
+            }
+
+            var myData = new { labels = ploNames, data = scores };
+
+            return Json(myData);
+
+        }
+
+
+
+
+
 
 
         [HttpGet("/department/AAC")]
