@@ -124,7 +124,21 @@ namespace SpmsApp.Controllers
         public IActionResult StudentPLOComparisonProgramWise()
         {
             return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
-        }       
+        }  
+
+        [HttpGet("/department/CPAASP")]
+        public IActionResult ComparisonPloAchievedVsAttemptedSelectedPrograms()
+        {
+            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
+        } 
+
+        [HttpGet("/department/CPAFSC")]
+        public IActionResult ComparisonPloAchievedVsFailedForSelectCourses()
+        {
+            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
+        } 
+
+
 
         [HttpGet("/department/SPAT/")]
         public IActionResult StudentPloAchievementTable()

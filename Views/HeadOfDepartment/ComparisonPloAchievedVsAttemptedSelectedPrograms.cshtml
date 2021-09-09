@@ -1,0 +1,16 @@
+@model SpmsApp.ViewModels.TopbarViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="row">
+    <div class="col">@Html.Partial("TopBar", Model)</div>
+</div>
+<div class="row">
+    <div class="col-2">
+        @Html.Partial("HeadOfDepartmentSidebar")
+    </div>
+    <div class="col">
+        <h1>PLO 1</h1>
+    </div>
+</div>
