@@ -184,11 +184,82 @@ namespace SpmsApp.Controllers
 
 
 
+
+
+
+
+
+
+
+
+
+
         [HttpGet("/department/CPAFSC")]
         public IActionResult ComparisonPloAchievedVsFailedForSelectCourses()
         {
-            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
+           var viewModel = new ComparisonPloAchievedVsFailedForSelectCoursesViewModel()
+            {
+                TopbarViewModel = new TopbarViewModel()
+                {
+                    Name = ActiveHead.FullName,
+                    ID = ActiveHead.DepartmentHeadID
+                },
+                Courses = ds.courses.Where(c => c.Program.Department == ActiveHead.Department && c.CoofferedCourse == null).ToList(),
+                Semester = new Semester(1, 2001)
+            };
+
+            return View(viewModel);
         } 
+
+        [HttpPost("/department/CPAFSC")]
+        public IActionResult ComparisonPloAchievedVsFailedForSelectCourses([FromBody] ComparisonPloAchievedVsFailedForSelectCoursesViewModel viewModel)
+        {
+
+             var evaluations = ds.evaluations.Where(ev => viewModel.SelectedCourses.Contains(ev.Assessment.Section.Course.CourseID))
+                                            .Where(ev => viewModel.SelectedSemesters.Contains(ev.Assessment.Section.Semester));
+            var evaluationsPloGroups = evaluations.GroupBy(ev => ev.Assessment.CourseOutcome.PLO.PloName);
+
+            var ploNameList = new List<string>();
+            var achievedList = new List<float>();
+            var failedList = new List<float>();
+
+            foreach (var evGroup in evaluationsPloGroups)
+            {
+                ploNameList.Add(evGroup.Key);
+
+                var passedCount = 0;
+
+                foreach (var ev in evGroup)
+                {
+                    var percent = ev.TotalObtainedMark / ev.Assessment.TotalMark * 100;
+
+                    if (percent > ev.Assessment.Section.PassMark)
+                    {
+                        passedCount++;
+                    }
+                }
+
+                var passPercent = (float)passedCount / evGroup.Count() * 100;
+
+                achievedList.Add(passPercent);
+                failedList.Add(100 - passPercent);
+            }
+
+            var myData = new {label = ploNameList, passData = achievedList, failData = failedList};
+
+            return Json(myData);
+
+
+        }
+
+
+
+
+
+
+
+
+
 
 
 
