@@ -178,6 +178,13 @@ namespace SpmsApp.Controllers
             return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
         }
 
+        [HttpGet("/department/PCACSP")]
+        public IActionResult PLOComparisonAmongCourseWithSameSelectedPlos()
+        {
+            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
+        }
+
+
         [HttpGet("/department/AAC")]
         public IActionResult AttemptedVsAchievedComparison()
         {
