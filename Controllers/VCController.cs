@@ -531,7 +531,7 @@ namespace SpmsApp.Controllers
             return View(new TopbarViewModel() { Name = "No Name Set", ID = 0000 });
         }
         [HttpGet("/vc/spat/")]
-        public IActionResult StudentPLOAchievementTable()
+        public IActionResult StudentPLOAchievementTable() // 3
         {
             PloAchievementTableViewModel ploAchievementTableViewModel = new PloAchievementTableViewModel();
             ploAchievementTableViewModel.TopbarViewModel = new TopbarViewModel()
@@ -544,7 +544,7 @@ namespace SpmsApp.Controllers
         }
 
         [HttpGet("/vc/spat/{studentID}")]
-        public IActionResult StudentPloAchievementTable(int studentID)
+        public IActionResult StudentPloAchievementTable(int studentID) // 3 continued...
         {
             var student = ds.students.Find(s => s.StudentID == studentID);
 
