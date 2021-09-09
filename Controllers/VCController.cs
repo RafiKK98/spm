@@ -201,7 +201,8 @@ namespace SpmsApp.Controllers
         }
 
         [HttpGet("/vc/ippsc/{selectedCourse}/{startSemester}/{startYear}/{endSemester}/{endYear}")]
-        public IActionResult InstructorwisePLOPerformanceComparisonSelectCourse(int selectedCourse, int startSemester, int startYear, int endSemester, int endYear) // 4 continued
+        public IActionResult InstructorwisePLOPerformanceComparisonSelectCourse(int selectedCourse, int startSemester, 
+        int startYear, int endSemester, int endYear) // 4 continued
         {
             var course = ds.courses.Find(c => c.CourseID == selectedCourse);
             var start = new Semester(startSemester, startYear);
