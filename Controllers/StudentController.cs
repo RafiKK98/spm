@@ -109,7 +109,7 @@ namespace SpmsApp.Controllers
         }
 
 
-[HttpGet("/student/ispscp")]
+        [HttpGet("/student/ispscp")]
         public IActionResult IndividualStudentPloScoreComparisonProgram() // 2
         {
             var viewModel = new IndividualStudentPLOScoreComparisonProgramViewModel()
@@ -191,7 +191,11 @@ namespace SpmsApp.Controllers
         }
 
 
-
+        [HttpGet("/student/logout")]
+        public IActionResult Logout()
+        {
+            return Redirect("/");
+        }
 
     }
 }

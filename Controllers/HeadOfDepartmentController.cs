@@ -613,5 +613,11 @@ namespace SpmsApp.Controllers
 
             return Json(data);
         }
+
+        [HttpGet("/department/logout")]
+        public IActionResult Logout()
+        {
+            return Redirect("/");
+        }
     }
 }

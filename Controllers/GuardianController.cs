@@ -31,6 +31,10 @@ namespace SpmsApp.Controllers
             return View(ploAchievementTableViewModel);
         }
 
-
+        [HttpGet("/guardian/logout")]
+        public IActionResult Logout()
+        {
+            return Redirect("/");
+        }
     }
 }

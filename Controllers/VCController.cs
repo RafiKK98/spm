@@ -639,5 +639,11 @@ namespace SpmsApp.Controllers
         {
             return View(viewModel);
         }
+
+        [HttpGet("/vc/logout")]
+        public IActionResult Logout()
+        {
+            return Redirect("/");
+        }
     }
 }

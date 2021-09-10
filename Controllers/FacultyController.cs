@@ -833,5 +833,11 @@ namespace SpmsApp.Controllers
 
         //     return View(ploAchievementTableViewModel);
         // }
+
+        [HttpGet("/faculty/logout")]
+        public IActionResult Logout()
+        {
+            return Redirect("/");
+        }
     }
 }
