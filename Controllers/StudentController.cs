@@ -125,10 +125,10 @@ namespace SpmsApp.Controllers
             return View(viewModel);
         }
 
-        [HttpGet("/student/ispscp/{studentID}/{programID}")]
-        public IActionResult IndividualStudentPloScoreComparisonProgram(int studentID, int programID) // 2 continued
+        [HttpGet("/student/ispscp/{programID}")]
+        public IActionResult IndividualStudentPloScoreComparisonProgram(int programID) // 2 continued
         {
-            var student = ds.students.Find(s => s.StudentID == studentID);
+            //var student = ds.students.Find(s => s.StudentID == studentID);
 
             //if (student == null) return NotFound();
 
@@ -153,7 +153,7 @@ namespace SpmsApp.Controllers
                 {
                     programScore += p.TotalObtainedMark;
 
-                    if (p.Student == student)
+                    if (p.Student == activestudent)
                     {
                         studentScore += p.TotalObtainedMark;
                     }

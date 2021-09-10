@@ -35,14 +35,14 @@
     document.getElementById("student-course-selector").addEventListener('submit', e => {
         e.preventDefault();
 
-        let stID = document.getElementById("stID").value;
+        //let stID = document.getElementById("stID").value;
         let pID = document.getElementById("pID").value;
 
         console.log(stID);
         console.log(pID);
         console.log('program view');
 
-        fetch(`/student/ispscp/${stID}/${pID}`)
+        fetch(`/student/ispscp/${pID}`)
             .then(res => res.json())
             .then(res => {
                 console.log(res);
