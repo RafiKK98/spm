@@ -2,6 +2,7 @@
 using SpmsApp.Models;
 using SpmsApp.Services;
 using SpmsApp.ViewModels;
+using SpmsApp.ViewModels.Student;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -106,6 +107,68 @@ namespace SpmsApp.Controllers
 
             return Json(new { StData = studentScoreList, StLabel = studentPloList, CourseData = courseAvgScoreList });
         }
+
+
+[HttpGet("/student/ispscp")]
+        public IActionResult IndividualStudentPloScoreComparisonProgram() // 2
+        {
+            var viewModel = new IndividualStudentPLOScoreComparisonProgramViewModel()
+            {
+                TopbarViewModel = new TopbarViewModel()
+                {
+                    Name = activestudent.FullName,
+                    ID = activestudent.ID
+                },
+                Programs = ds.programs.Where(p => p == activestudent.Program).ToList()
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpGet("/student/ispscp/{studentID}/{programID}")]
+        public IActionResult IndividualStudentPloScoreComparisonProgram(int studentID, int programID) // 2 continued
+        {
+            var student = ds.students.Find(s => s.StudentID == studentID);
+
+            if (student == null) return NotFound();
+
+            var program = ds.programs.Find(p => p.ProgramID == programID);
+            var programPlos = ds.plos.Where(plo => plo.Program == program);
+
+            var evaluations = ds.evaluations.Where(ev => ev.Assessment.CourseOutcome.PLO.Program == program);
+
+            List<float> programScores = new List<float>();
+            List<float> studentScores = new List<float>();
+
+            foreach (var plo in programPlos)
+            {
+                var ploScoreProgram = evaluations.Where(ev => ev.Assessment.CourseOutcome.PLO == plo);
+                var stCount = ploScoreProgram.GroupBy(psp => psp.Student).Count();
+                // var ploScoreStudent = ploScoreProgram.Where(ev => ev.Student == student);
+
+                float programScore = 0;
+                float studentScore = 0;
+
+                foreach (var p in ploScoreProgram)
+                {
+                    programScore += p.TotalObtainedMark;
+
+                    if (p.Student == student)
+                    {
+                        studentScore += p.TotalObtainedMark;
+                    }
+                }
+
+                programScores.Add(programScore / stCount);
+                studentScores.Add(studentScore);
+            }
+
+            var data = new { PloList = programPlos.Select(p => p.PloName), StudentScores = studentScores, ProgramScores = programScores };
+
+            return Json(data);
+        }
+
+
 
 
         [HttpGet("/student/")]
