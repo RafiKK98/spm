@@ -555,6 +555,21 @@ namespace SpmsApp.Services
             return null;
         }
 
+        public Student GetStudent(string username, string password)
+        {
+            // int userID = .UserID;
+            // return faculties.Find(f => f.ID == userID);
+            if (loginCredentialsList.Find(lc => lc.Username == username && lc.Password == password) is LoginCredentials lc)
+            {
+                if (students.Find(f => f.ID == lc.UserID) is Student s)
+                {
+                    return s;
+                }
+            }
+
+            return null;
+        }
+
         public VC GetVC(string username, string password)
         {
             // int userID = .UserID;

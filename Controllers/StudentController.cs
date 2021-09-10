@@ -21,7 +21,7 @@ namespace SpmsApp.Controllers
         {
             // return Content("HELLO WORLD");
 
-            var viewModel = new IndividualStudentPloScoreComparisonCourseViewModel()
+            var viewModel = new IndividualStudentPLOScoreComparisonCourseViewModel()
             {
                 TopbarViewModel = new TopbarViewModel()
                 {
@@ -130,7 +130,7 @@ namespace SpmsApp.Controllers
         {
             var student = ds.students.Find(s => s.StudentID == studentID);
 
-            if (student == null) return NotFound();
+            //if (student == null) return NotFound();
 
             var program = ds.programs.Find(p => p.ProgramID == programID);
             var programPlos = ds.plos.Where(plo => plo.Program == program);
@@ -174,7 +174,7 @@ namespace SpmsApp.Controllers
         [HttpGet("/student/")]
         public IActionResult Index()
         {
-            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
+            return View(new TopbarViewModel(){Name = activestudent.FullName, ID = activestudent.ID});
 
         }
 

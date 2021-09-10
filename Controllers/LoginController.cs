@@ -25,7 +25,13 @@ namespace SpmsApp.Controllers
             }
             else if (cred.UserType == UserType.Student)
             {
-                return Redirect("/student/");
+                if (service.GetStudent(cred.Username, cred.Password) is Student s)
+                {
+                    StudentController.activestudent = s;
+                    return Redirect("/student/"); 
+                }
+
+                return Redirect("/login/wrong");
             }
             else if (cred.UserType == UserType.Faculty)
             {
