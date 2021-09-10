@@ -190,6 +190,19 @@ namespace SpmsApp.Controllers
 
         }
 
+        [HttpGet("/student/pat")]
+        public IActionResult PloAchievementTable() // 3
+        {
+            PLOAchievementTableViewModel ploAchievementTableViewModel = new PLOAchievementTableViewModel();
+            ploAchievementTableViewModel.TopbarViewModel = new TopbarViewModel()
+            {
+                Name = activestudent.FullName,
+                ID = activestudent.StudentID
+            };
+
+            return View(ploAchievementTableViewModel);
+        }
+
 
         [HttpGet("/student/logout")]
         public IActionResult Logout()
