@@ -4,5 +4,6 @@ namespace SpmsApp.ViewModels.Student
     {
         public TopbarViewModel TopbarViewModel { get; set; }
         public int StudentID { get; set; }
+        
     }
 }

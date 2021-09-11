@@ -1,4 +1,4 @@
-﻿@model SpmsApp.ViewModels.Student.PLOAchievementTableViewModel;
+@model SpmsApp.ViewModels.Student.PLOAchievementTableViewModel;
 @{
     ViewData["Title"] = "PLO Table";
 }
@@ -13,9 +13,9 @@
     <div class="col">
         <h1>Student PLO Achievement Table</h1>
         <form id="student-selector">
-           @* <label for="student-id-field">Enter a Student ID</label>
-            <input asp-for="StudentID" type="text" name="student-id-field" id="studentID">
-            <input type="submit" value="Submit">*@
+            @*<label for="student-id-field">Enter a Student ID</label>
+            <input asp-for="StudentID" type="text" name="student-id-field" id="studentID">*@
+            <input type="submit" value="Load">
         </form>
         <div id="student-name"></div>
         <div id="current-student-id"></div>
@@ -30,7 +30,7 @@
     studentForm.addEventListener("submit", e => {
         e.preventDefault();
 
-        let studentID = document.getElementById("studentID").value;
+        let studentID = @Model.TopbarViewModel.ID;    //document.getElementById("studentID").value;
         console.log(studentID);
 
         fetch(`/student/pat/${studentID}`)

@@ -174,21 +174,21 @@ namespace SpmsApp.Controllers
         [HttpGet("/student/")]
         public IActionResult Index()
         {
-            return View(new TopbarViewModel(){Name = activestudent.FullName, ID = activestudent.ID});
+            return View(new TopbarViewModel(){Name = activestudent.FullName, ID = activestudent.StudentID});
 
         }
 
-        [HttpGet("/student/cpc/")]
-        public IActionResult CoursePLOComparison()
-        {
-            // List<Course> cou=new List<Course>();
-            // foreach(Student s in ds.students)
-            // {
-            //     foreach
-            // }
-        return Content("ssss");
+        // [HttpGet("/student/cpc/")]
+        // public IActionResult CoursePLOComparison()
+        // {
+        //     // List<Course> cou=new List<Course>();
+        //     // foreach(Student s in ds.students)
+        //     // {
+        //     //     foreach
+        //     // }
+        // return Content("ssss");
 
-        }
+        // }
 
         [HttpGet("/student/pat")]
         public IActionResult PloAchievementTable() // 3
