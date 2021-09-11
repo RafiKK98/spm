@@ -1,4 +1,6 @@
 using System;
+using SpmsApp.Services;
+using System.Linq;
 
 namespace SpmsApp.Models
 {
@@ -10,6 +12,5 @@ namespace SpmsApp.Models
         public DateTime DateofBirth { get; set; }
 
         public Program Program { get; set; }
-
     }
 }

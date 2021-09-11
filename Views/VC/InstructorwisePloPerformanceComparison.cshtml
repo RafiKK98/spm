@@ -33,5 +33,55 @@
             <br>
             <input type="submit" value="Submit" class="btn btn-primary">
         </form>
+
+        @if (Model.Data != null)
+        {
+            <div style="width: 85%;" id="draw-point">
+
+            </div>
+
+            <script>
+                let drawPoint = document.getElementById('draw-point');
+                drawPoint.innerHTML = "";
+
+                var ctx = document.createElement('canvas');
+                ctx.getContext('2d');
+                drawPoint.appendChild(ctx);
+
+                var myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: @Html.Raw(Json.Serialize(Model.Data.PloList)),
+                @* datasets: @Html.Raw(Json.Serialize(Model.Data.AchieveData)) *@
+                    datasets: [{
+                        label: 'Percentage of Achievement',
+                        data: @Html.Raw(Json.Serialize(Model.Data.AchieveData)),
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                        },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                                grid: {
+                                offset: true
+                            }
+                        },
+                        x: {
+                            grid: {
+                                offset: true
+                            }
+                        }
+                    }
+                }
+                    })
+            </script>
+        }
     </div>
 </div>

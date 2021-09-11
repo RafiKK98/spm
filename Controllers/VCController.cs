@@ -579,9 +579,216 @@ namespace SpmsApp.Controllers
             return View(viewModel);
         }
 
+        // [HttpPost("/vc/ippc")]
+        // public IActionResult InstructorwisePloPerformanceComparison(InstructorwisePloPerformanceComparisonViewModel viewModel)
+        // {
+        //     Semester start = new Semester(viewModel.StartSemester, viewModel.StartYear);
+        //     Semester end = new Semester(viewModel.EndSemester, viewModel.EndYear);
+        //     Faculty faculty = ds.faculties.Find(f => f.ID == viewModel.FacultyID);
+        // }
+
         [HttpPost("/vc/ippc")]
         public IActionResult InstructorwisePloPerformanceComparison(InstructorwisePloPerformanceComparisonViewModel viewModel)
         {
+            Semester start = new Semester(viewModel.StartSemester, viewModel.StartYear);
+            Semester end = new Semester(viewModel.EndSemester, viewModel.EndYear);
+            Faculty faculty = ds.faculties.Find(f => f.ID == viewModel.FacultyID);
+
+            var sections = ds.sections.Where(s => s.Faculty == faculty && s.Semester.CompareTo(start) >= 0 && end.CompareTo(s.Semester) >= 0);
+            var evaluationStudentGroups = ds.evaluations.Where(e => sections.Contains(e.Assessment.Section) && e.Assessment.Section.Semester.CompareTo(start) >= 0 && e.Assessment.Section.Semester.CompareTo(end) <= 0)
+                                            .GroupBy(e => e.Student);
+
+            string[] ploname = { "PLO-01", "PLO-02", "PLO-03", "PLO-04", "PLO-05", "PLO-06", "PLO-07", "PLO-08", "PLO-09", "PLO-10", "PLO-11", "PLO-12" };
+            int[] ploAttempted = new int[12];
+            int[] ploAchieved = new int[12];
+
+            foreach (var evStGroup in evaluationStudentGroups)
+            {
+                var evStSectionGroups = evStGroup.GroupBy(ev => ev.Assessment.Section);
+                bool[] hasPlo = null;
+                bool[] hasAchieved = null;
+
+                foreach (var evStSectionGroup in evStSectionGroups)
+                {
+                    hasPlo = new bool[12];
+                    hasAchieved = new bool[12];
+
+                    var evStSecPloGroups = evStSectionGroup.GroupBy(ev => ev.Assessment.CourseOutcome.PLO.PloName);
+
+                    foreach (var evStSecPloGroup in evStSecPloGroups)
+                    {
+                        float totalObtainable = 0;
+                        float totalObtained = 0;
+
+                        switch (evStSecPloGroup.Key)
+                        {
+                            case "PLO-01":
+                                hasPlo[0] = true;
+                                break;
+                            case "PLO-02":
+                                hasPlo[1] = true;
+                                break;
+                            case "PLO-03":
+                                hasPlo[2] = true;
+                                break;
+                            case "PLO-04":
+                                hasPlo[3] = true;
+                                break;
+                            case "PLO-05":
+                                hasPlo[4] = true;
+                                break;
+                            case "PLO-06":
+                                hasPlo[5] = true;
+                                break;
+                            case "PLO-07":
+                                hasPlo[6] = true;
+                                break;
+                            case "PLO-08":
+                                hasPlo[7] = true;
+                                break;
+                            case "PLO-09":
+                                hasPlo[8] = true;
+                                break;
+                            case "PLO-10":
+                                hasPlo[9] = true;
+                                break;
+                            case "PLO-11":
+                                hasPlo[10] = true;
+                                break;
+                            case "PLO-12":
+                                hasPlo[11] = true;
+                                break;
+                        }
+
+                        foreach (var evStSecPlo in evStSecPloGroup)
+                        {
+                            totalObtainable += evStSecPlo.Assessment.TotalMark;
+                            totalObtained += evStSecPlo.TotalObtainedMark;
+                        }
+
+                        float percent = totalObtained / totalObtainable * 100;
+
+                        if (percent >= evStSecPloGroup.First().Assessment.Section.PassMark)
+                        {
+                            switch (evStSecPloGroup.Key)
+                            {
+                                case "PLO-01":
+                                    hasAchieved[0] = true;
+                                    break;
+                                case "PLO-02":
+                                    hasAchieved[1] = true;
+                                    break;
+                                case "PLO-03":
+                                    hasAchieved[2] = true;
+                                    break;
+                                case "PLO-04":
+                                    hasAchieved[3] = true;
+                                    break;
+                                case "PLO-05":
+                                    hasAchieved[4] = true;
+                                    break;
+                                case "PLO-06":
+                                    hasAchieved[5] = true;
+                                    break;
+                                case "PLO-07":
+                                    hasAchieved[6] = true;
+                                    break;
+                                case "PLO-08":
+                                    hasAchieved[7] = true;
+                                    break;
+                                case "PLO-09":
+                                    hasAchieved[8] = true;
+                                    break;
+                                case "PLO-10":
+                                    hasAchieved[9] = true;
+                                    break;
+                                case "PLO-11":
+                                    hasAchieved[10] = true;
+                                    break;
+                                case "PLO-12":
+                                    hasAchieved[11] = true;
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            switch (evStSecPloGroup.Key)
+                            {
+                                case "PLO-01":
+                                    hasAchieved[0] = false;
+                                    break;
+                                case "PLO-02":
+                                    hasAchieved[1] = false;
+                                    break;
+                                case "PLO-03":
+                                    hasAchieved[2] = false;
+                                    break;
+                                case "PLO-04":
+                                    hasAchieved[3] = false;
+                                    break;
+                                case "PLO-05":
+                                    hasAchieved[4] = false;
+                                    break;
+                                case "PLO-06":
+                                    hasAchieved[5] = false;
+                                    break;
+                                case "PLO-07":
+                                    hasAchieved[6] = false;
+                                    break;
+                                case "PLO-08":
+                                    hasAchieved[7] = false;
+                                    break;
+                                case "PLO-09":
+                                    hasAchieved[8] = false;
+                                    break;
+                                case "PLO-10":
+                                    hasAchieved[9] = false;
+                                    break;
+                                case "PLO-11":
+                                    hasAchieved[10] = false;
+                                    break;
+                                case "PLO-12":
+                                    hasAchieved[11] = false;
+                                    break;
+                            }
+                        }
+                    }
+                }
+
+                if (hasPlo != null)
+                {
+                    for (int i = 0; i < hasPlo.Length; i++)
+                    {
+                        ploAttempted[i]++;
+                    }
+                }
+
+                if (hasAchieved != null)
+                {
+                    for (int i = 0; i < hasAchieved.Length; i++)
+                    {
+                        ploAchieved[i]++;
+                    }
+                }
+            }
+
+            List<float> ploAchievePercent = new List<float>();
+
+            for (int i = 0; i < ploAchieved.Length; i++)
+            {
+                ploAchievePercent.Add((float)ploAchieved[i] / ploAttempted[i] * 100);
+            }
+
+            var data = new ViewModels.VC.Data { PloList = ploname, AchieveData = ploAchievePercent };
+
+            viewModel.TopbarViewModel = new TopbarViewModel()
+            {
+                Name = ActiveVC.FullName,
+                ID = ActiveVC.VCID
+            };
+            viewModel.Faculties = ds.faculties.Where(f => f.Department.School.University == ActiveVC.University).ToList();
+            viewModel.Data = data;
+
             return View(viewModel);
         }
     }

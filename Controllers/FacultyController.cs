@@ -57,7 +57,7 @@ namespace SpmsApp.Controllers
 
             if (_data.Count <= 0) return Json(null);
 
-            var plos = ds.plos.Where(o => o.Program == ds.students.First().Program);
+            var plos = ds.plos.Where(o => o.Program == student.Program);
 
             if (plos.Count() <= 0) return Json(null);
 

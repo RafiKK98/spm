@@ -13,5 +13,13 @@ namespace SpmsApp.ViewModels.VC
         public int StartYear { get; set; }
         public int EndSemester { get; set; }
         public int EndYear { get; set; }
+
+        public Data Data { get; set; }
+    }
+
+    public class Data
+    {
+        public string[] PloList { get; set; }
+        public List<float> AchieveData { get; set; }
     }
 }

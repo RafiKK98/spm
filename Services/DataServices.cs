@@ -17,6 +17,12 @@ namespace SpmsApp.Services
         public float PassMark { get; set; }
     }
 
+    public class Info
+    {
+        // public string CourseCode { get; set; }
+        public List<Data> Data { get; set; }
+    }
+
     public class DataServices
     {
         public static DataServices dataServices = new DataServices();
@@ -572,7 +578,7 @@ namespace SpmsApp.Services
 
         public SchoolDean GetDean(string username, string password)
         {
-            
+
             if (loginCredentialsList.Find(lc => lc.Username == username && lc.Password == password) is LoginCredentials lc)
             {
                 if (schoolDeans.Find(dean => dean.ID == lc.UserID) is SchoolDean d)
@@ -583,9 +589,9 @@ namespace SpmsApp.Services
 
             return null;
         }
-         public DepartmentHead GetHead(string username, string password)
+        public DepartmentHead GetHead(string username, string password)
         {
-            
+
             if (loginCredentialsList.Find(lc => lc.Username == username && lc.Password == password) is LoginCredentials lc)
             {
                 if (departmentHeads.Find(head => head.ID == lc.UserID) is DepartmentHead h)
@@ -599,7 +605,7 @@ namespace SpmsApp.Services
 
         public UGCIEB GetUGCIEB(string username, string password)
         {
-            
+
             if (loginCredentialsList.Find(lc => lc.Username == username && lc.Password == password) is LoginCredentials lc)
             {
                 if (uGCIEBs.Find(uGCIEBs => uGCIEBs.ID == lc.UserID) is UGCIEB u)
@@ -611,9 +617,9 @@ namespace SpmsApp.Services
             return null;
         }
 
-         public Guardian GetGuardian(string username, string password)
+        public Guardian GetGuardian(string username, string password)
         {
-            
+
             if (loginCredentialsList.Find(lc => lc.Username == username && lc.Password == password) is LoginCredentials lc)
             {
                 if (guardians.Find(guardians => guardians.ID == lc.UserID) is Guardian g)
@@ -630,7 +636,7 @@ namespace SpmsApp.Services
 
 
 
-        public ArrayList PloAchievementTableData(Student student)
+        public List<Info> PloAchievementTableData(Student student)
         {
             var studentCourseRegistrations = courseRegistrations.Where(cr => cr.Student == student);
 
@@ -660,14 +666,14 @@ namespace SpmsApp.Services
 
             var courseWiseStudentEvaluations = studentEvaluations.GroupBy(o => o.Evaluation.Assessment.Section.Course.CourseID);
 
-            ArrayList data = new ArrayList();
+            List<Info> data = new List<Info>();
 
             foreach (var courseEval in courseWiseStudentEvaluations)
             {
                 // var recentRegistrationDate = courseEval.Max(o => o.CourseRegistration.RegistrationDate);                
                 var courseToDisplay = courseEval.ToList();
 
-                var dt = new { CourseCode = courseEval.Key, Data = new List<Data>() };
+                var dt = new Info{ Data = new List<Data>() };
                 foreach (var course in courseToDisplay)
                 {
                     dt.Data.Add(new Data()
