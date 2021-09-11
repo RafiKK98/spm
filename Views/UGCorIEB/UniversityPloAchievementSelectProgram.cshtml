@@ -26,3 +26,44 @@
         </div>
     </div>
 </div>
+<script>
+    document.getElementById("programSelector").addEventListener("submit", e => {
+        e.preventDefault();
+
+        let programID = parseInt(document.getElementById("selector").value);
+
+        console.log(programID);
+
+        fetch("/ugc/upasp", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                selectedProgram : programID
+            })
+        })
+        .then(res => res.json())
+        .then(res => {
+            let drawPoint = document.getElementById('draw-point');
+            drawPoint.innerHTML = "";
+
+            var ctx = document.createElement('canvas');
+            ctx.getContext('2d');
+            drawPoint.appendChild(ctx);
+            console.log(res.data)
+
+            var myChart = new Chart(ctx, {
+                type: 'radar',
+                data: res.data,
+                options: {
+                    elements: {
+                        line: {
+                            borderWidth: 3
+                        }
+                    }
+                }
+            })
+        })
+    })
+</script>
