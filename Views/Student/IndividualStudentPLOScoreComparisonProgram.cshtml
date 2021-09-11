@@ -1,6 +1,6 @@
-@model SpmsApp.ViewModels.Student.IndividualStudentPLOScoreComparisonCourseViewModel;
+@model SpmsApp.ViewModels.Student.IndividualStudentPLOScoreComparisonProgramViewModel;
 @{
-    ViewData["Title"] = "Dashboard";
+    ViewData["Title"] = "Individual Student PLO Score Comparison (Program)";
 }
 
 <div class="row">
@@ -14,13 +14,13 @@
         <form id="student-course-selector">
             
             <label>
-                Select a Course:
+                Select a Program:
             </label>
-            <select id="cID" required>
-                <option value="">Select a Course</option>
-                @foreach (var course in Model.Courses)
+            <select id="pID" required>
+                <option value="">Select a Program</option>
+                @foreach (var program in Model.Programs)
                 {
-                    <option value=@course.CourseID>@($"{course.CourseCode} - {course.CourseName}")</option>
+                    <option value=@program.ProgramID>@($"{program.ProgramName}")</option>
                 }
             </select>
             <input type="submit" value="Submit">
@@ -35,12 +35,14 @@
     document.getElementById("student-course-selector").addEventListener('submit', e => {
         e.preventDefault();
 
-        let cID = document.getElementById("cID").value;
+        //let stID = document.getElementById("stID").value;
+        let pID = document.getElementById("pID").value;
 
+        console.log(stID);
+        console.log(pID);
+        console.log('program view');
 
-        console.log(cID);
-
-        fetch(`/student/ispscc/${cID}`)
+        fetch(`/student/ispscp/${pID}`)
             .then(res => res.json())
             .then(res => {
                 console.log(res);
@@ -54,10 +56,10 @@
                 var myChart = new Chart(ctx, {
                     type: 'bar',
                     data: {
-                        labels: res.stLabel,
+                        labels: res.ploList,
                         datasets: [{
                             label: 'Student Score',
-                            data: res.stData,
+                            data: res.studentScores,
                             backgroundColor: [
                                 'rgba(255, 99, 132, 1)'
                             ],
@@ -66,8 +68,8 @@
                             ],
                             borderWidth: 1
                         }, {
-                            label: 'Course Average',
-                            data: res.courseData,
+                            label: 'Program Average',
+                            data: res.programScores,
                             backgroundColor: [
                                 'rgba(54, 162, 235, 1)'
                             ],

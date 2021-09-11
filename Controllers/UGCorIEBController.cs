@@ -39,7 +39,11 @@ namespace SpmsApp.Controllers
         }
        
 
-
+        [HttpGet("/ugc/logout")]
+        public IActionResult Logout()
+        {
+            return Redirect("/");
+        }
 
     }
 }

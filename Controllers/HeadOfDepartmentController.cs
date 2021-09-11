@@ -124,7 +124,65 @@ namespace SpmsApp.Controllers
         public IActionResult StudentPLOComparisonProgramWise()
         {
             return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
-        }       
+        }  
+
+        [HttpGet("/department/CPAFSC")]
+        public IActionResult ComparisonPloAchievedVsFailedForSelectCourses()
+        {
+           var viewModel = new ComparisonPloAchievedVsFailedForSelectCoursesViewModel()
+            {
+                TopbarViewModel = new TopbarViewModel()
+                {
+                    Name = ActiveHead.FullName,
+                    ID = ActiveHead.DepartmentHeadID
+                },
+                Courses = ds.courses.Where(c => c.Program.Department == ActiveHead.Department && c.CoofferedCourse == null).ToList(),
+                Semester = new Semester(1, 2001)
+            };
+
+            return View(viewModel);
+        } 
+
+        [HttpPost("/department/CPAFSC")]
+        public IActionResult ComparisonPloAchievedVsFailedForSelectCourses([FromBody] ComparisonPloAchievedVsFailedForSelectCoursesViewModel viewModel)
+        {
+
+             var evaluations = ds.evaluations.Where(ev => viewModel.SelectedCourses.Contains(ev.Assessment.Section.Course.CourseID))
+                                            .Where(ev => viewModel.SelectedSemesters.Contains(ev.Assessment.Section.Semester));
+            var evaluationsPloGroups = evaluations.GroupBy(ev => ev.Assessment.CourseOutcome.PLO.PloName);
+
+            var ploNameList = new List<string>();
+            var achievedList = new List<float>();
+            var failedList = new List<float>();
+
+            foreach (var evGroup in evaluationsPloGroups)
+            {
+                ploNameList.Add(evGroup.Key);
+
+                var passedCount = 0;
+
+                foreach (var ev in evGroup)
+                {
+                    var percent = ev.TotalObtainedMark / ev.Assessment.TotalMark * 100;
+
+                    if (percent > ev.Assessment.Section.PassMark)
+                    {
+                        passedCount++;
+                    }
+                }
+
+                var passPercent = (float)passedCount / evGroup.Count() * 100;
+
+                achievedList.Add(passPercent);
+                failedList.Add(100 - passPercent);
+            }
+
+            var myData = new {label = ploNameList, passData = achievedList, failData = failedList};
+
+            return Json(myData);
+
+
+        }
 
         [HttpGet("/department/SPAT/")]
         public IActionResult StudentPloAchievementTable()
@@ -162,6 +220,100 @@ namespace SpmsApp.Controllers
         public IActionResult PLOWiseCoursePerformance()
         {
             return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
+        }
+
+
+        [HttpGet("/department/PCACSP")]
+        public IActionResult PLOComparisonAmongCourseWithSameSelectedPLOs()
+        {
+            
+            var viewModel = new PLOComparisonAmongCourseWithSameSelectedPLOsViewModel()
+            {
+                TopbarViewModel = new TopbarViewModel()
+                {
+                    Name = ActiveHead.FullName,
+                    ID = ActiveHead.DepartmentHeadID
+                },
+                Courses = ds.courses.Where(c => c.Program.Department == ActiveHead.Department).ToList()
+            
+
+            };
+
+            return View(viewModel);
+        }
+
+        public class Dummy
+        {
+            public string Name { get; set; }
+        }
+
+
+        [HttpPost]
+        public IActionResult DummyAction([FromBody] PLOComparisonAmongCourseWithSameSelectedPLOsViewModel dummy)
+        {
+            var courses = ds.courses.Where(c => dummy.SelectedCoursesID.Contains(c.CourseID)).ToList();
+            return Json(dummy);
+        }
+
+
+
+        [HttpPost("/department/PCACSP/{startSemester}/{startYear}/{endSemester}/{endYear}")]
+
+        public IActionResult PLOComparisonAmongCourseWithSameSelectedPLOs([FromBody] PLOComparisonAmongCourseWithSameSelectedPLOsViewModel viewModel, int startSemester, int startYear, int endSemester, int endYear )
+        {
+             var start = new Semester(startSemester, startYear);
+            var end = new Semester(endSemester, endYear);
+
+            
+            List<float> scores = new List<float>();
+            List<string> ploNames = new List<string>();
+
+            List<Course> courses = new List<Course>();
+
+            foreach (var course in ds.courses)
+            {
+                if (viewModel.SelectedCoursesID.Contains(course.CourseID))
+                {
+                    bool available = true;
+                    var plos = ds.cos.Where(co => co.Course == course).Select(co => co.PLO.PloName);
+
+                    foreach (var ploName in viewModel.SelectedPlosName)
+                    {
+                        if (!plos.Contains(ploName))
+                            available = false;
+                    }
+
+                    if (available) courses.Add(course);
+                }
+            }
+
+            var evaluations = ds.evaluations.Where(ev => courses.Contains(ev.Assessment.Section.Course)
+                                                    && viewModel.SelectedPlosName.Contains(ev.Assessment.CourseOutcome.PLO.PloName)
+                                                    && ev.Assessment.Section.Semester.CompareTo(start) >= 0
+                                                    && ev.Assessment.Section.Semester.CompareTo(end) <= 0)
+                                            .GroupBy(ev => ev.Assessment.CourseOutcome.PLO.PloName);
+
+            foreach (var evg in evaluations)
+            {
+                ploNames.Add(evg.Key);
+                int count = 0;
+
+                foreach (var ev in evg)
+                {
+                    var percent = ev.TotalObtainedMark / ev.Assessment.TotalMark * 100;
+                    if (percent >= ev.Assessment.Section.PassMark)
+                    {
+                        count++;
+                    }
+                }
+
+                scores.Add((float)count / evg.Count() * 100);
+            }
+
+            var myData = new { labels = ploNames, data = scores };
+
+            return Json(myData);
+
         }
 
         [HttpGet("/department/AAC")]
@@ -348,6 +500,62 @@ namespace SpmsApp.Controllers
             return Json(new { StData = studentScoreList, StLabel = studentPloList, CourseData = courseAvgScoreList });
         }
 
+
+        [HttpGet("/department/CPAASP")]
+        public IActionResult ComparisonPloAchievedVsAttemptedSelectedPrograms()
+        {
+             var viewModel = new ComparisonPloAchievedVsAttemptedSelectedProgramsViewModel()
+             {
+                TopbarViewModel = new TopbarViewModel()
+                {
+                   Name = ActiveHead.FullName,
+                    ID = ActiveHead.DepartmentHeadID
+                },
+                Programs = ds.programs.Where(p => p.Department == ActiveHead.Department).ToList()
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost("/department/CPAASP")]
+         public IActionResult ComparisonPloAchievedVsAttemptedSelectedPrograms([FromBody] ComparisonPloAchievedVsAttemptedSelectedProgramsViewModel viewModel)
+        {
+            var evaluations = ds.evaluations.Where(e => viewModel.SelectedPrograms.Contains(e.Assessment.CourseOutcome.PLO.Program.ProgramID))
+                                            .Where(e => viewModel.SelectedSemesters.Contains(e.Assessment.Section.Semester));
+
+            var evaluationsPloGroups = evaluations.GroupBy(ev => ev.Assessment.CourseOutcome.PLO.PloName);
+
+            var ploNameList = new List<string>();
+            var achievedList = new List<float>();
+            var attemptedList = new List<float>();
+
+            foreach (var evGroup in evaluationsPloGroups)
+            {
+                ploNameList.Add(evGroup.Key);
+
+                var passedCount = 0;
+
+                foreach (var ev in evGroup)
+                {
+                    var percent = ev.TotalObtainedMark / ev.Assessment.TotalMark * 100;
+
+                    if (percent > ev.Assessment.Section.PassMark)
+                    {
+                        passedCount++;
+                    }
+                }
+
+                achievedList.Add(passedCount);
+                attemptedList.Add(evGroup.Count());
+            }
+
+            var myData = new {label = ploNameList, passData = achievedList, attemptData = attemptedList};
+
+            return Json(myData);
+        }
+
+
+
         [HttpGet("/department/ISPSCP")]
         public IActionResult IndividualStudentPLOScoreComparisonProgramWise()
         {
@@ -363,6 +571,7 @@ namespace SpmsApp.Controllers
 
             return View(viewModel);
         }
+
         [HttpGet("/department/ISPSCP/{studentID}/{programID}")]
          public IActionResult IndividualStudentPLOScoreComparisonProgramWise(int studentID, int programID)
         {
@@ -403,6 +612,12 @@ namespace SpmsApp.Controllers
             var data = new { PloList = programPlos.Select(p => p.PloName), StudentScores = studentScores, ProgramScores = programScores };
 
             return Json(data);
+        }
+
+        [HttpGet("/department/logout")]
+        public IActionResult Logout()
+        {
+            return Redirect("/");
         }
     }
 }

@@ -201,7 +201,8 @@ namespace SpmsApp.Controllers
         }
 
         [HttpGet("/vc/ippsc/{selectedCourse}/{startSemester}/{startYear}/{endSemester}/{endYear}")]
-        public IActionResult InstructorwisePLOPerformanceComparisonSelectCourse(int selectedCourse, int startSemester, int startYear, int endSemester, int endYear) // 4 continued
+        public IActionResult InstructorwisePLOPerformanceComparisonSelectCourse(int selectedCourse, int startSemester, 
+        int startYear, int endSemester, int endYear) // 4 continued
         {
             var course = ds.courses.Find(c => c.CourseID == selectedCourse);
             var start = new Semester(startSemester, startYear);
@@ -277,7 +278,8 @@ namespace SpmsApp.Controllers
         }
 
         [HttpPost("/vc/pccsp/{startSemester}/{startYear}/{endSemester}/{endYear}")]
-        public IActionResult PloComparisonCourseWithSelectPlos([FromBody] PLOComparisonCourseWithSelectPlosViewModel viewModel, int startSemester, int startYear, int endSemester, int endYear) // 5 continued
+        public IActionResult PloComparisonCourseWithSelectPlos([FromBody] PLOComparisonCourseWithSelectPlosViewModel viewModel, 
+        int startSemester, int startYear, int endSemester, int endYear) // 5 continued
         {
             var start = new Semester(startSemester, startYear);
             var end = new Semester(endSemester, endYear);
@@ -393,6 +395,59 @@ namespace SpmsApp.Controllers
             return Json(myData);
         }
 
+        [HttpGet("/vc/cpaap")]
+        public IActionResult ComparisonPloAchievedAttemptedSelectPrograms() // 7
+        {
+            var viewModel = new ComparisonPLOAchievedAttemptedSelectProgramsViewModel()
+            {
+                TopbarViewModel = new TopbarViewModel()
+                {
+                    Name = ActiveVC.FullName,
+                    ID = ActiveVC.VCID
+                },
+                Programs = ds.programs.Where(p => p.Department.School.University == ActiveVC.University).ToList()
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost("/vc/cpaap")]
+        public IActionResult ComparisonPloAchievedAttemptedSelectPrograms([FromBody] ComparisonPloAchievedAttemptedSelectProgramsViewModel viewModel) // 7 continued...
+        {
+            var evaluations = ds.evaluations.Where(e => viewModel.SelectedPrograms.Contains(e.Assessment.CourseOutcome.PLO.Program.ProgramID))
+                                            .Where(e => viewModel.SelectedSemesters.Contains(e.Assessment.Section.Semester));
+
+            var evaluationsPloGroups = evaluations.GroupBy(ev => ev.Assessment.CourseOutcome.PLO.PloName);
+
+            var ploNameList = new List<string>();
+            var achievedList = new List<float>();
+            var attemptedList = new List<float>();
+
+            foreach (var evGroup in evaluationsPloGroups)
+            {
+                ploNameList.Add(evGroup.Key);
+
+                var passedCount = 0;
+
+                foreach (var ev in evGroup)
+                {
+                    var percent = ev.TotalObtainedMark / ev.Assessment.TotalMark * 100;
+
+                    if (percent > ev.Assessment.Section.PassMark)
+                    {
+                        passedCount++;
+                    }
+                }
+
+                achievedList.Add(passedCount);
+                attemptedList.Add(evGroup.Count());
+            }
+
+            var myData = new {label = ploNameList, passData = achievedList, attemptData = attemptedList};
+
+            return Json(myData);
+        }
+
         [HttpGet("/vc/spcc/")]
         public IActionResult StudentPLOComparisonByCourse()
         {
@@ -476,7 +531,7 @@ namespace SpmsApp.Controllers
             return View(new TopbarViewModel() { Name = "No Name Set", ID = 0000 });
         }
         [HttpGet("/vc/spat/")]
-        public IActionResult StudentPLOAchievementTable()
+        public IActionResult StudentPLOAchievementTable() // 3
         {
             PloAchievementTableViewModel ploAchievementTableViewModel = new PloAchievementTableViewModel();
             ploAchievementTableViewModel.TopbarViewModel = new TopbarViewModel()
@@ -489,7 +544,7 @@ namespace SpmsApp.Controllers
         }
 
         [HttpGet("/vc/spat/{studentID}")]
-        public IActionResult StudentPloAchievementTable(int studentID)
+        public IActionResult StudentPloAchievementTable(int studentID) // 3 continued...
         {
             var student = ds.students.Find(s => s.StudentID == studentID);
 
@@ -790,6 +845,12 @@ namespace SpmsApp.Controllers
             viewModel.Data = data;
 
             return View(viewModel);
+        }
+
+        [HttpGet("/vc/logout")]
+        public IActionResult Logout()
+        {
+            return Redirect("/");
         }
     }
 }

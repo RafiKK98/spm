@@ -19,7 +19,7 @@ namespace SpmsApp.Controllers
         {
             return View(new TopbarViewModel() {Name = Activeguardian.FullName, ID = Activeguardian.guardianID});
         }
-        [HttpGet("/guardian/spat")]
+       [HttpGet("/guardian/spat")]
         public IActionResult StudentPLOAchievementTable()
         {
              PloAchievementTableViewModel ploAchievementTableViewModel = new PloAchievementTableViewModel();
@@ -30,8 +30,11 @@ namespace SpmsApp.Controllers
 
             return View(ploAchievementTableViewModel);
         }
-       
 
-
+        [HttpGet("/guardian/logout")]
+        public IActionResult Logout()
+        {
+            return Redirect("/");
+        }
     }
 }
