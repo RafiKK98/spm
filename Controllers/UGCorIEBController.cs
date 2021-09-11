@@ -22,11 +22,24 @@ namespace SpmsApp.Controllers
             return View(new TopbarViewModel() {Name = ActiveUgcieb.FullName, ID =ActiveUgcieb.UgciebID});
         }
 
-        [HttpGet("/ugc/pafap")]
-        public IActionResult PLOAchievementForAProgram()
+       [HttpGet("/ugc/upasp/")]
+        public IActionResult UniversityPloAchievementSelectProgram()
         {
-            return View(new TopbarViewModel() {Name = "No Name Set", ID = 0000});
+            var viewModel = new UniversityPloAchievementSelectProgram()
+            {
+                TopbarViewModel = new TopbarViewModel()
+                {
+                    Name = ActiveUgcieb.FullName,
+                    ID = ActiveUgcieb.UgciebID
+                },
+                Programs = ds.programs
+            };
+
+            return View(viewModel);
+              
         }
+        
+
         [HttpGet("/ugc/pwcp")]
         public IActionResult PLOwiseCoursePerformance()
         {
