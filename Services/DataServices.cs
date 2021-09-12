@@ -646,11 +646,6 @@ namespace SpmsApp.Services
             return null;
         }
 
-
-
-
-
-
         public List<Info> PloAchievementTableData(Student student)
         {
             var studentCourseRegistrations = courseRegistrations.Where(cr => cr.Student == student);
