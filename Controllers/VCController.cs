@@ -846,7 +846,7 @@ namespace SpmsApp.Controllers
 
             return View(viewModel);
         }
-        [HttpGet("/vc/upasp/")]
+          [HttpGet("/vc/upasp/")]
         public IActionResult UniversityPloAchievementSelectProgram()
         {
             var viewModel = new SpmsApp.ViewModels.VC.UniversityPloAchievementSelectProgram()
@@ -854,15 +854,16 @@ namespace SpmsApp.Controllers
                 TopbarViewModel = new TopbarViewModel()
                 {
                     Name = ActiveVC.FullName,
-                ID = ActiveVC.VCID
+                    ID = ActiveVC.VCID
                 },
                 Programs = ds.programs
             };
 
             return View(viewModel);
-              
+
         }
-            [HttpPost("/vc/upasp/")]
+        
+        [HttpPost("/vc/upasp/")]
         public IActionResult UniversityPloAchievementSelectProgram([FromBody] SpmsApp.ViewModels.VC.UniversityPloAchievementSelectProgram viewModel)
         {
             viewModel.TopbarViewModel = new TopbarViewModel()
@@ -899,7 +900,7 @@ namespace SpmsApp.Controllers
                 passCount.Add(passed);
             }
 
-            SpmsApp.ViewModels.VC.Dataset dset = new  SpmsApp.ViewModels.VC.Dataset()
+            SpmsApp.ViewModels.VC.Dataset dset = new SpmsApp.ViewModels.VC.Dataset()
             {
                 Data = passCount,
                 Label = "No. of Students",
@@ -911,10 +912,10 @@ namespace SpmsApp.Controllers
                 PointHoverBorderColor = "rgb(255, 99, 132)"
             };
 
-            ViewModels.Data data = new ViewModels.Data()
+            ViewModels.VC.VC_Data data = new ViewModels.VC.VC_Data()
             {
                 Labels = labels,
-                Datasets = new List< SpmsApp.ViewModels.Dataset>() { dset }
+                Datasets = new List<ViewModels.VC.Dataset>() { dset }
             };
 
             viewModel.Data = data;
@@ -922,8 +923,6 @@ namespace SpmsApp.Controllers
             return Json(viewModel);
         }
 
-       
-        
        
 
         [HttpGet("/vc/logout")]
