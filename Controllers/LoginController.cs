@@ -28,7 +28,7 @@ namespace SpmsApp.Controllers
                 if (service.GetStudent(cred.Username, cred.Password) is Student s)
                 {
                     StudentController.activestudent = s;
-                    return Redirect("/student/"); 
+                    return Redirect("/student/");
                 }
 
                 return Redirect("/login/wrong");
@@ -38,7 +38,7 @@ namespace SpmsApp.Controllers
                 if (service.GetFaculty(cred.Username, cred.Password) is Faculty f)
                 {
                     FacultyController.activeFaculty = f;
-                    return Redirect("/faculty/"); 
+                    return Redirect("/faculty/");
                 }
 
                 return Redirect("/login/wrong");
@@ -48,7 +48,7 @@ namespace SpmsApp.Controllers
                 if (service.GetDean(cred.Username, cred.Password) is SchoolDean d)
                 {
                     DeanController.ActiveDean = d;
-                    return Redirect("/dean/"); 
+                    return Redirect("/dean/");
                 }
 
                 return Redirect("/login/wrong");
@@ -57,33 +57,33 @@ namespace SpmsApp.Controllers
             {
                 if (service.GetHead(cred.Username, cred.Password) is DepartmentHead h)
                 {
-                HeadOfDepartmentController.ActiveHead=h;
-                return Redirect("/department/");
+                    HeadOfDepartmentController.ActiveHead = h;
+                    return Redirect("/department/");
                 }
                 return Redirect("/login/wrong");
             }
             else if (cred.UserType == UserType.UGCIEB)
             {
-                 if (service.GetUGCIEB(cred.Username, cred.Password) is UGCIEB u)
+                if (service.GetUGCIEB(cred.Username, cred.Password) is UGCIEB u)
                 {
-                     UGCorIEBController.ActiveUgcieb=u;
+                    UGCorIEBController.ActiveUgcieb = u;
                     return Redirect("/ugc/");
                 }
-                  return Redirect("/login/wrong");
-             
+                return Redirect("/login/wrong");
+
             }
 
             else if (cred.UserType == UserType.Guardian)
             {
-                 if (service.GetGuardian(cred.Username, cred.Password) is Guardian g)
+                if (service.GetGuardian(cred.Username, cred.Password) is Guardian g)
                 {
                     GuardianController.Activeguardian = g;
-                    return Redirect("/guardian/"); 
+                    return Redirect("/guardian/");
                 }
 
                 return Redirect("/login/wrong");
             }
-            
+
 
             else if (cred.UserType == UserType.VC)
             {
@@ -91,7 +91,7 @@ namespace SpmsApp.Controllers
                 if (service.GetVC(cred.Username, cred.Password) is VC v)
                 {
                     VCController.ActiveVC = v;
-                    return Redirect("/vc/"); 
+                    return Redirect("/vc/");
                 }
 
                 return Redirect("/login/wrong");
