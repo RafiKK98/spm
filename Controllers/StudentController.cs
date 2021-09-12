@@ -40,8 +40,6 @@ namespace SpmsApp.Controllers
             
             var course = ds.courses.Find(c => c.CourseID == courseID);
 
-            
-
             var courseRegistrations = ds.courseRegistrations.Where(cr => cr.Student == activestudent && cr.Section.Course == course.CoofferedCourse).ToList();
 
             if (courseRegistrations.Count <= 0) return NotFound();
