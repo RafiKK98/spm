@@ -856,7 +856,8 @@ namespace SpmsApp.Controllers
                     Name = ActiveVC.FullName,
                     ID = ActiveVC.VCID
                 },
-                Programs = ds.programs
+                Programs = ds.programs.Where(p=>p.Department.School.University==ActiveVC.University).ToList()
+
             };
 
             return View(viewModel);
@@ -871,7 +872,8 @@ namespace SpmsApp.Controllers
                 Name = ActiveVC.FullName,
                 ID = ActiveVC.VCID
             };
-            viewModel.Programs = ds.programs;
+            viewModel.Programs =  ds.programs.Where(p=>p.Department.School.University==ActiveVC.University).ToList();
+
 
             var program = ds.programs.Find(p => p.ProgramID == viewModel.SelectedProgram);
 
