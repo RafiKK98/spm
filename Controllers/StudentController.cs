@@ -172,21 +172,21 @@ namespace SpmsApp.Controllers
         [HttpGet("/student/")]
         public IActionResult Index()
         {
-            return View(new TopbarViewModel(){Name = activestudent.FullName, ID = activestudent.ID});
+            return View(new TopbarViewModel(){Name = activestudent.FullName, ID = activestudent.StudentID});
 
         }
 
-        [HttpGet("/student/cpc/")]
-        public IActionResult CoursePLOComparison()
-        {
-            // List<Course> cou=new List<Course>();
-            // foreach(Student s in ds.students)
-            // {
-            //     foreach
-            // }
-        return Content("ssss");
+        // [HttpGet("/student/cpc/")]
+        // public IActionResult CoursePLOComparison()
+        // {
+        //     // List<Course> cou=new List<Course>();
+        //     // foreach(Student s in ds.students)
+        //     // {
+        //     //     foreach
+        //     // }
+        // return Content("ssss");
 
-        }
+        // }
 
         [HttpGet("/student/pat")]
         public IActionResult PloAchievementTable() // 3
@@ -199,6 +199,26 @@ namespace SpmsApp.Controllers
             };
 
             return View(ploAchievementTableViewModel);
+        }
+
+        [HttpGet("/student/pat/{studentID}")]
+        public IActionResult PloAchievementTable(int studentID) // 3 continued...
+        {
+            //var student = ds.students.Find(s => s.StudentID == studentID);
+
+            //if (student == null) return Json(null);
+
+            var _data = ds.PloAchievementTableData(activestudent);
+
+            if (_data.Count <= 0) return Json(null);
+
+            var plos = ds.plos.Where(o => o.Program == ds.students.First().Program);
+
+            if (plos.Count() <= 0) return Json(null);
+
+            var mydata = new { studentName = activestudent.FullName, ploList = plos, data = _data };
+
+            return Json(mydata);
         }
 
 
