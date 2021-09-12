@@ -846,6 +846,85 @@ namespace SpmsApp.Controllers
 
             return View(viewModel);
         }
+        [HttpGet("/vc/upasp/")]
+        public IActionResult UniversityPloAchievementSelectProgram()
+        {
+            var viewModel = new SpmsApp.ViewModels.VC.UniversityPloAchievementSelectProgram()
+            {
+                TopbarViewModel = new TopbarViewModel()
+                {
+                    Name = ActiveVC.FullName,
+                ID = ActiveVC.VCID
+                },
+                Programs = ds.programs
+            };
+
+            return View(viewModel);
+              
+        }
+            [HttpPost("/vc/upasp/")]
+        public IActionResult UniversityPloAchievementSelectProgram([FromBody] SpmsApp.ViewModels.VC.UniversityPloAchievementSelectProgram viewModel)
+        {
+            viewModel.TopbarViewModel = new TopbarViewModel()
+            {
+                Name = ActiveVC.FullName,
+                ID = ActiveVC.VCID
+            };
+            viewModel.Programs = ds.programs;
+
+            var program = ds.programs.Find(p => p.ProgramID == viewModel.SelectedProgram);
+
+            var programEval = ds.evaluations.Where(ev => ev.Assessment.CourseOutcome.PLO.Program == program);
+            var evalPloGroups = programEval.GroupBy(ev => ev.Assessment.CourseOutcome.PLO.PloName);
+
+            List<string> labels = new List<string>();
+            List<int> passCount = new List<int>();
+
+            foreach (var evalPloGroup in evalPloGroups)
+            {
+                labels.Add(evalPloGroup.Key);
+
+                int passed = 0;
+
+                foreach (var eval in evalPloGroup)
+                {
+                    float percent = (float)eval.TotalObtainedMark / eval.Assessment.TotalMark * 100;
+
+                    if (percent >= eval.Assessment.Section.PassMark)
+                    {
+                        passed++;
+                    }
+                }
+
+                passCount.Add(passed);
+            }
+
+            SpmsApp.ViewModels.VC.Dataset dset = new  SpmsApp.ViewModels.VC.Dataset()
+            {
+                Data = passCount,
+                Label = "No. of Students",
+                BackgroundColor = "rgba(255, 99, 132, 0.2)",
+                BorderColor = "rgb(255, 99, 132)",
+                PointBackgroundColor = "rgb(255, 99, 132)",
+                PointBorderColor = "#fff",
+                PointHoverBackgroundColor = "#fff",
+                PointHoverBorderColor = "rgb(255, 99, 132)"
+            };
+
+            ViewModels.Data data = new ViewModels.Data()
+            {
+                Labels = labels,
+                Datasets = new List< SpmsApp.ViewModels.Dataset>() { dset }
+            };
+
+            viewModel.Data = data;
+
+            return Json(viewModel);
+        }
+
+       
+        
+       
 
         [HttpGet("/vc/logout")]
         public IActionResult Logout()
