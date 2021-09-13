@@ -35,12 +35,12 @@ namespace SpmsApp.Controllers
         }
 
         [HttpGet("/student/ispscc/{courseID}")]
-        public IActionResult IndividualStudentPloScoreComparisonCourse( int courseID) // 1 continued
+        public IActionResult IndividualStudentPloScoreComparisonCourse(int courseID) // 1 continued
         {
             
             var course = ds.courses.Find(c => c.CourseID == courseID);
 
-            var courseRegistrations = ds.courseRegistrations.Where(cr => cr.Student == activestudent && cr.Section.Course == course.CoofferedCourse).ToList();
+            var courseRegistrations = ds.courseRegistrations.Where(cr => cr.Student == activestudent && (cr.Section.Course == course || cr.Section.Course == course.CoofferedCourse)).ToList();
 
             if (courseRegistrations.Count <= 0) return NotFound();
 
