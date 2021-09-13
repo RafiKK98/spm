@@ -201,7 +201,7 @@ namespace SpmsApp.Controllers
         }
 
         [HttpGet("/vc/ippsc/{selectedCourse}/{startSemester}/{startYear}/{endSemester}/{endYear}")]
-        public IActionResult InstructorwisePLOPerformanceComparisonSelectCourse(int selectedCourse, int startSemester, 
+        public IActionResult InstructorwisePLOPerformanceComparisonSelectCourse(int selectedCourse, int startSemester,
         int startYear, int endSemester, int endYear) // 4 continued
         {
             var course = ds.courses.Find(c => c.CourseID == selectedCourse);
@@ -278,7 +278,7 @@ namespace SpmsApp.Controllers
         }
 
         [HttpPost("/vc/pccsp/{startSemester}/{startYear}/{endSemester}/{endYear}")]
-        public IActionResult PloComparisonCourseWithSelectPlos([FromBody] PLOComparisonCourseWithSelectPlosViewModel viewModel, 
+        public IActionResult PloComparisonCourseWithSelectPlos([FromBody] PLOComparisonCourseWithSelectPlosViewModel viewModel,
         int startSemester, int startYear, int endSemester, int endYear) // 5 continued
         {
             var start = new Semester(startSemester, startYear);
@@ -443,7 +443,7 @@ namespace SpmsApp.Controllers
                 attemptedList.Add(evGroup.Count());
             }
 
-            var myData = new {label = ploNameList, passData = achievedList, attemptData = attemptedList};
+            var myData = new { label = ploNameList, passData = achievedList, attemptData = attemptedList };
 
             return Json(myData);
         }
@@ -854,15 +854,16 @@ namespace SpmsApp.Controllers
                 TopbarViewModel = new TopbarViewModel()
                 {
                     Name = ActiveVC.FullName,
-                ID = ActiveVC.VCID
+                    ID = ActiveVC.VCID
                 },
                 Programs = ds.programs
             };
 
             return View(viewModel);
-              
+
         }
-            [HttpPost("/vc/upasp/")]
+        
+        [HttpPost("/vc/upasp/")]
         public IActionResult UniversityPloAchievementSelectProgram([FromBody] SpmsApp.ViewModels.VC.UniversityPloAchievementSelectProgram viewModel)
         {
             viewModel.TopbarViewModel = new TopbarViewModel()
@@ -899,7 +900,7 @@ namespace SpmsApp.Controllers
                 passCount.Add(passed);
             }
 
-            SpmsApp.ViewModels.VC.Dataset dset = new  SpmsApp.ViewModels.VC.Dataset()
+            SpmsApp.ViewModels.VC.Dataset dset = new SpmsApp.ViewModels.VC.Dataset()
             {
                 Data = passCount,
                 Label = "No. of Students",
@@ -911,20 +912,16 @@ namespace SpmsApp.Controllers
                 PointHoverBorderColor = "rgb(255, 99, 132)"
             };
 
-            ViewModels.Data data = new ViewModels.Data()
+            ViewModels.VC.VC_Data data = new ViewModels.VC.VC_Data()
             {
                 Labels = labels,
-                Datasets = new List< SpmsApp.ViewModels.Dataset>() { dset }
+                Datasets = new List<ViewModels.VC.Dataset>() { dset }
             };
 
             viewModel.Data = data;
 
             return Json(viewModel);
         }
-
-       
-        
-       
 
         [HttpGet("/vc/logout")]
         public IActionResult Logout()

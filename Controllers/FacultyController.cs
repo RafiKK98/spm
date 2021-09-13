@@ -39,13 +39,6 @@ namespace SpmsApp.Controllers
             return View(ploAchievementTableViewModel);
         }
 
-        struct PatData
-        {
-            public string studentName;
-            public ArrayList data;
-            public IEnumerable<ProgramlearningOutcome> ploList;
-        }
-
         [HttpGet("/faculty/pat/{studentID}")]
         public IActionResult PloAchievementTable(int studentID) // 3 continued...
         {
@@ -279,7 +272,9 @@ namespace SpmsApp.Controllers
                 studentScoreList.Add(score);
             }
 
-            var courseEval = ds.evaluations.Where(ev => ev.Assessment.Section.Semester.Equals(semester) && ev.Assessment.Section.Course == course && ev.Assessment.CourseOutcome.PLO.Program == student.Program);
+            var courseEval = ds.evaluations.Where(ev => ev.Assessment.Section.Semester.Equals(semester) &&
+                                                        ev.Assessment.Section.Course == course &&
+                                                        ev.Assessment.CourseOutcome.PLO.Program == student.Program);
 
             var courseEvalGroupbyPlo = courseEval.GroupBy(ce => ce.Assessment.CourseOutcome.PLO.PloName);
 

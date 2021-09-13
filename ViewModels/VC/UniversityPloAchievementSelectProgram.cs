@@ -10,7 +10,7 @@ namespace SpmsApp.ViewModels.VC
         public List<Program> Programs { get; set; }
         public int SelectedProgram { get; set; }
 
-        public Data Data { get; set; }
+        public VC_Data Data { get; set; }
     }
 
     public class VC_Data

@@ -65,7 +65,7 @@
 
             <form id="new-assessment-course-selector-form">
                 <select id="new-assessment-course-selector">
-                    <option value="">Selelct a Course</option>
+                    <option value="">Selelct a Program</option>
                     @foreach (var course in Model.CourseList)
                     {
                         <option value=@course.CourseID>@($"{course.CourseCode} - {course.Program.ProgramName}")</option>

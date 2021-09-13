@@ -540,8 +540,11 @@ namespace SpmsApp.Services
             connection = new MySqlConnection("server=localhost;database=spmsdb;userid=spms;password=");
             connection.Open();
 
-            MySqlCommand cmd = new MySqlCommand("Insert into Assessment_T (AssessmentID, QuestionNumber, AssessmentType, TotalMarks, SectionID, CoID) values" +
-                                                $"({assessment.AssessmentID}, {assessment.QuestionNumber}, '{assessment.AssessmentType}', {assessment.TotalMark}, {assessment.Section.SectionID}, {assessment.CourseOutcome.CoID});", connection);
+            MySqlCommand cmd = new MySqlCommand(
+                "Insert into Assessment_T (AssessmentID, QuestionNumber, AssessmentType, TotalMarks, SectionID, CoID) values" +
+                $"({assessment.AssessmentID}, {assessment.QuestionNumber}, " + 
+                $"'{assessment.AssessmentType}', {assessment.TotalMark}, {assessment.Section.SectionID}," + 
+                $"{assessment.CourseOutcome.CoID});", connection);
             cmd.ExecuteNonQuery();
             connection.Close();
         }
