@@ -925,11 +925,6 @@ namespace SpmsApp.Controllers
             return Json(viewModel);
         }
 
-<<<<<<< HEAD
-=======
-       
-
->>>>>>> 91fc52e4e3c9c093d76b0f093d539f85618c64ca
         [HttpGet("/vc/logout")]
         public IActionResult Logout()
         {
