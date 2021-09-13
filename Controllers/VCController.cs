@@ -846,7 +846,7 @@ namespace SpmsApp.Controllers
 
             return View(viewModel);
         }
-        [HttpGet("/vc/upasp/")]
+          [HttpGet("/vc/upasp/")]
         public IActionResult UniversityPloAchievementSelectProgram()
         {
             var viewModel = new SpmsApp.ViewModels.VC.UniversityPloAchievementSelectProgram()
@@ -856,7 +856,8 @@ namespace SpmsApp.Controllers
                     Name = ActiveVC.FullName,
                     ID = ActiveVC.VCID
                 },
-                Programs = ds.programs
+                Programs = ds.programs.Where(p=>p.Department.School.University==ActiveVC.University).ToList()
+
             };
 
             return View(viewModel);
@@ -871,7 +872,8 @@ namespace SpmsApp.Controllers
                 Name = ActiveVC.FullName,
                 ID = ActiveVC.VCID
             };
-            viewModel.Programs = ds.programs;
+            viewModel.Programs =  ds.programs.Where(p=>p.Department.School.University==ActiveVC.University).ToList();
+
 
             var program = ds.programs.Find(p => p.ProgramID == viewModel.SelectedProgram);
 
@@ -923,6 +925,11 @@ namespace SpmsApp.Controllers
             return Json(viewModel);
         }
 
+<<<<<<< HEAD
+=======
+       
+
+>>>>>>> 91fc52e4e3c9c093d76b0f093d539f85618c64ca
         [HttpGet("/vc/logout")]
         public IActionResult Logout()
         {
