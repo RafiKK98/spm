@@ -1,3 +1,7 @@
+Prerequisites: dotnet core 3, mysql
+
+To start the server, open terminal window in the root directory of the project and run "dotnet run"
+
 Login Credentials:
 
 Faculty: 1702@uni1.edu.bd<br>
